@@ -153,7 +153,7 @@ in
             max-substitution-jobs
             ;
         };
-        inherit (args.osConfig.nix) registry package;
+        inherit (args.osConfig.nix) registry;
         extraOptions = ''
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
