@@ -84,6 +84,7 @@ in
     inputs._1password-shell-plugins.hmModules.default
     inputs.shypkgs-public.hmModules.${system}.dwl
     inputs.nix-flatpak.homeManagerModules.nix-flatpak
+    inputs.lix-module.nixosModules.default
 
     inputs.nixfigs-secrets.user
     (
@@ -139,6 +140,7 @@ in
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
         '';
+        package = pkgs.lix;
       }
     else
       {
@@ -151,7 +153,7 @@ in
             max-substitution-jobs
             ;
         };
-        inherit (args.osConfig.nix) registry;
+        inherit (args.osConfig.nix) registry package;
         extraOptions = ''
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
