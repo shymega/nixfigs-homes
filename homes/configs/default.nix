@@ -75,25 +75,32 @@ let
   ];
 in
 {
-  imports = [
-    ./network-targets.nix
-    (import ./programs/rofi.nix { inherit lib pkgs; })
-    inputs.agenix.homeManagerModules.default
-    inputs.nix-doom-emacs-unstraightened.hmModule
-    inputs.nix-index-database.hmModules.nix-index
-    inputs._1password-shell-plugins.hmModules.default
-    inputs.shypkgs-public.hmModules.${system}.dwl
-    inputs.nix-flatpak.homeManagerModules.nix-flatpak
-    inputs.lix-module.nixosModules.default
-
-    inputs.nixfigs-secrets.user
-    (
-      { config, ... }:
-      {
-        nixpkgs.config = self.nixpkgs-config;
-      }
-    )
-  ] ++ (if !isModule then [ inputs.chaotic.homeManagerModules.default ] else [ ]);
+  imports =
+    [
+      ./network-targets.nix
+      (import ./programs/rofi.nix { inherit lib pkgs; })
+      inputs.agenix.homeManagerModules.default
+      inputs.nix-doom-emacs-unstraightened.hmModule
+      inputs.nix-index-database.hmModules.nix-index
+      inputs._1password-shell-plugins.hmModules.default
+      inputs.shypkgs-public.hmModules.${system}.dwl
+      inputs.nix-flatpak.homeManagerModules.nix-flatpak
+      inputs.lix-module.nixosModules.default
+    ]
+    ++ (
+      if !isModule then
+        [
+          inputs.chaotic.homeManagerModules.default
+          (
+            { config, ... }:
+            {
+              nixpkgs.config = self.nixpkgs-config;
+            }
+          )
+        ]
+      else
+        [ ]
+    );
 
   nix =
     if !isModule then
