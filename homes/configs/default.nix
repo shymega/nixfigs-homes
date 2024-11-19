@@ -85,6 +85,7 @@ in
       inputs._1password-shell-plugins.hmModules.default
       inputs.shypkgs-public.hmModules.${system}.dwl
       inputs.nix-flatpak.homeManagerModules.nix-flatpak
+      inputs.nixfigs-secrets.user
       inputs.lix-module.nixosModules.default
     ]
     ++ (
