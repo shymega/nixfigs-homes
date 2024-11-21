@@ -354,11 +354,14 @@ in {
       enableScDaemon = true;
       enableSshSupport = false;
       enableExtraSocket = true;
+      grabKeyboardAndMouse = true;
       defaultCacheTtl = 34560000;
       maxCacheTtl = 34560000;
       extraConfig = ''
         auto-expand-secmem
         allow-preset-passphrase
+        allow-emacs-pinentry
+        allow-loopback-pinentry
       '';
     };
     gnome-keyring = {
