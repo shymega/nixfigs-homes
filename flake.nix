@@ -53,6 +53,7 @@
     forEachSystem = inputs.nixpkgs.lib.genAttrs systems;
   in {
     inherit (inputs.nixfigs-pkgs) overlays packages nixpkgs-config;
+    inherit (inputs) self;
     # for `nix fmt`
     formatter = treeFmtEachSystem (pkgs: treeFmtEval.${pkgs.system}.config.build.wrapper);
     # for `nix flake check`
