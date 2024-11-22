@@ -266,7 +266,6 @@ in {
         statix
         stow
         swaks
-        texlive.combined.scheme-full
         tigervnc
         timewarrior
         tmuxp
@@ -320,6 +319,7 @@ in {
                 protonup-qt
                 steamcmd
                 step-cli
+                texlive.combined.scheme-full
                 totp
                 vlc
                 wemod-launcher
