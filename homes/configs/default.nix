@@ -326,7 +326,7 @@ in {
                 winetricks
                 wm-menu
                 zenmonitor
-               (isync.override {withCyrusSaslXoauth2 = true;})
+                (isync.override {withCyrusSaslXoauth2 = true;})
               ])
           )
       );
