@@ -143,7 +143,7 @@ in {
         builders = @/etc/nix/machines
         !include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
-      package = pkgs.lix;
+      package = pkgs.nix;
     }
     else {
       settings = {
@@ -171,7 +171,9 @@ in {
       [
         activitywatch
         aerc
+        age
         alpaca
+        alsa-utils
         android-tools
         ansible
         asciinema
@@ -241,6 +243,7 @@ in {
         pass
         pavucontrol
         pdftk
+        pizauth
         playerctl
         pmbootstrap-bumped
         poetry
@@ -248,6 +251,9 @@ in {
         powershell
         pre-commit
         public-inbox
+        pw-volume
+        pwalarmd
+        pwvucontrol
         python3Full
         python3Packages.pip
         python3Packages.pipx
@@ -265,6 +271,7 @@ in {
         statix
         stow
         swaks
+        tea
         tigervnc
         timewarrior
         tmuxp
@@ -274,6 +281,8 @@ in {
         virt-manager
         virtiofsd
         w3m
+        wayfarer
+        wayvnc
         weechatWithMyPlugins
         wezterm
         wf-recorder
@@ -281,54 +290,58 @@ in {
         wl-mirror
         xsv
         yubikey-manager-qt
-        yubioath-flutter
         zathura
         zellij
         zip
         zoxide
       ]
       ++ [inputs.agenix.packages.${system}.default]
+      ++ [(pkgs.isync.override {withCyrusSaslXoauth2 = true;})]
       ++ (
         with pkgs;
           lib.optionals isPC (
-            with pkgs.unstable.jetbrains;
-              [
-                clion
-                datagrip
-                gateway
-                goland
-                idea-ultimate
-                phpstorm
-                pycharm-professional
-                rider
-                ruby-mine
-                rust-rover
-                webstorm
-                writerside
-              ]
-              ++ (with pkgs; [
-                android-studio
-                android-studio-for-platform
-                bestool
-                buildbox
-                buildstream2
-                deckcheatz
-                mpv
-                protontricks
-                protonup-qt
-                steamcmd
-                step-cli
-                texlive.combined.scheme-full
-                totp
-                vlc
-                wemod-launcher
-                wineWowPackages.stable
-                winetricks
-                wm-menu
-                zenmonitor
-               (isync.override {withCyrusSaslXoauth2 = true;})
-              ])
+            with pkgs.unstable.jetbrains; [
+              clion
+              datagrip
+              gateway
+              goland
+              idea-ultimate
+              phpstorm
+              pycharm-professional
+              rider
+              ruby-mine
+              rust-rover
+              webstorm
+              writerside
+            ]
           )
+      )
+      ++ (
+        with pkgs;
+          lib.optionals isPC [
+            android-studio
+            android-studio-for-platform
+            bestool
+            buildbox
+            buildstream2
+            deckcheatz
+            libnotify
+            mpv
+            protontricks
+            protonup-qt
+            offlineimap
+            steamcmd
+            step-cli
+            texlive.combined.scheme-full
+            totp
+            vlc
+            wemod-launcher
+            wineWowPackages.stable
+            winetricks
+            wm-menu
+            xrlinuxdriver
+            zenmonitor
+          ]
       );
   };
 
@@ -450,7 +463,7 @@ in {
       ];
     };
     bash.enable = true;
-    obs-studio = {
+    obs-studio = lib.optionalAttrs isPC {
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
