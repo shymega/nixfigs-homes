@@ -172,6 +172,7 @@ in {
         activitywatch
         aerc
         alpaca
+        alsa-utils
         android-tools
         ansible
         asciinema
@@ -248,6 +249,9 @@ in {
         powershell
         pre-commit
         public-inbox
+        pw-volume
+        pwalarmd
+        pwvucontrol
         python3Full
         python3Packages.pip
         python3Packages.pipx
@@ -274,6 +278,7 @@ in {
         virt-manager
         virtiofsd
         w3m
+        wayfarer
         weechatWithMyPlugins
         wezterm
         wf-recorder
@@ -307,6 +312,7 @@ in {
                 writerside
               ]
               ++ (with pkgs; [
+                (isync.override {withCyrusSaslXoauth2 = true;})
                 android-studio
                 android-studio-for-platform
                 bestool
@@ -326,7 +332,6 @@ in {
                 winetricks
                 wm-menu
                 zenmonitor
-                (isync.override {withCyrusSaslXoauth2 = true;})
               ])
           )
       );
