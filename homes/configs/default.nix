@@ -450,7 +450,7 @@ in {
       ];
     };
     bash.enable = true;
-    obs-studio = {
+    obs-studio = lib.optionalAttrs isPC {
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
