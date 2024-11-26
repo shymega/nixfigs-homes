@@ -293,7 +293,7 @@ in {
         zoxide
       ]
       ++ [inputs.agenix.packages.${system}.default]
-      ++ [pkgs.isync.override {withCyrusSaslXoauth2 = true;}]
+      ++ [(pkgs.isync.override {withCyrusSaslXoauth2 = true;})]
       ++ (
         with pkgs;
           lib.optionals isPC (
