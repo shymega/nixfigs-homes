@@ -293,6 +293,7 @@ in {
         zoxide
       ]
       ++ [inputs.agenix.packages.${system}.default]
+      ++ [pkgs.isync.override {withCyrusSaslXoauth2 = true;}]
       ++ (
         with pkgs;
           lib.optionals isPC (
@@ -312,7 +313,6 @@ in {
                 writerside
               ]
               ++ (with pkgs; [
-                (isync.override {withCyrusSaslXoauth2 = true;})
                 android-studio
                 android-studio-for-platform
                 bestool
