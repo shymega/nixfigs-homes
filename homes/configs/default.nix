@@ -331,6 +331,7 @@ in {
                 wineWowPackages.stable
                 winetricks
                 wm-menu
+                xrlinuxdriver
                 zenmonitor
               ])
           )
