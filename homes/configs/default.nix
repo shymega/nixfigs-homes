@@ -286,7 +286,6 @@ in {
         wl-mirror
         xsv
         yubikey-manager-qt
-        yubioath-flutter
         zathura
         zellij
         zip
