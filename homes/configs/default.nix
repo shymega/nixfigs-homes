@@ -329,7 +329,7 @@ in {
             mpv
             protontricks
             protonup-qt
-            offlineimap-patched
+            offlineimap
             steamcmd
             step-cli
             texlive.combined.scheme-full
