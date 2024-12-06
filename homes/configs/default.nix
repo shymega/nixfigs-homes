@@ -318,6 +318,7 @@ in {
                 buildbox
                 buildstream2
                 deckcheatz
+                libnotify
                 mpv
                 protontricks
                 protonup-qt
