@@ -296,45 +296,47 @@ in {
       ++ (
         with pkgs;
           lib.optionals isPC (
-            with pkgs.unstable.jetbrains;
-              [
-                clion
-                datagrip
-                gateway
-                goland
-                idea-ultimate
-                phpstorm
-                pycharm-professional
-                rider
-                ruby-mine
-                rust-rover
-                webstorm
-                writerside
-              ]
-              ++ (with pkgs; [
-                android-studio
-                android-studio-for-platform
-                bestool
-                buildbox
-                buildstream2
-                deckcheatz
-                libnotify
-                mpv
-                protontricks
-                protonup-qt
-                steamcmd
-                step-cli
-                texlive.combined.scheme-full
-                totp
-                vlc
-                wemod-launcher
-                wineWowPackages.stable
-                winetricks
-                wm-menu
-                xrlinuxdriver
-                zenmonitor
-              ])
+            with pkgs.unstable.jetbrains; [
+              clion
+              datagrip
+              gateway
+              goland
+              idea-ultimate
+              phpstorm
+              pycharm-professional
+              rider
+              ruby-mine
+              rust-rover
+              webstorm
+              writerside
+            ]
           )
+      )
+      ++ (
+        with pkgs;
+          lib.optionals isPC [
+            android-studio
+            android-studio-for-platform
+            bestool
+            buildbox
+            buildstream2
+            deckcheatz
+            libnotify
+            mpv
+            protontricks
+            protonup-qt
+            steamcmd
+            step-cli
+            texlive.combined.scheme-full
+            totp
+            vlc
+            wemod-launcher
+            wineWowPackages.stable
+            winetricks
+            wm-menu
+            xrlinuxdriver
+            zenmonitor
+          ]
       );
   };
 
