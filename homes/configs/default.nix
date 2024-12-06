@@ -143,7 +143,7 @@ in {
         builders = @/etc/nix/machines
         !include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
-      package = pkgs.lix;
+      package = pkgs.nix;
     }
     else {
       settings = {
@@ -171,6 +171,7 @@ in {
       [
         activitywatch
         aerc
+        age
         alpaca
         alsa-utils
         android-tools
@@ -242,6 +243,7 @@ in {
         pass
         pavucontrol
         pdftk
+        pizauth
         playerctl
         pmbootstrap-bumped
         poetry
@@ -269,6 +271,7 @@ in {
         statix
         stow
         swaks
+        tea
         tigervnc
         timewarrior
         tmuxp
@@ -279,6 +282,7 @@ in {
         virtiofsd
         w3m
         wayfarer
+        wayvnc
         weechatWithMyPlugins
         wezterm
         wf-recorder
@@ -325,6 +329,7 @@ in {
             mpv
             protontricks
             protonup-qt
+            offlineimap-patched
             steamcmd
             step-cli
             texlive.combined.scheme-full
