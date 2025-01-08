@@ -202,7 +202,6 @@ in {
         firefox
         fuse
         fzf
-        gh
         glab
         gnumake
         google-chrome
@@ -504,6 +503,8 @@ in {
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
+        style = "auto";
+        inline_height = 0;
         key_path = config.age.secrets.atuin_key.path;
         sync_address = "https://api.atuin.sh";
         auto_sync = true;
@@ -522,7 +523,7 @@ in {
         };
       };
     };
-    nix-index-database.comma.enable = false;
+    nix-index-database.comma.enable = true;
     rbw.enable = true;
     neovim = {
       enable = true;
