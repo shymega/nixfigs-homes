@@ -202,7 +202,6 @@ in {
         firefox
         fuse
         fzf
-        gh
         glab
         gnumake
         google-chrome
@@ -522,7 +521,7 @@ in {
         };
       };
     };
-    nix-index-database.comma.enable = false;
+    nix-index-database.comma.enable = true;
     rbw.enable = true;
     neovim = {
       enable = true;
