@@ -202,7 +202,6 @@ in {
         firefox
         fuse
         fzf
-        gh
         glab
         gnumake
         google-chrome
