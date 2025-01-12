@@ -447,7 +447,7 @@ in {
 
   programs = {
     _1password-shell-plugins = {
-      enable = true;
+      enable = false;
       plugins = with pkgs; [
         awscli2
         cachix
