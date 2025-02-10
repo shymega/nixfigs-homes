@@ -5,7 +5,7 @@
       outputs = [
         {
           criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
+          mode = "3840x2160";
           position = "0,0";
           scale = 1.5;
           status = "enable";
@@ -19,8 +19,16 @@
       name = "home_beelink_flipgo_dual_monitors";
       outputs = [
         {
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.5;
+          status = "enable";
+          transform = "normal";
+        }
+        {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,0";
           scale = 1.5;
           status = "enable";
@@ -28,16 +36,8 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,1002";
-          scale = 1.5;
-          status = "enable";
-          transform = "normal";
-        }
-        {
-          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
-          position = "0,0";
           scale = 1.5;
           status = "enable";
           transform = "normal";
@@ -51,7 +51,7 @@
       outputs = [
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.4;
           status = "enable";
@@ -74,7 +74,7 @@
       outputs = [
         {
           criteria = "Japan Display Inc. GPD1001H 0x00000001";
-          mode = "2560x1600@60Hz";
+          mode = "2560x1600";
           position = "0,0";
           scale = 1.65;
           status = "enable";
@@ -89,7 +89,7 @@
       outputs = [
         {
           criteria = "Japan Display Inc. GPD1001H 0x00000001";
-          mode = "2560x1600@60Hz";
+          mode = "2560x1600";
           position = "2803,795";
           scale = 1.5;
           status = "enable";
@@ -97,7 +97,7 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "5363,1798";
           scale = 1.5;
           status = "enable";
@@ -105,7 +105,7 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "5363,795";
           scale = 1.5;
           status = "enable";
@@ -119,18 +119,18 @@
       name = "gpd_wm2_viture_home_office";
       outputs = [
         {
-          criteria = "Japan Display Inc. GPD1001H 0x00000001";
-          mode = null;
+          criteria = "CVT VITURE 0x88888800";
+          mode = "1920x1080";
           position = "0,0";
-          scale = 1.0;
+          scale = 1.4;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          criteria = "Japan Display Inc. GPD1001H 0x00000001";
+          mode = null;
           position = "0,0";
-          scale = 1.4;
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -150,18 +150,18 @@
       name = "gpd_wm2_viture_default";
       outputs = [
         {
-          criteria = "Japan Display Inc. GPD1001H 0x00000001";
-          mode = null;
+          criteria = "CVT VITURE 0x88888800";
+          mode = "1920x1080";
           position = "0,0";
-          scale = 1.0;
+          scale = 1.4;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          criteria = "Japan Display Inc. GPD1001H 0x00000001";
+          mode = null;
           position = "0,0";
-          scale = 1.4;
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -181,8 +181,16 @@
           transform = "normal";
         }
         {
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.5;
+          status = "enable";
+          transform = "normal";
+        }
+        {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,0";
           scale = 1.5;
           status = "enable";
@@ -190,16 +198,8 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,1002";
-          scale = 1.5;
-          status = "enable";
-          transform = "normal";
-        }
-        {
-          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
-          position = "0,0";
           scale = 1.5;
           status = "enable";
           transform = "normal";
@@ -221,7 +221,7 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,0";
           scale = 1.5;
           status = "enable";
@@ -229,7 +229,7 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,1002";
           scale = 1.5;
           status = "enable";
@@ -252,7 +252,7 @@
         }
         {
           criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
+          mode = "3840x2160";
           position = "0,0";
           scale = 1.5;
           status = "enable";
@@ -267,7 +267,7 @@
       outputs = [
         {
           criteria = "Unknown 0x226D 0x00000000";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.0;
           status = "enable";
@@ -281,18 +281,18 @@
       name = "think_x270_desk_home_office";
       outputs = [
         {
-          criteria = "Unknown 0x226D 0x00000000";
-          mode = null;
+          criteria = "LG Electronics LG Ultra HD 0x0000BFB4";
+          mode = "3840x2160";
           position = "0,0";
-          scale = 1.0;
+          scale = 1.5;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "LG Electronics LG Ultra HD 0x0000BFB4";
-          mode = "3840x2160@60Hz";
+          criteria = "Unknown 0x226D 0x00000000";
+          mode = null;
           position = "0,0";
-          scale = 1.5;
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -305,7 +305,7 @@
       outputs = [
         {
           criteria = "California Institute of Technology 0x1404 Unknown";
-          mode = "1920x1200@60Hz";
+          mode = "1920x1200";
           position = "0,0";
           scale = 1.0;
           status = "enable";
@@ -319,8 +319,24 @@
       name = "home_office_ct_laptop_flipgo_dual_monitors";
       outputs = [
         {
+          criteria = "California Institute of Technology 0x1404 Unknown";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.5;
+          status = "enable";
+          transform = "normal";
+        }
+        {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,0";
           scale = 1.5;
           status = "enable";
@@ -328,25 +344,9 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "4064,0";
           scale = 1.5;
-          status = "enable";
-          transform = "normal";
-        }
-        {
-          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
-          position = "0,0";
-          scale = 1.5;
-          status = "enable";
-          transform = "normal";
-        }
-        {
-          criteria = "California Institute of Technology 0x1404 Unknown";
-          mode = null;
-          position = "0,0";
-          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -359,14 +359,14 @@
       outputs = [
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.4;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          criteria = "California Institute of Technology 0x1404 Unknown";
           mode = null;
           position = "0,0";
           scale = 1.0;
@@ -374,7 +374,7 @@
           transform = "normal";
         }
         {
-          criteria = "California Institute of Technology 0x1404 Unknown";
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
           mode = null;
           position = "0,0";
           scale = 1.0;
@@ -390,7 +390,7 @@
       outputs = [
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.4;
           status = "enable";
@@ -412,8 +412,16 @@
       name = "home_ct_laptop_portable_flipgo_dual_monitors";
       outputs = [
         {
+          criteria = "California Institute of Technology 0x1404 Unknown";
+          mode = "1920x1200";
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+        {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "2560,0";
           scale = 1.5;
           status = "enable";
@@ -421,17 +429,9 @@
         }
         {
           criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
+          mode = "2256x1504";
           position = "4064,0";
           scale = 1.5;
-          status = "enable";
-          transform = "normal";
-        }
-        {
-          criteria = "California Institute of Technology 0x1404 Unknown";
-          mode = "1920x1200@60Hz";
-          position = "0,0";
-          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -444,7 +444,7 @@
       outputs = [
         {
           criteria = "Samsung Display Corp. 0x4166 Unknown";
-          mode = "2880x1800@60Hz";
+          mode = "2880x1800";
           position = "0,0";
           scale = 1.5;
           status = "enable";
@@ -459,7 +459,7 @@
       outputs = [
         {
           criteria = "Stargate Technology DP 0x01010101";
-          mode = "2880x1800@60Hz";
+          mode = "2880x1800";
           position = "0,0";
           scale = 1.5;
           status = "enable";
@@ -467,7 +467,7 @@
         }
         {
           criteria = "Samsung Display Corp. 0x4166 Unknown";
-          mode = "2880x1800@60Hz";
+          mode = "2880x1800";
           position = "0,1200";
           scale = 1.5;
           status = "enable";
@@ -478,21 +478,21 @@
   }
   {
     profile = {
-      name = "duo_home_office_flipgo_dual_default";
+      name = "duo_home_office_flipgo_single_default";
       outputs = [
         {
-          criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
-          mode = "2256x1504@60Hz";
-          position = "4064,0";
-          scale = 1.5;
+          criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
+          mode = "2256x1504";
+          position = "2560,0";
+          scale = 1.75;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
-          mode = "2256x1504@60Hz";
-          position = "2560,0";
-          scale = 1.5;
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.75;
           status = "enable";
           transform = "normal";
         }
@@ -505,10 +505,111 @@
           transform = "normal";
         }
         {
+          criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
+          mode = "2256x1504";
+          position = "4064,0";
+          scale = 1.75;
+          status = "enable";
+          transform = "normal";
+        }
+      ];
+    };
+  }
+  {
+    profile = {
+      name = "duo_home_office_flipgo_dual_default";
+      outputs = [
+        {
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+        {
           criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
-          mode = "3840x2160@60Hz";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.75;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "Stargate Technology DP 0x01010101";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "Invalid Vendor Codename - RTK FlipGo-A1 demoset-1";
+          mode = "2256x1504";
+          position = "2560,0";
+          scale = 1.75;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "Invalid Vendor Codename - RTK FlipGo-A2 demoset-1";
+          mode = "2256x1504";
+          position = "4064,0";
+          scale = 1.75;
+          status = "enable";
+          transform = "normal";
+        }
+      ];
+    };
+  }
+  {
+    profile = {
+      name = "duo_home_office_lg_single_default";
+      outputs = [
+        {
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
           position = "0,0";
           scale = 1.5;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+      ];
+    };
+  }
+  {
+    profile = {
+      name = "duo_home_office_lg_dual_default_lg";
+      outputs = [
+        {
+          criteria = "Stargate Technology DP 0x01010101";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          mode = "3840x2160";
+          position = "0,0";
+          scale = 1.5;
+          status = "enable";
+          transform = "normal";
+        }
+        {
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -521,7 +622,7 @@
       outputs = [
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.25;
           status = "enable";
@@ -544,14 +645,14 @@
       outputs = [
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.25;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
           mode = null;
           position = "0,0";
           scale = 1.0;
@@ -559,7 +660,7 @@
           transform = "normal";
         }
         {
-          criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
           mode = null;
           position = "0,0";
           scale = 1.0;
@@ -574,18 +675,18 @@
       name = "duo_dual_builtin_portable_viture_default";
       outputs = [
         {
-          criteria = "Stargate Technology DP 0x01010101";
-          mode = null;
+          criteria = "CVT VITURE 0x88888800";
+          mode = "1920x1080";
           position = "0,0";
-          scale = 1.0;
+          scale = 1.25;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          criteria = "Stargate Technology DP 0x01010101";
+          mode = null;
           position = "0,0";
-          scale = 1.25;
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
@@ -605,23 +706,15 @@
       name = "duo_dual_builtin_home_office_viture_default";
       outputs = [
         {
-          criteria = "Stargate Technology DP 0x01010101";
-          mode = null;
-          position = "0,0";
-          scale = 1.0;
-          status = "enable";
-          transform = "normal";
-        }
-        {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.25;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          criteria = "Stargate Technology DP 0x01010101";
           mode = null;
           position = "0,0";
           scale = 1.0;
@@ -636,6 +729,14 @@
           status = "enable";
           transform = "normal";
         }
+        {
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = null;
+          position = "0,0";
+          scale = 1.0;
+          status = "enable";
+          transform = "normal";
+        }
       ];
     };
   }
@@ -644,17 +745,17 @@
       name = "mirror_codethink_hdmi";
       outputs = [
         {
-          criteria = "HDMI-A-1";
-          mode = "1920x1080@60Hz";
-          position = "1920,0";
+          criteria = "California Institute of Technology 0x1404 Unknown";
+          mode = "1920x1200";
+          position = "0,0";
           scale = 1.0;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "California Institute of Technology 0x1404 Unknown";
-          mode = "1920x1200@60Hz";
-          position = "0,0";
+          criteria = "HDMI-A-1";
+          mode = "1920x1080";
+          position = "1920,0";
           scale = 1.0;
           status = "enable";
           transform = "normal";
@@ -667,18 +768,18 @@
       name = "mirror_gpd_wm2_hdmi";
       outputs = [
         {
-          criteria = "Samsung Display Corp. 0x4166 Unknown";
-          mode = "2880x1800@60Hz";
-          position = "0,0";
-          scale = 1.5;
+          criteria = "HDMI-A-1";
+          mode = "1920x1080";
+          position = "1920,0";
+          scale = 1.0;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "HDMI-A-1";
-          mode = "1920x1080@60Hz";
-          position = "1920,0";
-          scale = 1.0;
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = "2880x1800";
+          position = "0,0";
+          scale = 1.5;
           status = "enable";
           transform = "normal";
         }
@@ -690,17 +791,17 @@
       name = "mirror_duo_hdmi";
       outputs = [
         {
-          criteria = "Samsung Display Corp. 0x4166 Unknown";
-          mode = null;
-          position = "0,0";
+          criteria = "HDMI-A-1";
+          mode = "1920x1080";
+          position = "1920,0";
           scale = 1.0;
           status = "enable";
           transform = "normal";
         }
         {
-          criteria = "HDMI-A-1";
-          mode = "1920x1080@60Hz";
-          position = "1920,0";
+          criteria = "Samsung Display Corp. 0x4166 Unknown";
+          mode = null;
+          position = "0,0";
           scale = 1.0;
           status = "enable";
           transform = "normal";
@@ -714,7 +815,7 @@
       outputs = [
         {
           criteria = "Unknown 0x226D 0x00000000";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "0,0";
           scale = 1.0;
           status = "enable";
@@ -722,7 +823,7 @@
         }
         {
           criteria = "HDMI-A-1";
-          mode = "1920x1080@60Hz";
+          mode = "1920x1080";
           position = "1920,0";
           scale = 1.0;
           status = "enable";

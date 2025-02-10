@@ -176,7 +176,6 @@ in {
         android-tools
         asciinema
         aws-sam-cli
-        azure-cli
         b4
         bat
         bc
@@ -216,8 +215,6 @@ in {
         itd
         jdk17
         jq
-        khal
-        khard
         leafnode
         llm-ls
         m4
@@ -292,7 +289,7 @@ in {
       ++ (
         with pkgs;
           lib.optionals isPC (
-            with pkgs.unstable.jetbrains; [
+            with pkgs.jetbrains; [
               clion
               datagrip
               gateway
@@ -340,11 +337,8 @@ in {
           ]
       )
       ++ (with pkgs.unstable.vimPlugins; [
-          astrocore
-          astrolsp
-          astroui
-          nvim-lspconfig
-          gcc
+        astrocore
+        gcc
       ]);
   };
 
@@ -381,7 +375,7 @@ in {
       '';
     };
     kanshi = {
-      enable = false;
+      enable = true;
       systemdTarget = "wlroots-session.target";
       settings = import ./aux/kanshi-config.nix;
     };
@@ -693,9 +687,11 @@ in {
       polkit-gnome-authentication-agent-1 = {
         Unit = {
           Description = "polkit-gnome-authentication-agent-1";
-          After = ["graphical-session.target"];
+          After = ["default.target"];
+          BindsTo = ["default.target"];
+          PartOf = ["default.target"];
         };
-        Install.WantedBy = ["graphical-session.target"];
+        Install.WantedBy = ["default.target"];
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
