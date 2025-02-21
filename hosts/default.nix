@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
-{ inputs, ... }:
+{ self, inputs, ... }:
 let
   inherit (inputs.nixpkgs.lib.strings) hasSuffix;
   mkHost =
@@ -26,6 +26,7 @@ let
           hostname
           type
           username
+          self
           ;
       }
     else
