@@ -25,12 +25,12 @@ let
       libx = inputs.nixfigs-helpers.libx.${hostPlatform};
     in
     homeManagerConfiguration {
-      pkgs = libx.genPkgs hostPlatform;
+      pkgs = genPkgs hostPlatform;
       modules = [ ./configs ];
       extraSpecialArgs = {
         system = hostPlatform;
         hostType = type;
-        pkgs = libx.genPkgs hostPlatform;
+        pkgs = genPkgs hostPlatform;
         inherit
           inputs
           username
