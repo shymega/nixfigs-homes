@@ -566,7 +566,7 @@ in {
     };
     home-manager.enable = true;
     doom-emacs = {
-      enable = true;
+      enable = false;
       emacs = pkgs.emacs29-pgtk;
       provideEmacs = true;
       experimentalFetchTree = true;
