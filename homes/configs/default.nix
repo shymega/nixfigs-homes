@@ -619,7 +619,7 @@ in {
       };
 
       Socket = {
-        ListenStream = "${atuinDataDir}/atuin.sock";
+        ListenStream = "%t/atuin.sock";
         SocketMode = "0600";
         RemoveOnStop = true;
       };
