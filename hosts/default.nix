@@ -1,24 +1,25 @@
 # SPDX-FileCopyrightText: 2024 Dom Rodriguez <shymega@shymega.org.uk
 #
 # SPDX-License-Identifier: GPL-3.0-only
-
-{ self, inputs, ... }:
-let
+{
+  self,
+  inputs,
+  ...
+}: let
   inherit (inputs.nixpkgs.lib.strings) hasSuffix;
-  mkHost =
-    {
-      type ? "nixos",
-      hostname ? null,
-      hostPlatform ? "x86_64-linux",
-      username ? "dzrodriguez",
-      hostRoles ? [ "workstation" ],
-      pubkey ? null,
-      deployable ? false,
-    }:
-    if type == "home-manager" then
+  mkHost = {
+    type ? "nixos",
+    hostname ? null,
+    hostPlatform ? "x86_64-linux",
+    username ? "dzrodriguez",
+    hostRoles ? ["workstation"],
+    pubkey ? null,
+    deployable ? false,
+  }:
+    if type == "home-manager"
+    then
       assert ((hasSuffix "linux" hostPlatform) || (hasSuffix "darwin" hostPlatform) && hostname == null);
-      assert pubkey == null;
-      {
+      assert pubkey == null; {
         inherit
           deployable
           hostPlatform
@@ -29,10 +30,8 @@ let
           self
           ;
       }
-    else
-      throw "unknown host type '${type}'";
-in
-{
+    else throw "unknown host type '${type}'";
+in {
   "dzrodriguez@x86_64-linux" = mkHost {
     type = "home-manager";
     username = "dzrodriguez";
