@@ -8,17 +8,71 @@
   config,
   username,
   system,
-  osConfig ? null,
   self,
   lib,
   libx,
   ...
-}:
+}@args:
 let
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
+  isModule = builtins.hasAttr "osConfig" args;
   getHomeDirectory = username: homePrefix + "/${username}";
   homeDirectory = getHomeDirectory username;
+  flatpakPackages = [
+    "app.ytmdesktop.ytmdesktop"
+    "chat.delta.desktop"
+    "com.atlauncher.ATLauncher"
+    "com.calibre_ebook.calibre"
+    "com.discordapp.Discord"
+    "com.freerdp.FreeRDP"
+    "com.getpostman.Postman"
+    "com.github.IsmaelMartinez.teams_for_linux"
+    "com.github.Matoking.protontricks"
+    "com.github.tchx84.Flatseal"
+    "com.icanblink.blink"
+    "com.jgraph.drawio.desktop"
+    "com.meetfranz.Franz"
+    "com.moonlight_stream.Moonlight"
+    "com.prusa3d.PrusaSlicer"
+    "com.slack.Slack"
+    "com.usebottles.bottles"
+    "com.valvesoftware.Steam"
+    "com.valvesoftware.SteamLink"
+    "com.wps.Office"
+    "dev.zed.Zed"
+    "im.fluffychat.Fluffychat"
+    "im.riot.Riot"
+    "io.dbeaver.DBeaverCommunity"
+    "net.ankiweb.Anki"
+    "net.kuribo64.melonDS"
+    "net.lutris.Lutris"
+    "net.minetest.Minetest"
+    "net.redeclip.redclip"
+    "org.DolphinEmu.dolphin-emu"
+    "org.blender.Blender"
+    "org.citra_emu.citra"
+    "org.dust3d.dust3d"
+    "org.filezillaproject.Filezilla"
+    "org.freecadweb.FreeCAD"
+    "org.fritzing.Fritzing"
+    "org.gnome.Boxes"
+    "org.gnome.Calls"
+    "org.gnome.Evolution"
+    "org.gnome.NetworkDisplays"
+    "org.jitsi.jitsi-meet"
+    "org.kicad.KiCad"
+    "org.libreoffice.LibreOffice"
+    "org.mozilla.Thunderbird"
+    "org.onlyoffice.desktopeditors"
+    "org.openscad.OpenSCAD"
+    "org.prismlauncher.PrismLauncher"
+    "org.remmina.Remmina"
+    "org.telegram.desktop"
+    "org.yuzu_emu.yuzu"
+    "org.zdoom.GZDoom"
+    "us.zoom.Zoom"
+  ];
 in
 {
   imports = [
@@ -29,6 +83,7 @@ in
     inputs.nix-index-database.hmModules.nix-index
     inputs._1password-shell-plugins.hmModules.default
     inputs.shypkgs-public.hmModules.${system}.dwl
+    inputs.nix-flatpak.homeManagerModules.nix-flatpak
 
     inputs.nixfigs-secrets.user
     (
@@ -37,16 +92,15 @@ in
         nixpkgs.config = self.nixpkgs-config;
       }
     )
-  ];
+  ] ++ (if !isModule then [ inputs.chaotic.homeManagerModules.default ] else [ ]);
 
   nix =
-    if osConfig == null then
+    if !isModule then
       {
         settings = rec {
           substituters = [
             "https://cache.dataaturservice.se/spectrum/?priority=50"
             "https://cache.nixos.org/?priority=10"
-            "https://deckcheatz-nightlies.cachix.org/?priority=10"
             "https://deploy-rs.cachix.org/?priority=10"
             "https://devenv.cachix.org/?priority=5"
             "https://nix-community.cachix.org/?priority=5"
@@ -58,7 +112,6 @@ in
           ];
           trusted-public-keys = [
             "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-            "deckcheatz-nightlies.cachix.org-1:ygkraChLCkqqirdkGjQ68Y3LgVrdFB2bErQfj5TbmxU="
             "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
             "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -74,6 +127,15 @@ in
           http-connections = 128;
           max-substitution-jobs = 128;
         };
+        registry = rec {
+          nixpkgs.flake = inputs.nixpkgs;
+          n.flake = nixpkgs.flake;
+          home-manager.flake = inputs.home-manager;
+          unstable.flake = inputs.nixpkgs-unstable;
+          shynixpkgs.flake = inputs.nixpkgs-shymega;
+          shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
+        };
+        package = pkgs.nixVersions.latest;
         extraOptions = ''
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
@@ -82,7 +144,7 @@ in
     else
       {
         settings = {
-          inherit (osConfig.nix.settings)
+          inherit (args.osConfig.nix.settings)
             substituters
             trusted-public-keys
             builders-use-substitutes
@@ -90,6 +152,7 @@ in
             max-substitution-jobs
             ;
         };
+        inherit (args.osConfig.nix) registry;
         extraOptions = ''
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
@@ -104,10 +167,14 @@ in
       with pkgs.unstable;
       [
         (isync.override { withCyrusSaslXoauth2 = true; })
+        activitywatch
+        aerc
         alpaca
-        android-studio-for-platform
         android-tools
         ansible
+        asciinema
+        aws-sam-cli
+        azure-cli
         b4
         bat
         bc
@@ -124,6 +191,7 @@ in
         difftastic
         distrobox
         dogdns
+        dosbox
         elf2uf2-rs
         encfs
         exiftool
@@ -132,7 +200,11 @@ in
         firefox
         fuse
         fzf
+        gh
+        glab
         gnumake
+        google-chrome
+        google-cloud-sdk
         gthumb
         httpie
         hub
@@ -145,16 +217,20 @@ in
         jq
         khal
         khard
+        leafnode
         llm-ls
         m4
         maven
+        meli
         mkcert
         modem-manager-gui
         moneydance
         mpc-cli
         mupdf
         ncmpcpp
+        neomutt
         networkmanagerapplet
+        nh
         nixpkgs-fmt
         nodejs
         notmuch
@@ -164,8 +240,10 @@ in
         pavucontrol
         pdftk
         playerctl
+        pmbootstrap-bumped
         poetry
         poppler_utils
+        powershell
         pre-commit
         public-inbox
         python3Full
@@ -173,6 +251,7 @@ in
         python3Packages.pipx
         python3Packages.virtualenv
         q
+        qemu_full
         ranger
         rclone
         reuse
@@ -182,9 +261,10 @@ in
         speedtest-go
         starship
         statix
-        step-cli
         stow
+        swaks
         texlive.combined.scheme-full
+        tigervnc
         timewarrior
         tmuxp
         unrar
@@ -192,7 +272,6 @@ in
         vdirsyncer
         virt-manager
         virtiofsd
-        vlc
         w3m
         weechatWithMyPlugins
         wezterm
@@ -200,42 +279,14 @@ in
         wget
         wl-mirror
         xsv
+        yubikey-manager-qt
+        yubioath-flutter
         zathura
         zellij
-        zenmonitor
         zip
         zoxide
       ]
       ++ [ inputs.agenix.packages.${system}.default ]
-      ++ (with pkgs; [
-        android-studio
-        aws-sam-cli
-        azure-cli
-        bestool
-        buildbox
-        buildstream2
-        deckcheatz
-        dosbox
-        gitkraken
-        google-chrome
-        google-cloud-sdk
-        leafnode
-        lutris
-        mpv
-        neomutt
-        powershell
-        protontricks
-        protonup-qt
-        qemu_full
-        steamcmd
-        totp
-        wemod-launcher
-        wineWowPackages.stable
-        winetricks
-        wm-menu
-        yubikey-manager-qt
-        yubioath-flutter
-      ])
       ++ (
         with pkgs;
         lib.optionals isPC (
@@ -252,7 +303,28 @@ in
             ruby-mine
             rust-rover
             webstorm
+            writerside
           ]
+          ++ (with pkgs; [
+            android-studio
+            android-studio-for-platform
+            bestool
+            buildbox
+            buildstream2
+            deckcheatz
+            mpv
+            protontricks
+            protonup-qt
+            steamcmd
+            step-cli
+            totp
+            vlc
+            wemod-launcher
+            wineWowPackages.stable
+            winetricks
+            wm-menu
+            zenmonitor
+          ])
         )
       );
   };
@@ -283,6 +355,7 @@ in
       maxCacheTtl = 34560000;
       extraConfig = ''
         auto-expand-secmem
+        allow-preset-passphrase
       '';
     };
     gnome-keyring = {
@@ -333,9 +406,32 @@ in
     "$HOME/.local/share/flatpak/exports/share"
   ];
 
+  services.flatpak = {
+    enable = true;
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      }
+      {
+        name = "flathub-beta";
+        location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
+      }
+    ];
+    packages = map (appId: {
+      inherit appId;
+      origin = "flathub";
+    }) flatpakPackages;
+    uninstallUnmanaged = true;
+    update.auto = {
+      enable = true;
+      onCalendar = "daily"; # Default value
+    };
+  };
+
   programs = {
     _1password-shell-plugins = {
-      enable = true;
+      enable = false;
       plugins = with pkgs; [
         awscli2
         cachix
@@ -385,34 +481,30 @@ in
         }
       ];
     };
-    atuin =
-      let
-        atuin-patched = pkgs.unstable.atuin;
-      in
-      {
-        enable = true;
-        package = atuin-patched;
-        enableBashIntegration = true;
-        enableFishIntegration = true;
-        settings = {
-          key_path = config.age.secrets.atuin_key.path;
-          sync_address = "https://api.atuin.sh";
-          auto_sync = true;
-          dialect = "uk";
-          secrets_filter = true;
-          enter_accept = false;
-          workspaces = true;
+    atuin = {
+      enable = true;
+      package = pkgs.unstable.atuin;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      settings = {
+        key_path = config.age.secrets.atuin_key.path;
+        sync_address = "https://api.atuin.sh";
+        auto_sync = true;
+        dialect = "uk";
+        secrets_filter = true;
+        enter_accept = false;
+        workspaces = true;
+        sync_frequency = 900;
+        sync = {
+          records = true;
+        };
+        daemon = {
+          enabled = true;
+          systemd_socket = true;
           sync_frequency = 900;
-          sync = {
-            records = true;
-          };
-          daemon = {
-            enabled = true;
-            systemd_socket = true;
-            sync_frequency = 900;
-          };
         };
       };
+    };
     nix-index-database.comma.enable = true;
     nix-index.enable = true;
     rbw.enable = true;
@@ -450,7 +542,7 @@ in
     };
     vscode = {
       enable = true;
-      package = pkgs.vscode.fhs;
+      package = pkgs.unstable.vscode.fhs;
     };
     direnv = {
       enable = true;
@@ -554,7 +646,7 @@ in
             Requires = [ "atuin-daemon.socket" ];
           };
           Service = {
-            ExecStart = "${lib.getExe pkgs.unstable.atuin} daemon";
+            ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
             Environment = [ "ATUIN_LOG=info" ];
             Restart = "on-failure";
             RestartSteps = 5;
