@@ -135,7 +135,6 @@ in
           shynixpkgs.flake = inputs.nixpkgs-shymega;
           shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
         };
-        package = pkgs.nixVersions.latest;
         extraOptions = ''
           builders = @/etc/nix/machines
           !include ${config.age.secrets.nix_conf_access_tokens.path}
