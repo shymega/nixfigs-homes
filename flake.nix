@@ -10,7 +10,6 @@
     extra-trusted-substituters = [
       "https://cache.dataaturservice.se/spectrum/"
       "https://cache.nixos.org/"
-      "https://deckcheatz-nightlies.cachix.org"
       "https://deploy-rs.cachix.org/"
       "https://devenv.cachix.org"
       "https://nix-community.cachix.org"
@@ -21,7 +20,6 @@
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "deckcheatz-nightlies.cachix.org-1:ygkraChLCkqqirdkGjQ68Y3LgVrdFB2bErQfj5TbmxU="
       "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -83,7 +81,7 @@
         import inputs.nixfigs-helpers.helpers.devShells { inherit pkgs self system; }
       );
       hosts = import ./hosts { inherit inputs self; };
-      homeConfigurations = import ./homes { inherit inputs; };
+      homeConfigurations = import ./homes { inherit inputs self; };
       homeModules = {
         default = import ./homes/configs;
       };
@@ -92,7 +90,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
-    nixpkgs-shymega.url = "github:shymega/nixpkgs/shymega/staging";
+    nixpkgs-shymega.url = "github:shymega/nixpkgs?ref=shymega/staging";
     nixfigs-helpers.url = "github:shymega/nixfigs-helpers";
     nixfigs-secrets.url = "github:shymega/nixfigs-secrets";
     nixfigs-common.url = "github:shymega/nixfigs-common";
@@ -115,8 +113,43 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    stylix = {
+      url = "github:danth/stylix/release-24.05";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        flake-compat.follows = "flake-compat";
+      };
+    };
+    srvos = {
+      url = "github:nix-community/srvos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    base16-schemes.url = "github:SenchoPens/base16.nix";
+    nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
+    nixfigs-doom-emacs = {
+      url = "github:shymega/nixfigs-doom-emacs";
+      flake = false;
+    };
+    _1password-shell-plugins.url = "github:1Password/shell-plugins";
     flake-utils.url = "github:numtide/flake-utils";
     shypkgs-private.url = "github:shymega/shypkgs-private";
     shypkgs-public.url = "github:shymega/shypkgs-public";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
   };
 }
