@@ -202,7 +202,6 @@ in {
         firefox
         fuse
         fzf
-        gh
         glab
         gnumake
         google-chrome
@@ -282,7 +281,6 @@ in {
         wf-recorder
         wget
         wl-mirror
-        xsv
         yubikey-manager-qt
         zathura
         zellij
@@ -372,6 +370,11 @@ in {
         allow-emacs-pinentry
         allow-loopback-pinentry
       '';
+    };
+    kanshi = {
+      enable = true;
+      systemdTarget = "wlroots-session.target";
+      settings = import ./aux/kanshi-config.nix;
     };
     gnome-keyring = {
       enable = true;
@@ -504,6 +507,8 @@ in {
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
+        style = "auto";
+        inline_height = 0;
         key_path = config.age.secrets.atuin_key.path;
         sync_address = "https://api.atuin.sh";
         auto_sync = true;
@@ -522,7 +527,7 @@ in {
         };
       };
     };
-    nix-index-database.comma.enable = false;
+    nix-index-database.comma.enable = true;
     rbw.enable = true;
     neovim = {
       enable = true;
@@ -566,7 +571,7 @@ in {
     };
     home-manager.enable = true;
     doom-emacs = {
-      enable = true;
+      enable = false;
       emacs = pkgs.emacs29-pgtk;
       provideEmacs = true;
       experimentalFetchTree = true;
@@ -575,6 +580,7 @@ in {
     };
     taskwarrior = {
       enable = true;
+      package = pkgs.taskwarrior2;
       config = {
         report = {
           minimal.filter = "status:pending";
@@ -708,9 +714,9 @@ in {
           };
         Service = {
           Type = "oneshot";
-          ExecStartPre = "${getExe' pkgs.taskwarrior "task"}";
-          ExecStart = "${getExe' pkgs.taskwarrior "task"} sync";
-          ExecStartPost = "${getExe' pkgs.taskwarrior "task"} sync";
+          ExecStartPre = "${getExe' pkgs.taskwarrior2 "task"}";
+          ExecStart = "${getExe' pkgs.taskwarrior2 "task"} sync";
+          ExecStartPost = "${getExe' pkgs.taskwarrior2 "task"} sync";
         };
       };
     };
