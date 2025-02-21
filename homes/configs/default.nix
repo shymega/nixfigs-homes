@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 Dom Rodriguez <shymega@shymega.org.uk
 #
 # SPDX-License-Identifier: GPL-3.0-only
-
 {
   inputs,
   pkgs,
@@ -12,8 +11,7 @@
   lib,
   libx,
   ...
-}@args:
-let
+} @ args: let
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
   isModule = builtins.hasAttr "osConfig" args;
@@ -73,99 +71,105 @@ let
     "org.zdoom.GZDoom"
     "us.zoom.Zoom"
   ];
-in
-{
-  imports = [
-    ./network-targets.nix
-    (import ./programs/rofi.nix { inherit lib pkgs; })
-    inputs.agenix.homeManagerModules.default
-    inputs.nix-doom-emacs-unstraightened.hmModule
-    inputs.nix-index-database.hmModules.nix-index
-    inputs._1password-shell-plugins.hmModules.default
-    inputs.shypkgs-public.hmModules.${system}.dwl
-    inputs.nix-flatpak.homeManagerModules.nix-flatpak
-
-    inputs.nixfigs-secrets.user
-    (
-      { config, ... }:
-      {
-        nixpkgs.config = self.nixpkgs-config;
-      }
-    )
-  ] ++ (if !isModule then [ inputs.chaotic.homeManagerModules.default ] else [ ]);
+in {
+  imports =
+    [
+      ./network-targets.nix
+      (import ./programs/rofi.nix {inherit lib pkgs;})
+      inputs.agenix.homeManagerModules.default
+      inputs.nix-doom-emacs-unstraightened.hmModule
+      inputs.nix-index-database.hmModules.nix-index
+      inputs._1password-shell-plugins.hmModules.default
+      inputs.shypkgs-public.hmModules.${system}.dwl
+      inputs.nix-flatpak.homeManagerModules.nix-flatpak
+      inputs.nixfigs-secrets.user
+      inputs.lix-module.nixosModules.default
+    ]
+    ++ (
+      if !isModule
+      then [
+        inputs.chaotic.homeManagerModules.default
+        (
+          {config, ...}: {
+            nixpkgs.config = self.nixpkgs-config;
+          }
+        )
+      ]
+      else []
+    );
 
   nix =
-    if !isModule then
-      {
-        settings = rec {
-          substituters = [
-            "https://cache.dataaturservice.se/spectrum/?priority=50"
-            "https://cache.nixos.org/?priority=10"
-            "https://deploy-rs.cachix.org/?priority=10"
-            "https://devenv.cachix.org/?priority=5"
-            "https://nix-community.cachix.org/?priority=5"
-            "https://nix-gaming.cachix.org/?priority=5"
-            "https://nix-on-droid.cachix.org/?priority=5"
-            "https://numtide.cachix.org/?priority=5"
-            "https://pre-commit-hooks.cachix.org/?priority=5"
-            "ssh://eu.nixbuild.net?priority=50"
-          ];
-          trusted-public-keys = [
-            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-            "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
-            "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-            "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
-            "nixbuild.net/VNUM6K-1:ha1G8guB68/E1npRiatdXfLZfoFBddJ5b2fPt3R9JqU="
-            "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-            "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
-            "spectrum-os.org-2:foQk3r7t2VpRx92CaXb5ROyy/NBdRJQG2uX2XJMYZfU="
-          ];
-          binary-caches = substituters;
-          builders-use-substitutes = true;
-          http-connections = 128;
-          max-substitution-jobs = 128;
-        };
-        registry = rec {
-          nixpkgs.flake = inputs.nixpkgs;
-          n.flake = nixpkgs.flake;
-          home-manager.flake = inputs.home-manager;
-          unstable.flake = inputs.nixpkgs-unstable;
-          shynixpkgs.flake = inputs.nixpkgs-shymega;
-          shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
-        };
-        extraOptions = ''
-          builders = @/etc/nix/machines
-          !include ${config.age.secrets.nix_conf_access_tokens.path}
-        '';
-      }
-    else
-      {
-        settings = {
-          inherit (args.osConfig.nix.settings)
-            substituters
-            trusted-public-keys
-            builders-use-substitutes
-            http-connections
-            max-substitution-jobs
-            ;
-        };
-        inherit (args.osConfig.nix) registry;
-        extraOptions = ''
-          builders = @/etc/nix/machines
-          !include ${config.age.secrets.nix_conf_access_tokens.path}
-        '';
+    if !isModule
+    then {
+      settings = rec {
+        substituters = [
+          "https://cache.dataaturservice.se/spectrum/?priority=50"
+          "https://cache.nixos.org/?priority=10"
+          "https://deploy-rs.cachix.org/?priority=10"
+          "https://devenv.cachix.org/?priority=5"
+          "https://nix-community.cachix.org/?priority=5"
+          "https://nix-gaming.cachix.org/?priority=5"
+          "https://nix-on-droid.cachix.org/?priority=5"
+          "https://numtide.cachix.org/?priority=5"
+          "https://pre-commit-hooks.cachix.org/?priority=5"
+          "ssh://eu.nixbuild.net?priority=50"
+        ];
+        trusted-public-keys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
+          "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+          "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
+          "nixbuild.net/VNUM6K-1:ha1G8guB68/E1npRiatdXfLZfoFBddJ5b2fPt3R9JqU="
+          "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+          "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
+          "spectrum-os.org-2:foQk3r7t2VpRx92CaXb5ROyy/NBdRJQG2uX2XJMYZfU="
+        ];
+        binary-caches = substituters;
+        builders-use-substitutes = true;
+        http-connections = 128;
+        max-substitution-jobs = 128;
       };
+      registry = rec {
+        nixpkgs.flake = inputs.nixpkgs;
+        n.flake = nixpkgs.flake;
+        home-manager.flake = inputs.home-manager;
+        unstable.flake = inputs.nixpkgs-unstable;
+        shynixpkgs.flake = inputs.nixpkgs-shymega;
+        shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
+      };
+      extraOptions = ''
+        builders = @/etc/nix/machines
+        !include ${config.age.secrets.nix_conf_access_tokens.path}
+      '';
+      package = pkgs.lix;
+    }
+    else {
+      settings = {
+        inherit
+          (args.osConfig.nix.settings)
+          substituters
+          trusted-public-keys
+          builders-use-substitutes
+          http-connections
+          max-substitution-jobs
+          ;
+      };
+      inherit (args.osConfig.nix) registry;
+      extraOptions = ''
+        builders = @/etc/nix/machines
+        !include ${config.age.secrets.nix_conf_access_tokens.path}
+      '';
+    };
 
   home = {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
     stateVersion = "24.05";
-    packages =
-      with pkgs.unstable;
+    packages = with pkgs.unstable;
       [
-        (isync.override { withCyrusSaslXoauth2 = true; })
+        (isync.override {withCyrusSaslXoauth2 = true;})
         activitywatch
         aerc
         alpaca
@@ -262,7 +266,6 @@ in
         statix
         stow
         swaks
-        texlive.combined.scheme-full
         tigervnc
         timewarrior
         tmuxp
@@ -285,46 +288,47 @@ in
         zip
         zoxide
       ]
-      ++ [ inputs.agenix.packages.${system}.default ]
+      ++ [inputs.agenix.packages.${system}.default]
       ++ (
         with pkgs;
-        lib.optionals isPC (
-          with pkgs.unstable.jetbrains;
-          [
-            clion
-            datagrip
-            gateway
-            goland
-            idea-ultimate
-            phpstorm
-            pycharm-professional
-            rider
-            ruby-mine
-            rust-rover
-            webstorm
-            writerside
-          ]
-          ++ (with pkgs; [
-            android-studio
-            android-studio-for-platform
-            bestool
-            buildbox
-            buildstream2
-            deckcheatz
-            mpv
-            protontricks
-            protonup-qt
-            steamcmd
-            step-cli
-            totp
-            vlc
-            wemod-launcher
-            wineWowPackages.stable
-            winetricks
-            wm-menu
-            zenmonitor
-          ])
-        )
+          lib.optionals isPC (
+            with pkgs.unstable.jetbrains;
+              [
+                clion
+                datagrip
+                gateway
+                goland
+                idea-ultimate
+                phpstorm
+                pycharm-professional
+                rider
+                ruby-mine
+                rust-rover
+                webstorm
+                writerside
+              ]
+              ++ (with pkgs; [
+                android-studio
+                android-studio-for-platform
+                bestool
+                buildbox
+                buildstream2
+                deckcheatz
+                mpv
+                protontricks
+                protonup-qt
+                steamcmd
+                step-cli
+                texlive.combined.scheme-full
+                totp
+                vlc
+                wemod-launcher
+                wineWowPackages.stable
+                winetricks
+                wm-menu
+                zenmonitor
+              ])
+          )
       );
   };
 
@@ -350,16 +354,19 @@ in
       enableScDaemon = true;
       enableSshSupport = false;
       enableExtraSocket = true;
+      grabKeyboardAndMouse = true;
       defaultCacheTtl = 34560000;
       maxCacheTtl = 34560000;
       extraConfig = ''
         auto-expand-secmem
         allow-preset-passphrase
+        allow-emacs-pinentry
+        allow-loopback-pinentry
       '';
     };
     gnome-keyring = {
       enable = true;
-      components = [ "secrets" ];
+      components = ["secrets"];
     };
     dunst.enable = true;
     mpd-discord-rpc.enable = true;
@@ -417,10 +424,12 @@ in
         location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
       }
     ];
-    packages = map (appId: {
-      inherit appId;
-      origin = "flathub";
-    }) flatpakPackages;
+    packages =
+      map (appId: {
+        inherit appId;
+        origin = "flathub";
+      })
+      flatpakPackages;
     uninstallUnmanaged = true;
     update.auto = {
       enable = true;
@@ -585,113 +594,119 @@ in
   };
   news.display = "silent";
 
-  systemd.user =
-    let
-      atuinDataDir = "${config.xdg.dataHome}/atuin";
-      atuinCommonConfig = {
-        ConditionPathIsDirectory = atuinDataDir;
-        ConditionPathExists = "${config.xdg.configHome}/atuin/config.toml";
-      };
-      taskwCommonConfig = {
-        ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
-        ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
-      };
-    in
-    {
-      sockets.atuin-daemon = {
-        Unit = {
-          Description = "Unix socket activation for atuin shell history daemon";
-        };
-
-        Socket = {
-          ListenStream = "${atuinDataDir}/atuin.sock";
-          SocketMode = "0600";
-          RemoveOnStop = true;
-        };
-
-        Install = {
-          WantedBy = [ "sockets.target" ];
-        };
+  systemd.user = let
+    atuinDataDir = "${config.xdg.dataHome}/atuin";
+    atuinCommonConfig = {
+      ConditionPathIsDirectory = atuinDataDir;
+      ConditionPathExists = "${config.xdg.configHome}/atuin/config.toml";
+    };
+    taskwCommonConfig = {
+      ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
+      ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
+    };
+  in {
+    sockets.atuin-daemon = {
+      Unit = {
+        Description = "Unix socket activation for atuin shell history daemon";
       };
 
-      timers = {
-        atuin-sync = {
-          Unit = atuinCommonConfig // {
+      Socket = {
+        ListenStream = "${atuinDataDir}/atuin.sock";
+        SocketMode = "0600";
+        RemoveOnStop = true;
+      };
+
+      Install = {
+        WantedBy = ["sockets.target"];
+      };
+    };
+
+    timers = {
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
             Description = "Atuin - Sync Service Timer";
           };
-          Timer.OnCalendar = "*:0/30";
-          Install.WantedBy = [ "timers.target" ];
-        };
-        task-sync = {
-          Unit = taskwCommonConfig // {
+        Timer.OnCalendar = "*:0/30";
+        Install.WantedBy = ["timers.target"];
+      };
+      task-sync = {
+        Unit =
+          taskwCommonConfig
+          // {
             Description = "Taskwarrior auto sync timer";
           };
-          Timer.OnCalendar = "*:0/30";
-          Install.WantedBy = [ "timers.target" ];
+        Timer.OnCalendar = "*:0/30";
+        Install.WantedBy = ["timers.target"];
+      };
+    };
+    sessionVariables = {
+      CLUTTER_BACKEND = "wayland";
+      GDK_BACKEND = "wayland,x11";
+      QT_QPA_PLATFORM = "wayland;xcb";
+      MOZ_ENABLE_WAYLAND = "1";
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+    };
+    tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
+    services = {
+      atuin-daemon = {
+        Unit = {
+          Description = "atuin shell history daemon";
+          Requires = ["atuin-daemon.socket"];
+        };
+        Service = {
+          ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
+          Environment = ["ATUIN_LOG=info"];
+          Restart = "on-failure";
+          RestartSteps = 5;
+          RestartMaxDelaySec = 10;
+        };
+        Install = {
+          Also = ["atuin-daemon.socket"];
+          WantedBy = ["default.target"];
         };
       };
-      sessionVariables = {
-        CLUTTER_BACKEND = "wayland";
-        GDK_BACKEND = "wayland,x11";
-        QT_QPA_PLATFORM = "wayland;xcb";
-        MOZ_ENABLE_WAYLAND = "1";
-        _JAVA_AWT_WM_NONREPARENTING = "1";
+      polkit-gnome-authentication-agent-1 = {
+        Unit = {
+          Description = "polkit-gnome-authentication-agent-1";
+          After = ["graphical-session.target"];
+        };
+        Install.WantedBy = ["graphical-session.target"];
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
       };
-      tmpfiles.rules = [ "L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0" ];
-      services = {
-        atuin-daemon = {
-          Unit = {
-            Description = "atuin shell history daemon";
-            Requires = [ "atuin-daemon.socket" ];
-          };
-          Service = {
-            ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
-            Environment = [ "ATUIN_LOG=info" ];
-            Restart = "on-failure";
-            RestartSteps = 5;
-            RestartMaxDelaySec = 10;
-          };
-          Install = {
-            Also = [ "atuin-daemon.socket" ];
-            WantedBy = [ "default.target" ];
-          };
-        };
-        polkit-gnome-authentication-agent-1 = {
-          Unit = {
-            Description = "polkit-gnome-authentication-agent-1";
-            After = [ "graphical-session.target" ];
-          };
-          Install.WantedBy = [ "graphical-session.target" ];
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-            Restart = "on-failure";
-            RestartSec = 1;
-            TimeoutStopSec = 10;
-          };
-        };
-        atuin-sync = {
-          Unit = atuinCommonConfig // {
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
             Description = "Atuin - Sync Service";
           };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} sync";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} sync";
         };
-        task-sync = {
-          Unit = taskwCommonConfig // {
+      };
+      task-sync = {
+        Unit =
+          taskwCommonConfig
+          // {
             Description = "Taskwarrior auto sync service";
           };
-          Service = {
-            Type = "oneshot";
-            ExecStartPre = "${getExe' pkgs.taskwarrior "task"}";
-            ExecStart = "${getExe' pkgs.taskwarrior "task"} sync";
-            ExecStartPost = "${getExe' pkgs.taskwarrior "task"} sync";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStartPre = "${getExe' pkgs.taskwarrior "task"}";
+          ExecStart = "${getExe' pkgs.taskwarrior "task"} sync";
+          ExecStartPost = "${getExe' pkgs.taskwarrior "task"} sync";
         };
       };
     };
+  };
   services.kdeconnect = {
     enable = true;
     indicator = true;
