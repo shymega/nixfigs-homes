@@ -501,6 +501,7 @@ in {
     atuin = {
       enable = true;
       package = pkgs.unstable.atuin;
+      daemon.enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
@@ -516,8 +517,6 @@ in {
           records = true;
         };
         daemon = {
-          enabled = true;
-          systemd_socket = true;
           sync_frequency = 900;
         };
       };
@@ -613,22 +612,6 @@ in {
       ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
     };
   in {
-    sockets.atuin-daemon = {
-      Unit = {
-        Description = "Unix socket activation for atuin shell history daemon";
-      };
-
-      Socket = {
-        ListenStream = "${atuinDataDir}/atuin.sock";
-        SocketMode = "0600";
-        RemoveOnStop = true;
-      };
-
-      Install = {
-        WantedBy = ["sockets.target"];
-      };
-    };
-
     timers = {
       atuin-sync = {
         Unit =
@@ -658,23 +641,6 @@ in {
     };
     tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
     services = {
-      atuin-daemon = {
-        Unit = {
-          Description = "atuin shell history daemon";
-          Requires = ["atuin-daemon.socket"];
-        };
-        Service = {
-          ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
-          Environment = ["ATUIN_LOG=info"];
-          Restart = "on-failure";
-          RestartSteps = 5;
-          RestartMaxDelaySec = 10;
-        };
-        Install = {
-          Also = ["atuin-daemon.socket"];
-          WantedBy = ["default.target"];
-        };
-      };
       polkit-gnome-authentication-agent-1 = {
         Unit = {
           Description = "polkit-gnome-authentication-agent-1";
