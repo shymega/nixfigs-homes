@@ -1,11 +1,8 @@
 # SPDX-FileCopyrightText: 2024 Dom Rodriguez <shymega@shymega.org.uk
 #
 # SPDX-License-Identifier: GPL-3.0-only
-
-{ inputs, ... }:
-let
-  genPkgs =
-    system:
+{inputs, ...}: let
+  genPkgs = system:
     import inputs.nixpkgs {
       inherit system;
       overlays = builtins.attrValues self.overlays;
@@ -13,20 +10,17 @@ let
     };
   inherit (inputs) self;
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
-  genConfiguration =
-    _hostname:
-    {
-      type,
-      hostPlatform,
-      username,
-      ...
-    }:
-    let
-      libx = inputs.nixfigs-helpers.libx.${hostPlatform};
-    in
+  genConfiguration = _hostname: {
+    type,
+    hostPlatform,
+    username,
+    ...
+  }: let
+    libx = inputs.nixfigs-helpers.libx.${hostPlatform};
+  in
     homeManagerConfiguration {
       pkgs = genPkgs hostPlatform;
-      modules = [ ./configs ];
+      modules = [./configs];
       extraSpecialArgs = {
         system = hostPlatform;
         hostType = type;
@@ -40,6 +34,6 @@ let
       };
     };
 in
-inputs.nixpkgs.lib.mapAttrs genConfiguration (
-  inputs.nixpkgs.lib.filterAttrs (_: host: host.type == "home-manager") self.hosts
-)
+  inputs.nixpkgs.lib.mapAttrs genConfiguration (
+    inputs.nixpkgs.lib.filterAttrs (_: host: host.type == "home-manager") self.hosts
+  )
