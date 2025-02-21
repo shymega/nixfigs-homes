@@ -471,7 +471,7 @@
           position = "0,0";
           scale = 1.5;
           status = "enable";
-          transform = "normal";
+          transform = "180";
         }
       ];
     };
@@ -494,7 +494,7 @@
           position = "0,1200";
           scale = 1.5;
           status = "enable";
-          transform = "normal";
+          transform = "180";
         }
       ];
     };
