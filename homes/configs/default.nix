@@ -311,11 +311,12 @@ in {
       ++ (
         with pkgs;
           lib.optionals isPC [
+            (git-wip.override {
+              wipPrefix = "shymega";
+            })
             android-studio
             android-studio-for-platform
             bestool
-            buildbox
-            buildstream2
             deckcheatz
             libnotify
             mpv
@@ -326,6 +327,7 @@ in {
             step-cli
             texlive.combined.scheme-full
             totp
+            units
             virt-manager
             virtiofsd
             vlc
@@ -336,7 +338,14 @@ in {
             xrlinuxdriver
             zenmonitor
           ]
-      );
+      )
+      ++ (with pkgs.unstable.vimPlugins; [
+          astrocore
+          astrolsp
+          astroui
+          nvim-lspconfig
+          gcc
+      ]);
   };
 
   services = {
