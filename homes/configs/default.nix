@@ -381,7 +381,7 @@ in {
       '';
     };
     kanshi = {
-      enable = true;
+      enable = false;
       systemdTarget = "wlroots-session.target";
       settings = import ./aux/kanshi-config.nix;
     };
