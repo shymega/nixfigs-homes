@@ -167,21 +167,22 @@ in {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
     stateVersion = "24.11";
-    packages = with pkgs.unstable;
+    packages = with pkgs;
       [
         aerc
         age
+        alejandra
         alpaca
         alsa-utils
         android-tools
         asciinema
         aws-sam-cli
-        azure-cli
         b4
         bat
         bc
         beeper
         brightnessctl
+        buildpack
         bun
         cloudflared
         cocogitto
@@ -211,14 +212,14 @@ in {
         hub
         hut
         imagemagick
+        imapsync
         inetutils
         ispell
         itd
         jdk17
         jq
-        khal
-        khard
         leafnode
+        libnotify
         llm-ls
         m4
         maven
@@ -226,14 +227,17 @@ in {
         mkcert
         moneydance
         mpc-cli
+        mpv
         mupdf
         ncmpcpp
         neomutt
         networkmanagerapplet
         nh
+        nixpacks
         nixpkgs-fmt
         nodejs
         notmuch
+        offlineimap
         p7zip
         parallel
         pass
@@ -241,7 +245,6 @@ in {
         pdftk
         pizauth
         playerctl
-        pmbootstrap-bumped
         poetry
         poppler_utils
         powershell
@@ -259,28 +262,36 @@ in {
         rclone
         reuse
         ripgrep
+        rot8
         rustup
         scrcpy
+        shikane
         speedtest-go
+        spring-boot-cli
         starship
         statix
+        step-cli
         stow
         swaks
         tea
         tigervnc
         timewarrior
         tmuxp
+        totp
+        units
         unrar
         unzip
         vdirsyncer
+        vlc
         w3m
         wayfarer
         wayvnc
-        weechatWithMyPlugins
+        unstable.weechatWithMyPlugins
         wezterm
         wf-recorder
         wget
         wl-mirror
+        wm-menu
         yubikey-manager-qt
         zathura
         zellij
@@ -292,59 +303,50 @@ in {
       ++ (
         with pkgs;
           lib.optionals isPC (
-            with pkgs.unstable.jetbrains; [
-              clion
-              datagrip
-              gateway
-              goland
-              idea-ultimate
-              phpstorm
-              pycharm-professional
-              rider
-              ruby-mine
-              rust-rover
-              webstorm
-              writerside
-            ]
+            with pkgs.jetbrains;
+              [
+                clion
+                datagrip
+                gateway
+                goland
+                idea-ultimate
+                phpstorm
+                pycharm-professional
+                rider
+                ruby-mine
+                rust-rover
+                webstorm
+                writerside
+              ]
+              ++ (with pkgs; [
+                android-studio
+                android-studio-for-platform
+                bestool
+                deckcheatz
+                gcc
+                protontricks
+                protonup-qt
+                steamcmd
+                texlive.combined.scheme-full
+                virt-manager
+                virtiofsd
+                wemod-launcher
+                wineWowPackages.stable
+                winetricks
+                xrlinuxdriver
+                zenmonitor
+              ])
           )
       )
       ++ (
-        with pkgs;
-          lib.optionals isPC [
-            (git-wip.override {
-              wipPrefix = "shymega";
-            })
-            android-studio
-            android-studio-for-platform
-            bestool
-            deckcheatz
-            libnotify
-            mpv
-            offlineimap
-            protontricks
-            protonup-qt
-            steamcmd
-            step-cli
-            texlive.combined.scheme-full
-            totp
-            units
-            virt-manager
-            virtiofsd
-            vlc
-            wemod-launcher
-            wineWowPackages.stable
-            winetricks
-            wm-menu
-            xrlinuxdriver
-            zenmonitor
-          ]
+        with pkgs; [
+          (git-wip.override {
+            wipPrefix = "shymega";
+          })
+        ]
       )
       ++ (with pkgs.unstable.vimPlugins; [
-          astrocore
-          astrolsp
-          astroui
-          nvim-lspconfig
-          gcc
+        astrocore
       ]);
   };
 
@@ -381,7 +383,7 @@ in {
       '';
     };
     kanshi = {
-      enable = false;
+      enable = true;
       systemdTarget = "wlroots-session.target";
       settings = import ./aux/kanshi-config.nix;
     };
@@ -693,9 +695,11 @@ in {
       polkit-gnome-authentication-agent-1 = {
         Unit = {
           Description = "polkit-gnome-authentication-agent-1";
-          After = ["graphical-session.target"];
+          After = ["default.target"];
+          BindsTo = ["default.target"];
+          PartOf = ["default.target"];
         };
-        Install.WantedBy = ["graphical-session.target"];
+        Install.WantedBy = ["default.target"];
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
