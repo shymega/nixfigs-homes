@@ -166,10 +166,9 @@ in {
   home = {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
-    stateVersion = "24.05";
+    stateVersion = "24.11";
     packages = with pkgs.unstable;
       [
-        (isync.override {withCyrusSaslXoauth2 = true;})
         activitywatch
         aerc
         alpaca
@@ -327,6 +326,7 @@ in {
                 winetricks
                 wm-menu
                 zenmonitor
+               (isync.override {withCyrusSaslXoauth2 = true;})
               ])
           )
       );
