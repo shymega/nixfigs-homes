@@ -382,11 +382,15 @@ in {
         allow-loopback-pinentry
       '';
     };
-    kanshi = {
-      enable = true;
-      systemdTarget = "wlroots-session.target";
-      settings = import ./aux/kanshi-config.nix;
-    };
+    kanshi =
+      if builtins.hasAttr "osConfig.networking.hostName" args
+      then
+        lib.optionalAttrs (args.osConfig.networking.hostName != "DEUSEX-LINUX") {
+          enable = true;
+          systemdTarget = "wlroots-session.target";
+          settings = import ./aux/kanshi-config.nix;
+        }
+      else {};
     gnome-keyring = {
       enable = true;
       components = ["secrets"];
