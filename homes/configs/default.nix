@@ -84,6 +84,7 @@ in {
       inputs.nix-flatpak.homeManagerModules.nix-flatpak
       inputs.nixfigs-secrets.user
       inputs.lix-module.nixosModules.default
+      inputs.shyemacs-cfg.homeModules.emacs
     ]
     ++ (
       if !isModule
@@ -177,6 +178,8 @@ in {
         android-tools
         asciinema
         aws-sam-cli
+        awscli2
+        azure-cli
         b4
         bat
         bc
@@ -205,6 +208,7 @@ in {
         fzf
         glab
         gnumake
+        go
         google-chrome
         google-cloud-sdk
         gthumb
@@ -215,12 +219,10 @@ in {
         imapsync
         inetutils
         ispell
-        itd
         jdk17
         jq
         leafnode
         libnotify
-        llm-ls
         m4
         maven
         meli
@@ -233,6 +235,7 @@ in {
         neomutt
         networkmanagerapplet
         nh
+        nixfmt-rfc-style
         nixpacks
         nixpkgs-fmt
         nodejs
@@ -280,13 +283,13 @@ in {
         totp
         units
         unrar
+        unstable.weechatWithMyPlugins
         unzip
         vdirsyncer
         vlc
         w3m
         wayfarer
         wayvnc
-        unstable.weechatWithMyPlugins
         wezterm
         wf-recorder
         wget
@@ -307,10 +310,13 @@ in {
               [
                 clion
                 datagrip
+                dataspell
                 gateway
                 goland
+                idea-community
                 idea-ultimate
                 phpstorm
+                pycharm-community
                 pycharm-professional
                 rider
                 ruby-mine
@@ -334,7 +340,6 @@ in {
                 wineWowPackages.stable
                 winetricks
                 xrlinuxdriver
-                zenmonitor
               ])
           )
       )
@@ -382,11 +387,15 @@ in {
         allow-loopback-pinentry
       '';
     };
-    kanshi = {
-      enable = true;
-      systemdTarget = "wlroots-session.target";
-      settings = import ./aux/kanshi-config.nix;
-    };
+    kanshi =
+      if isModule && builtins.hasAttr "osConfig.networking.hostName" args
+      then
+        lib.optionalAttrs (lib.hasInfix args.osConfig.networking.hostName "-LINUX") {
+          enable = true;
+          systemdTarget = "wlroots-session.target";
+          settings = import ./aux/kanshi-config.nix;
+        }
+      else {};
     gnome-keyring = {
       enable = true;
       components = ["secrets"];
@@ -396,10 +405,10 @@ in {
     mpris-proxy.enable = true;
     mpdris2.enable = true;
     emacs = {
-      enable = true;
-      client.enable = true;
-      startWithUserSession = true;
-      socketActivation.enable = true;
+      enable = false;
+      # client.enable = true;
+      # startWithUserSession = true;
+      # socketActivation.enable = true;
     };
     mpd = {
       enable = true;
@@ -549,7 +558,7 @@ in {
       lfs.enable = true;
       extraConfig = {
         #        gpg.format = "ssh";
-        #        "gpg \"ssh\"".program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+        #        "gpg \"ssh\"".program = "${getExe' pkgs._1password-gui "op-ssh-sign"}";
         #        commit.gpgsign = true;
       };
       aliases = {
@@ -681,7 +690,7 @@ in {
           Requires = ["atuin-daemon.socket"];
         };
         Service = {
-          ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
+          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} daemon";
           Environment = ["ATUIN_LOG=info"];
           Restart = "on-failure";
           RestartSteps = 5;
