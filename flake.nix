@@ -109,11 +109,10 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
     stylix = {
       url = "github:danth/stylix/release-24.11";
@@ -122,14 +121,6 @@
         home-manager.follows = "home-manager";
         flake-compat.follows = "flake-compat";
       };
-    };
-    srvos = {
-      url = "github:nix-community/srvos";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     base16-schemes.url = "github:SenchoPens/base16.nix";
     nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
@@ -150,6 +141,13 @@
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    shyemacs-cfg = {
+      url = "github:shymega/emacs-cfg";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
   };
 }
