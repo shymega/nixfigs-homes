@@ -15,75 +15,67 @@
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
   isModule = builtins.hasAttr "osConfig" args;
+  osConfig =
+    if isModule
+    then builtins.getAttr "osConfig" args
+    else {};
   getHomeDirectory = username: homePrefix + "/${username}";
   homeDirectory = getHomeDirectory username;
-  flatpakPackages = [
-    "app.ytmdesktop.ytmdesktop"
-    "chat.delta.desktop"
-    "com.atlauncher.ATLauncher"
-    "com.calibre_ebook.calibre"
-    "com.discordapp.Discord"
-    "com.freerdp.FreeRDP"
-    "com.getpostman.Postman"
-    "com.github.IsmaelMartinez.teams_for_linux"
-    "com.github.Matoking.protontricks"
-    "com.github.tchx84.Flatseal"
-    "com.icanblink.blink"
-    "com.jgraph.drawio.desktop"
-    "com.meetfranz.Franz"
-    "com.moonlight_stream.Moonlight"
-    "com.prusa3d.PrusaSlicer"
-    "com.slack.Slack"
-    "com.usebottles.bottles"
-    "com.valvesoftware.Steam"
-    "com.valvesoftware.SteamLink"
-    "com.wps.Office"
-    "dev.zed.Zed"
-    "im.fluffychat.Fluffychat"
-    "im.riot.Riot"
-    "io.dbeaver.DBeaverCommunity"
-    "net.ankiweb.Anki"
-    "net.kuribo64.melonDS"
-    "net.lutris.Lutris"
-    "net.minetest.Minetest"
-    "net.redeclip.redclip"
-    "org.DolphinEmu.dolphin-emu"
-    "org.blender.Blender"
-    "org.citra_emu.citra"
-    "org.dust3d.dust3d"
-    "org.filezillaproject.Filezilla"
-    "org.freecadweb.FreeCAD"
-    "org.fritzing.Fritzing"
-    "org.gnome.Boxes"
-    "org.gnome.Calls"
-    "org.gnome.Evolution"
-    "org.gnome.NetworkDisplays"
-    "org.jitsi.jitsi-meet"
-    "org.kicad.KiCad"
-    "org.libreoffice.LibreOffice"
-    "org.mozilla.Thunderbird"
-    "org.onlyoffice.desktopeditors"
-    "org.openscad.OpenSCAD"
-    "org.prismlauncher.PrismLauncher"
-    "org.remmina.Remmina"
-    "org.telegram.desktop"
-    "org.yuzu_emu.yuzu"
-    "org.zdoom.GZDoom"
-    "us.zoom.Zoom"
+  rustCrates = with pkgs; [
+    aichat
+    bacon
+    bandwhich
+    cargo-binutils
+    cargo-bloat
+    cargo-bootimage
+    cargo-cross
+    cargo-deny
+    cargo-dist
+    cargo-edit
+    cargo-embassy
+    cargo-espflash
+    cargo-espmonitor
+    cargo-expand
+    cargo-generate
+    cargo-inspect
+    cargo-lambda
+    cargo-license
+    cargo-make
+    cargo-update
+    cargo-watch
+    cargo-workspaces
+    cargo-xbuild
+    difftastic
+    du-dust
+    duf
+    fclones
+    fd
+    just
+    ldproxy
+    mates
+    ripgrep
+    starship
+    taskwarrior-tui
+    tokei
+    wasm-pack
+    watchexec
+    worker-build
+    zoxide
   ];
 in {
-  imports =
+  imports = with inputs;
     [
       ./network-targets.nix
-      (import ./programs/rofi.nix {inherit lib pkgs;})
-      inputs.agenix.homeManagerModules.default
-      inputs.nix-doom-emacs-unstraightened.hmModule
-      inputs.nix-index-database.hmModules.nix-index
-      inputs._1password-shell-plugins.hmModules.default
-      inputs.shypkgs-public.hmModules.${system}.dwl
-      inputs.nix-flatpak.homeManagerModules.nix-flatpak
-      inputs.nixfigs-secrets.user
-      inputs.lix-module.nixosModules.default
+      ./programs/rofi.nix
+      ./programs/hyprland.nix
+      agenix.homeManagerModules.default
+      nix-index-database.hmModules.nix-index
+      _1password-shell-plugins.hmModules.default
+      shypkgs-public.hmModules.${system}.dwl
+      nix-flatpak.homeManagerModules.nix-flatpak
+      nixfigs-secrets.user
+      lix-module.nixosModules.default
+      shyemacs-cfg.homeModules.emacs
     ]
     ++ (
       if !isModule
@@ -103,40 +95,29 @@ in {
     then {
       settings = rec {
         substituters = [
-          "https://cache.dataaturservice.se/spectrum/?priority=50"
           "https://cache.nixos.org/?priority=10"
-          "https://deploy-rs.cachix.org/?priority=10"
-          "https://devenv.cachix.org/?priority=5"
           "https://nix-community.cachix.org/?priority=5"
-          "https://nix-gaming.cachix.org/?priority=5"
-          "https://nix-on-droid.cachix.org/?priority=5"
           "https://numtide.cachix.org/?priority=5"
           "https://pre-commit-hooks.cachix.org/?priority=5"
           "ssh://eu.nixbuild.net?priority=50"
         ];
         trusted-public-keys = [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
-          "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-          "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
           "nixbuild.net/VNUM6K-1:ha1G8guB68/E1npRiatdXfLZfoFBddJ5b2fPt3R9JqU="
           "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
           "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
-          "spectrum-os.org-2:foQk3r7t2VpRx92CaXb5ROyy/NBdRJQG2uX2XJMYZfU="
         ];
         binary-caches = substituters;
         builders-use-substitutes = true;
         http-connections = 128;
         max-substitution-jobs = 128;
       };
-      registry = rec {
-        nixpkgs.flake = inputs.nixpkgs;
-        n.flake = nixpkgs.flake;
+      registry = {
         home-manager.flake = inputs.home-manager;
-        unstable.flake = inputs.nixpkgs-unstable;
-        shynixpkgs.flake = inputs.nixpkgs-shymega;
+        n.flake = inputs.nixpkgs;
+        nixpkgs.flake = inputs.nixpkgs;
+        nu.flake = inputs.nixpkgs-unstable;
         shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
       };
       extraOptions = ''
@@ -177,6 +158,8 @@ in {
         android-tools
         asciinema
         aws-sam-cli
+        awscli2
+        azure-cli
         b4
         bat
         bc
@@ -205,6 +188,7 @@ in {
         fzf
         glab
         gnumake
+        go
         google-chrome
         google-cloud-sdk
         gthumb
@@ -215,12 +199,10 @@ in {
         imapsync
         inetutils
         ispell
-        itd
         jdk17
         jq
         leafnode
         libnotify
-        llm-ls
         m4
         maven
         meli
@@ -233,6 +215,7 @@ in {
         neomutt
         networkmanagerapplet
         nh
+        nixfmt-rfc-style
         nixpacks
         nixpkgs-fmt
         nodejs
@@ -261,14 +244,12 @@ in {
         ranger
         rclone
         reuse
-        ripgrep
         rot8
         rustup
         scrcpy
         shikane
         speedtest-go
         spring-boot-cli
-        starship
         statix
         step-cli
         stow
@@ -280,13 +261,13 @@ in {
         totp
         units
         unrar
+        unstable.weechatWithMyPlugins
         unzip
         vdirsyncer
         vlc
         w3m
         wayfarer
         wayvnc
-        unstable.weechatWithMyPlugins
         wezterm
         wf-recorder
         wget
@@ -296,10 +277,15 @@ in {
         zathura
         zellij
         zip
-        zoxide
+        (pkgs.doomEmacs {
+          doomDir = inputs.nixfigs-doom-emacs;
+          doomLocalDir = "${homeDirectory}/.local/state/doom";
+          emacs = pkgs.emacs29-pgtk;
+        })
+        (pkgs.isync.override {withCyrusSaslXoauth2 = true;})
+        inputs.agenix.packages.${pkgs.system}.default
       ]
-      ++ [inputs.agenix.packages.${system}.default]
-      ++ [(pkgs.isync.override {withCyrusSaslXoauth2 = true;})]
+      ++ rustCrates
       ++ (
         with pkgs;
           lib.optionals isPC (
@@ -307,10 +293,13 @@ in {
               [
                 clion
                 datagrip
+                dataspell
                 gateway
                 goland
+                idea-community
                 idea-ultimate
                 phpstorm
+                pycharm-community
                 pycharm-professional
                 rider
                 ruby-mine
@@ -321,7 +310,6 @@ in {
               ++ (with pkgs; [
                 android-studio
                 android-studio-for-platform
-                bestool
                 deckcheatz
                 gcc
                 protontricks
@@ -330,11 +318,9 @@ in {
                 texlive.combined.scheme-full
                 virt-manager
                 virtiofsd
-                wemod-launcher
                 wineWowPackages.stable
                 winetricks
                 xrlinuxdriver
-                zenmonitor
               ])
           )
       )
@@ -347,7 +333,8 @@ in {
       )
       ++ (with pkgs.unstable.vimPlugins; [
         astrocore
-      ]);
+      ])
+      ++ rustCrates;
   };
 
   services = {
@@ -382,11 +369,15 @@ in {
         allow-loopback-pinentry
       '';
     };
-    kanshi = {
-      enable = true;
-      systemdTarget = "wlroots-session.target";
-      settings = import ./aux/kanshi-config.nix;
-    };
+    kanshi =
+      if isModule && builtins.hasAttr "osConfig.networking.hostName" args
+      then
+        lib.optionalAttrs (lib.hasSuffix args.osConfig.networking.hostName "-LINUX") {
+          enable = false;
+          systemdTarget = "wlroots-session.target";
+          settings = import ./aux/kanshi-config.nix;
+        }
+      else {};
     gnome-keyring = {
       enable = true;
       components = ["secrets"];
@@ -436,7 +427,7 @@ in {
   ];
 
   services.flatpak = {
-    enable = true;
+    enable = false;
     remotes = [
       {
         name = "flathub";
@@ -549,7 +540,7 @@ in {
       lfs.enable = true;
       extraConfig = {
         #        gpg.format = "ssh";
-        #        "gpg \"ssh\"".program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+        #        "gpg \"ssh\"".program = "${getExe' pkgs._1password-gui "op-ssh-sign"}";
         #        commit.gpgsign = true;
       };
       aliases = {
@@ -581,14 +572,6 @@ in {
       nix-direnv.enable = true;
     };
     home-manager.enable = true;
-    doom-emacs = {
-      enable = false;
-      emacs = pkgs.emacs29-pgtk;
-      provideEmacs = true;
-      experimentalFetchTree = true;
-      doomDir = inputs.nixfigs-doom-emacs;
-      doomLocalDir = "${homeDirectory}/.local/state/doom";
-    };
     taskwarrior = {
       enable = true;
       package = pkgs.taskwarrior2;
@@ -681,7 +664,7 @@ in {
           Requires = ["atuin-daemon.socket"];
         };
         Service = {
-          ExecStart = "${lib.getExe' pkgs.unstable.atuin "atuin"} daemon";
+          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} daemon";
           Environment = ["ATUIN_LOG=info"];
           Restart = "on-failure";
           RestartSteps = 5;
