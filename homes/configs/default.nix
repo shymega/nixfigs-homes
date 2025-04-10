@@ -438,12 +438,6 @@ in {
         location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
       }
     ];
-    packages =
-      map (appId: {
-        inherit appId;
-        origin = "flathub";
-      })
-      flatpakPackages;
     uninstallUnmanaged = true;
     update.auto = {
       enable = true;
