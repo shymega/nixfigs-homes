@@ -172,7 +172,7 @@ in {
         focus_on_activate = false;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
+        mouse_move_enables_dpms = false;
         key_press_enables_dpms = true;
       };
 
@@ -254,7 +254,6 @@ in {
       general = {
         lock_cmd = lib.getExe lock_cmd;
         before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
       listener = [
@@ -265,7 +264,6 @@ in {
         {
           timeout = 330;
           on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
         }
       ];
     };
