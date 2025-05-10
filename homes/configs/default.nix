@@ -52,7 +52,6 @@
     fd
     just
     ldproxy
-    mates
     ripgrep
     starship
     taskwarrior-tui
@@ -70,7 +69,7 @@ in {
       ./programs/hyprland.nix
       agenix.homeManagerModules.default
       nix-index-database.hmModules.nix-index
-      _1password-shell-plugins.hmModules.default
+      onepassword-shell-plugins.hmModules.default
       shypkgs-public.hmModules.${system}.dwl
       nix-flatpak.homeManagerModules.nix-flatpak
       nixfigs-secrets.user
@@ -94,21 +93,20 @@ in {
     if !isModule
     then {
       settings = rec {
-        substituters = [
-          "https://cache.nixos.org/?priority=10"
-          "https://nix-community.cachix.org/?priority=5"
-          "https://numtide.cachix.org/?priority=5"
-          "https://pre-commit-hooks.cachix.org/?priority=5"
-          "ssh://eu.nixbuild.net?priority=50"
+        substituters = lib.mkForce [
+          "https://cache.nixos.org/?priority=15"
+          "https://nix-community.cachix.org/?priority=10"
+          "https://numtide.cachix.org/?priority=14"
+          "https://pre-commit-hooks.cachix.org/?priority=16"
+          "ssh://eu.nixbuild.net?priority=20"
         ];
-        trusted-public-keys = [
+        trusted-public-keys = lib.mkForce [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           "nixbuild.net/VNUM6K-1:ha1G8guB68/E1npRiatdXfLZfoFBddJ5b2fPt3R9JqU="
           "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
           "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
         ];
-        binary-caches = substituters;
         builders-use-substitutes = true;
         http-connections = 128;
         max-substitution-jobs = 128;
@@ -282,7 +280,7 @@ in {
           doomLocalDir = "${homeDirectory}/.local/state/doom";
           emacs = pkgs.emacs29-pgtk;
         })
-        (pkgs.isync.override {withCyrusSaslXoauth2 = true;})
+        unstable.isync-patched
         inputs.agenix.packages.${pkgs.system}.default
       ]
       ++ rustCrates
@@ -310,7 +308,6 @@ in {
               ++ (with pkgs; [
                 android-studio
                 android-studio-for-platform
-                deckcheatz
                 gcc
                 protontricks
                 protonup-qt
@@ -355,7 +352,7 @@ in {
     keybase.enable = true;
     gpg-agent = {
       enable = true;
-      pinentryPackage = with pkgs; lib.mkForce pinentry-gnome3;
+      pinentryPackage = lib.mkForce pkgs.pinentry-gtk2;
       enableScDaemon = true;
       enableSshSupport = false;
       enableExtraSocket = true;
