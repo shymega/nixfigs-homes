@@ -8,8 +8,10 @@
     if pidof ${pkgs.hyprlock}/bin/hyprlock > /dev/null; then
       exit 0
     else
+      ${pkgs.hyprlock}/bin/hyprlock --immediate &
+      sleep 2s
       hyprctl dispatch dpms off
-      ${pkgs.hyprlock}/bin/hyprlock
+      wait $(jobs -p)
     fi
   '';
 in {
@@ -172,7 +174,7 @@ in {
         focus_on_activate = false;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
+        mouse_move_enables_dpms = false;
         key_press_enables_dpms = true;
       };
 
@@ -254,6 +256,7 @@ in {
       general = {
         lock_cmd = lib.getExe lock_cmd;
         before_sleep_cmd = "loginctl lock-session";
+
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
