@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
@@ -18,8 +17,7 @@
 in {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = pkgs.hyprland;
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
@@ -189,6 +187,7 @@ in {
       env = [
         "AQ_NO_MODIFIERS,1"
         "GDK_BACKEND,wayland"
+        "GDK_SCALE,2"
         "MOZ_ENABLE_WAYLAND,1"
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "QT_QPA_PLATFORM,wayland;xcb"
@@ -196,8 +195,6 @@ in {
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
         "XDG_SESSION_TYPE,wayland"
-        "XCURSOR_SIZE,24"
-        "HYPRCURSOR_SIZE,24"
         "_JAVA_AWT_WM_NONREPARENTING,1"
       ];
 
@@ -205,8 +202,11 @@ in {
         no_hardware_cursors = 1;
       };
 
+      # See https://wiki.hyprland.org/Configuring/Window-ggRules/ for more
       windowrule = [
         "opacity 1.0 0.95, title:^(.*)$"
+        "float,title:^(Firefox — Sharing Indicator)$"
+        "float,title:^(*1Password*)$"
       ];
 
       exec-once = [
