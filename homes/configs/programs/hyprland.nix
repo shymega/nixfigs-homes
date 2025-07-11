@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
@@ -8,14 +9,17 @@
     if pidof ${pkgs.hyprlock}/bin/hyprlock > /dev/null; then
       exit 0
     else
+      ${pkgs.hyprlock}/bin/hyprlock --immediate &
+      sleep 2s
       hyprctl dispatch dpms off
-      ${pkgs.hyprlock}/bin/hyprlock
+      wait $(jobs -p)
     fi
   '';
 in {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = pkgs.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
@@ -172,7 +176,7 @@ in {
         focus_on_activate = false;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
+        mouse_move_enables_dpms = false;
         key_press_enables_dpms = true;
       };
 
@@ -193,6 +197,8 @@ in {
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
         "XDG_SESSION_TYPE,wayland"
+        "XCURSOR_SIZE,24"
+        "HYPRCURSOR_SIZE,24"
         "_JAVA_AWT_WM_NONREPARENTING,1"
       ];
 
@@ -200,11 +206,8 @@ in {
         no_hardware_cursors = 1;
       };
 
-      # See https://wiki.hyprland.org/Configuring/Window-ggRules/ for more
       windowrule = [
         "opacity 1.0 0.95, title:^(.*)$"
-        "float,title:^(Firefox — Sharing Indicator)$"
-        "float,title:^(*1Password*)$"
       ];
 
       exec-once = [
@@ -218,14 +221,6 @@ in {
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
         "${pkgs.kanshi}/bin/kanshi"
         "${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland"
-        "${pkgs.writeShellScriptBin "autostart" ''
-          export GDK_SCALE=$(${pkgs.hyprland}/bin/hyprctl -j monitors | jq ".[] | .scale | round" | head -n1)
-
-          com.discordapp.Discord &
-          org.telegram.desktop &
-          com.valvesoftware.Steam &
-          1password &
-        ''}/bin/autostart"
       ];
 
       debug.disable_scale_checks = true;
@@ -240,12 +235,6 @@ in {
 
   services.hyprpaper = {
     enable = true;
-    settings = {
-      preload = ["/home/dzrodriguez/.wallpapers/img/Photography/Dogs/Jazz.jpg"];
-      wallpaper = [
-        ", /home/dzrodriguez/.wallpapers/img/Photography/Dogs/Jazz.jpg"
-      ];
-    };
   };
 
   services.hypridle = {
@@ -254,6 +243,7 @@ in {
       general = {
         lock_cmd = lib.getExe lock_cmd;
         before_sleep_cmd = "loginctl lock-session";
+
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
