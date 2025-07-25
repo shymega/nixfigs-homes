@@ -4,21 +4,6 @@
 {
   description = "Home Manager repository for my NixOS flakes";
 
-  nixConfig = {
-    extra-trusted-substituters = [
-      "https://cache.nixos.org/"
-      "https://nix-community.cachix.org"
-      "https://numtide.cachix.org"
-      "https://pre-commit-hooks.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-      "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
-    ];
-  };
-
   outputs = inputs: let
     inherit (inputs) self;
     genPkgs = system:
@@ -72,7 +57,7 @@
     };
   };
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nixpkgs-shymega.url = "github:shymega/nixpkgs?ref=shymega/staging";
@@ -96,7 +81,7 @@
       };
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     plasma-manager = {
@@ -105,7 +90,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     stylix = {
-      url = "github:danth/stylix/release-24.11";
+      url = "github:danth/stylix/release-25.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
@@ -118,7 +103,7 @@
       url = "github:shymega/nixfigs-doom-emacs";
       flake = false;
     };
-    _1password-shell-plugins.url = "github:1Password/shell-plugins";
+    onepassword-shell-plugins.url = "github:1Password/shell-plugins";
     flake-utils.url = "github:numtide/flake-utils";
     shypkgs-private.url = "github:shymega/shypkgs-private";
     shypkgs-public.url = "github:shymega/shypkgs-public";
@@ -139,5 +124,6 @@
         home-manager.follows = "home-manager";
       };
     };
+    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.1";
   };
 }
