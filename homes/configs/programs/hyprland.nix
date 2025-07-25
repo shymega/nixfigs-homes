@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
@@ -8,14 +9,17 @@
     if pidof ${pkgs.hyprlock}/bin/hyprlock > /dev/null; then
       exit 0
     else
+      ${pkgs.hyprlock}/bin/hyprlock --immediate &
+      sleep 2s
       hyprctl dispatch dpms off
-      ${pkgs.hyprlock}/bin/hyprlock
+      wait $(jobs -p)
     fi
   '';
 in {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = pkgs.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
@@ -172,7 +176,7 @@ in {
         focus_on_activate = false;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
+        mouse_move_enables_dpms = false;
         key_press_enables_dpms = true;
       };
 
@@ -185,7 +189,7 @@ in {
       env = [
         "AQ_NO_MODIFIERS,1"
         "GDK_BACKEND,wayland"
-        "GDK_SCALE,2"
+        "GDK_SCALE,1"
         "MOZ_ENABLE_WAYLAND,1"
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "QT_QPA_PLATFORM,wayland;xcb"
@@ -193,6 +197,8 @@ in {
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
         "XDG_SESSION_TYPE,wayland"
+        "XCURSOR_SIZE,24"
+        "HYPRCURSOR_SIZE,24"
         "_JAVA_AWT_WM_NONREPARENTING,1"
       ];
 
@@ -200,11 +206,8 @@ in {
         no_hardware_cursors = 1;
       };
 
-      # See https://wiki.hyprland.org/Configuring/Window-ggRules/ for more
       windowrule = [
         "opacity 1.0 0.95, title:^(.*)$"
-        "float,title:^(Firefox — Sharing Indicator)$"
-        "float,title:^(*1Password*)$"
       ];
 
       exec-once = [
@@ -218,34 +221,26 @@ in {
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
         "${pkgs.kanshi}/bin/kanshi"
         "${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland"
+        "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.writeShellScriptBin "autostart" ''
-          export GDK_SCALE=$(${pkgs.hyprland}/bin/hyprctl -j monitors | jq ".[] | .scale | round" | head -n1)
+          systemctl --user --no-block restart autostart.service
 
-          com.discordapp.Discord &
-          org.telegram.desktop &
-          com.valvesoftware.Steam &
-          1password &
+          keepassxc &
         ''}/bin/autostart"
       ];
 
       debug.disable_scale_checks = true;
 
       xwayland = {
-        force_zero_scaling = true;
+        force_zero_scaling = false;
         enabled = true;
-        use_nearest_neighbor = true;
+        use_nearest_neighbor = false;
       };
     };
   };
 
   services.hyprpaper = {
     enable = true;
-    settings = {
-      preload = ["/home/dzrodriguez/.wallpapers/img/Photography/Dogs/Jazz.jpg"];
-      wallpaper = [
-        ", /home/dzrodriguez/.wallpapers/img/Photography/Dogs/Jazz.jpg"
-      ];
-    };
   };
 
   services.hypridle = {
@@ -254,6 +249,7 @@ in {
       general = {
         lock_cmd = lib.getExe lock_cmd;
         before_sleep_cmd = "loginctl lock-session";
+
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
