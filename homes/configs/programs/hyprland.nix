@@ -64,7 +64,7 @@ in {
         # "$mainMod SHIFT, 7, movetoworkspace, 7"
         # "$mainMod SHIFT, 8, movetoworkspace, 8"
         # "$mainMod SHIFT, 9, movetoworkspace, 9"
-       #  "$mainMod SHIFT, 0, movetoworkspace, 10"
+        #  "$mainMod SHIFT, 0, movetoworkspace, 10"
 
         # Move workspace to monitor
         # "$mainMod ALT, left, movecurrentworkspacetomonitor, l"
@@ -84,7 +84,7 @@ in {
         # random bindings
         ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AuioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
         ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
 
@@ -208,15 +208,16 @@ in {
         "AQ_NO_MODIFIERS,1"
         "GDK_BACKEND,wayland"
         "GDK_SCALE,1"
+        "HYPRCURSOR_SIZE,24"
         "MOZ_ENABLE_WAYLAND,1"
+        "NIXOS_OZONE_WL,1"
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
-        "QT_QPA_PLATFORM,wayland;xcb"
         "QT_ENABLE_HIGHDPI_SCALING,1"
+        "QT_QPA_PLATFORM,wayland;xcb"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
-        "XDG_SESSION_TYPE,wayland"
         "XCURSOR_SIZE,24"
-        "HYPRCURSOR_SIZE,24"
+        "XDG_SESSION_TYPE,wayland"
         "_JAVA_AWT_WM_NONREPARENTING,1"
       ];
 
@@ -256,17 +257,17 @@ in {
       };
 
       plugin = {
-              split-monitor-workspaces = {
-        count = 5;
-        keep_focused = 0;
-        enable_notifications = 0;
-        enable_persistent_workspaces = 1;
-    };
+        split-monitor-workspaces = {
+          count = 5;
+          keep_focused = 0;
+          enable_notifications = 0;
+          enable_persistent_workspaces = 1;
+        };
       };
 
       ecosystem = {
-          no_update_news = false;
-          no_donation_nag = false;
+        no_update_news = false;
+        no_donation_nag = false;
       };
     };
   };
