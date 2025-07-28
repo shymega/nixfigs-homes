@@ -740,7 +740,7 @@ in {
     };
     targets = {
       alacritty.enable = true;
-      kde.enable = true;
+      kde.enable = false;
       gnome.enable = true;
       hyprland = {
         enable = true;
