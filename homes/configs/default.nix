@@ -161,6 +161,7 @@ in {
         b4
         bat
         bc
+        beancount
         beeper
         black
         brightnessctl
@@ -186,8 +187,10 @@ in {
         flatpak-xdg-utils
         fuse
         fzf
+        gemini-cli
         gh
         glab
+        gnucash
         gnumake
         go
         google-chrome
@@ -203,6 +206,8 @@ in {
         jdk17
         jq
         leafnode
+        ledger
+        ledger2beancount
         libnotify
         lynx
         lzip
@@ -213,6 +218,7 @@ in {
         moneydance
         mpc-cli
         mpv
+        mpvScripts.mpris
         mupdf
         ncmpcpp
         neomutt
@@ -270,9 +276,9 @@ in {
         tmuxp
         toolbox
         totp
+        twilight-kde
         units
         unrar
-        unstable.claude-code
         unstable.devenv
         unstable.gzdoom
         unzip
@@ -287,6 +293,7 @@ in {
         wezterm
         wf-recorder
         wget
+        whitesur-kde
         wl-mirror
         wm-menu
         yubikey-manager-qt

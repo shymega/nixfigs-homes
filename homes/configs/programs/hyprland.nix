@@ -106,6 +106,9 @@ in {
         touchpad = {
           natural_scroll = false;
         };
+        touchdevice = {
+          enabled = false;
+        };
         sensitivity = 0.5;
       };
 
