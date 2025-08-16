@@ -93,8 +93,6 @@
       url = "github:danth/stylix/release-25.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        flake-compat.follows = "flake-compat";
       };
     };
     base16-schemes.url = "github:SenchoPens/base16.nix";
