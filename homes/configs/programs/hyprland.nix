@@ -101,10 +101,26 @@ in {
 
       "$mainMod" = "SUPER";
 
+      binds = {
+        drag_threshold = 10;
+      };
+
+      bindm = [
+        "$mainMod,mouse:272,movewindow"
+        "$mainMod,mouse:273,resizewindow"
+      ];
+
+      monitor = [
+        "WAYLAND-1,disabled"
+      ];
+
       input = {
         follow_mouse = 1;
         touchpad = {
           natural_scroll = false;
+        };
+        touchdevice = {
+          enabled = false;
         };
         sensitivity = 0.5;
       };
@@ -114,6 +130,11 @@ in {
         gaps_out = 2;
         border_size = 2;
         layout = "dwindle";
+      };
+
+      ecosystem = {
+        no_update_news = true;
+        no_donation_nag = true;
       };
 
       decoration = {
