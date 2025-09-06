@@ -106,6 +106,9 @@ in {
         touchpad = {
           natural_scroll = false;
         };
+        touchdevice = {
+          enabled = false;
+        };
         sensitivity = 0.5;
       };
 
@@ -114,6 +117,11 @@ in {
         gaps_out = 2;
         border_size = 2;
         layout = "dwindle";
+      };
+
+      ecosystem = {
+        no_update_news = true;
+        no_donation_nag = true;
       };
 
       decoration = {
