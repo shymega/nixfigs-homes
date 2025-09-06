@@ -34,7 +34,8 @@
     formatter = treeFmtEachSystem (pkgs: treeFmtEval.${pkgs.system}.config.build.wrapper);
     # for `nix flake check`
     checks =
-      treeFmtEachSystem (pkgs: {
+      treeFmtEachSystem
+      (pkgs: {
         formatting = treeFmtEval.${pkgs}.config.build.wrapper;
       })
       // forEachSystem (system: {
@@ -93,8 +94,6 @@
       url = "github:danth/stylix/release-25.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        flake-compat.follows = "flake-compat";
       };
     };
     base16-schemes.url = "github:SenchoPens/base16.nix";
@@ -118,7 +117,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shyemacs-cfg = {
-      url = "github:shymega/emacs-cfg";
+      url = "github:shymega/nixfigs-emacs.el";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
