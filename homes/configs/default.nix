@@ -65,7 +65,7 @@ in {
   imports = with inputs;
     [
       ./network-targets.nix
-      #./programs/hyprland.nix
+      ./programs/hyprland.nix
       agenix.homeManagerModules.default
       nix-index-database.hmModules.nix-index
       onepassword-shell-plugins.hmModules.default
@@ -746,19 +746,19 @@ in {
       hash = "sha256-1py6MskXEeG8o30IdDVpWjInWenFxjDWVth2m7X5uOM=";
     };
     targets = {
-      # alacritty.enable = true;
+      alacritty.enable = true;
       kde.enable = false;
       gnome.enable = true;
-      #hyprland = {
-      #  enable = true;
-      #  hyprpaper.enable = true;
-      #};
-      # rofi.enable = true;
-      # waybar.enable = true;
+      hyprland = {
+        enable = true;
+        hyprpaper.enable = true;
+      };
+      rofi.enable = true;
+      waybar.enable = true;
       tmux.enable = true;
       sway.enable = true;
-      # swaylock.enable = true;
-      # hyprlock.enable = true;
+      swaylock.enable = true;
+      hyprlock.enable = true;
     };
   };
 }
