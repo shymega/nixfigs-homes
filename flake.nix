@@ -123,7 +123,10 @@
         home-manager.follows = "home-manager";
       };
     };
-    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.1";
+    hyprland = {
+      url = "github:hyprwm/Hyprland?ref=v0.51.1";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
