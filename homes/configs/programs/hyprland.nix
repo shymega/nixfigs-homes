@@ -16,10 +16,13 @@
     fi
   '';
 in {
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = let
+    hyprlandPackages = inputs.hyprland.packages.${pkgs.system};
+    inherit (hyprlandPackages) hyprland xdg-desktop-portal-hyprland;
+  in {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = hyprland;
+    portalPackage = xdg-desktop-portal-hyprland;
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
