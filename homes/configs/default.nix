@@ -70,7 +70,6 @@ in {
       nix-index-database.hmModules.nix-index
       onepassword-shell-plugins.hmModules.default
       shypkgs-public.hmModules.${system}.dwl
-      nix-flatpak.homeManagerModules.nix-flatpak
       nixfigs-secrets.user
       shyemacs-cfg.homeModules.emacs
       stylix.homeModules.stylix
@@ -360,6 +359,7 @@ in {
   };
 
   services = {
+    swaync.enable = true;
     darkman = {
       enable = true;
       package = pkgs.darkman;
@@ -447,25 +447,6 @@ in {
     "/var/lib/flatpak/exports/share"
     "$HOME/.local/share/flatpak/exports/share"
   ];
-
-  services.flatpak = {
-    enable = false;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-      }
-      {
-        name = "flathub-beta";
-        location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-      }
-    ];
-    uninstallUnmanaged = true;
-    update.auto = {
-      enable = true;
-      onCalendar = "daily"; # Default value
-    };
-  };
 
   programs = {
     _1password-shell-plugins = {
