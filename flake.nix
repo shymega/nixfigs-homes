@@ -106,12 +106,10 @@
     flake-utils.url = "github:numtide/flake-utils";
     shypkgs-private.url = "github:shymega/shypkgs-private";
     shypkgs-public.url = "github:shymega/shypkgs-public";
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
     nix-index-database = {
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -123,7 +121,10 @@
         home-manager.follows = "home-manager";
       };
     };
-    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.1";
+    hyprland = {
+      url = "github:hyprwm/Hyprland?ref=v0.52.1";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
