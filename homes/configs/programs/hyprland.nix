@@ -16,10 +16,14 @@
     fi
   '';
 in {
+  imports = [
+    inputs.hyprland.homeManagerModules.default
+  ];
+
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = null;
+    portalPackage = null;
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
@@ -30,8 +34,6 @@ in {
         "$mainMod, M, exit,"
         "$mainMod, V, togglefloating,"
         "$mainMod, P, exec, wm-menu"
-        "$mainMod, R, pseudo, # dwindle"
-        "$mainMod, S, togglesplit, # dwindle"
 
         # Move focus with mainMod + arrow keys
         "$mainMod, left, movefocus, l"
@@ -129,7 +131,7 @@ in {
         gaps_in = 2;
         gaps_out = 2;
         border_size = 2;
-        layout = "dwindle";
+        layout = "master";
       };
 
       ecosystem = {
@@ -141,7 +143,7 @@ in {
         rounding = 8;
 
         blur = {
-          enabled = true;
+          enabled = false;
           size = 12;
           passes = 5;
           new_optimizations = true;
@@ -186,19 +188,24 @@ in {
         ];
       };
 
-      dwindle = {
-        pseudotile = true;
-        preserve_split = true;
-      };
-
       gestures = {};
 
       misc = {
-        focus_on_activate = false;
+        allow_session_lock_restore = true;
+        anr_missed_pings = 10;
+        disable_autoreload = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
-        mouse_move_enables_dpms = false;
+        focus_on_activate = false;
         key_press_enables_dpms = true;
+        lockdead_screen_delay = 5000;
+        mouse_move_enables_dpms = false;
+        vfr = true;
+        vrr = 3;
+      };
+
+      render = {
+        direct_scanout = 2;
       };
 
       layerrule = [
@@ -208,7 +215,6 @@ in {
       ];
 
       env = [
-        "AQ_NO_MODIFIERS,1"
         "GDK_BACKEND,wayland"
         "GDK_SCALE,1"
         "MOZ_ENABLE_WAYLAND,1"
@@ -231,23 +237,28 @@ in {
         "opacity 1.0 0.95, title:^(.*)$"
       ];
 
+      windowrulev2 = [
+        "tag +games, class:^(gamescope)$"
+        "tag +games, class:^(steam_app_\d+)$"
+        "noblur, tag:games*"
+        "fullscreen, tag:games*"
+      ];
+
       exec-once = [
         "${pkgs.bat}/bin/bat cache --build"
         "${pkgs.clipse}/bin/clipse -listen"
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "${pkgs.mako}/bin/mako"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
         "${pkgs.waybar}/bin/waybar"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
-        "${pkgs.kanshi}/bin/kanshi"
         "${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.writeShellScriptBin "autostart" ''
           systemctl --user --no-block restart autostart.service
-
-          keepassxc &
         ''}/bin/autostart"
+        "${pkgs.unstable.sunsetr}/bin/sunsetr"
+        "${pkgs.kanshi}/bin/kanshi"
       ];
 
       debug.disable_scale_checks = true;
@@ -291,4 +302,6 @@ in {
   programs.hyprlock = {
     enable = true;
   };
+
+  services.swaync.enable = true;
 }
