@@ -70,7 +70,6 @@ in {
       nix-index-database.hmModules.nix-index
       onepassword-shell-plugins.hmModules.default
       shypkgs-public.hmModules.${system}.dwl
-      nix-flatpak.homeManagerModules.nix-flatpak
       nixfigs-secrets.user
       shyemacs-cfg.homeModules.emacs
       stylix.homeModules.stylix
@@ -150,6 +149,7 @@ in {
         aerc
         age
         agebox
+        aider-chat
         alejandra
         alpaca
         alsa-utils
@@ -167,12 +167,14 @@ in {
         brightnessctl
         buildpack
         bun
+        claude-code
         cloudflared
         cocogitto
         curl
         dateutils
         dex
         diesel-cli
+        diffoscope
         difftastic
         distrobox
         dnscontrol
@@ -229,6 +231,7 @@ in {
         nixfmt-rfc-style
         nixpacks
         nixpkgs-fmt
+        nixpkgs-review
         nodejs
         notmuch
         offlineimap
@@ -257,6 +260,7 @@ in {
         rclone
         restic
         reuse
+        rkvm
         rot8
         ruff
         rustup
@@ -295,6 +299,7 @@ in {
         wget
         whitesur-kde
         wl-mirror
+        wlr-randr
         wm-menu
         yubikey-manager-qt
         zathura
@@ -360,6 +365,7 @@ in {
   };
 
   services = {
+    swaync.enable = true;
     darkman = {
       enable = true;
       package = pkgs.darkman;
@@ -404,7 +410,7 @@ in {
       enable = true;
       components = ["secrets"];
     };
-    dunst.enable = true;
+    dunst.enable = false;
     mpd-discord-rpc.enable = true;
     mpris-proxy.enable = true;
     mpdris2.enable = true;
@@ -447,25 +453,6 @@ in {
     "/var/lib/flatpak/exports/share"
     "$HOME/.local/share/flatpak/exports/share"
   ];
-
-  services.flatpak = {
-    enable = false;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-      }
-      {
-        name = "flathub-beta";
-        location = "https://flathub.org/beta-repo/flathub-beta.flatpakrepo";
-      }
-    ];
-    uninstallUnmanaged = true;
-    update.auto = {
-      enable = true;
-      onCalendar = "daily"; # Default value
-    };
-  };
 
   programs = {
     _1password-shell-plugins = {
