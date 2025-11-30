@@ -14,10 +14,6 @@
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
   isModule = builtins.hasAttr "osConfig" args;
-  osConfig =
-    if isModule
-    then builtins.getAttr "osConfig" args
-    else {};
   getHomeDirectory = username: homePrefix + "/${username}";
   homeDirectory = getHomeDirectory username;
   rustCrates = with pkgs; [
@@ -32,7 +28,7 @@
     cargo-dist
     cargo-edit
     cargo-embassy
-    cargo-espflash
+    espflash
     cargo-espmonitor
     cargo-expand
     cargo-generate
@@ -45,7 +41,7 @@
     cargo-workspaces
     cargo-xbuild
     difftastic
-    du-dust
+    dust
     duf
     fclones
     fd
@@ -141,7 +137,6 @@ in {
         alsa-utils
         android-tools
         asciinema
-        aws-sam-cli
         awscli2
         azure-cli
         b4
@@ -201,10 +196,8 @@ in {
         lzip
         m4
         maven
-        meli
         mkcert
-        moneydance
-        mpc-cli
+        mpc
         mpv
         mpvScripts.mpris
         mupdf
@@ -229,14 +222,14 @@ in {
         pizauth
         playerctl
         poetry
-        poppler_utils
+        poppler-utils
         powershell
         pre-commit
         public-inbox
         pw-volume
         pwalarmd
         pwvucontrol
-        python3Full
+        python3
         python3Packages.pip
         python3Packages.pipx
         python3Packages.virtualenv
@@ -287,7 +280,7 @@ in {
         wl-mirror
         wlr-randr
         wm-menu
-        yubikey-manager-qt
+        yubioath-flutter
         zathura
         zellij
         zip
@@ -297,45 +290,24 @@ in {
           emacs = pkgs.emacs30-pgtk;
         })
         unstable.isync-patched
-        inputs.agenix.packages.${pkgs.system}.default
+        inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ rustCrates
       ++ (
         with pkgs;
-          lib.optionals isPC (
-            with pkgs.jetbrains;
-              [
-                clion
-                datagrip
-                dataspell
-                gateway
-                goland
-                idea-community
-                idea-ultimate
-                phpstorm
-                pycharm-community
-                pycharm-professional
-                rider
-                ruby-mine
-                rust-rover
-                webstorm
-                writerside
-              ]
-              ++ (with pkgs; [
-                android-studio
-                android-studio-for-platform
-                gcc
-                protontricks
-                protonup-qt
-                steamcmd
-                texlive.combined.scheme-full
-                virt-manager
-                virtiofsd
-                wineWowPackages.stable
-                winetricks
-                xrlinuxdriver
-              ])
-          )
+          lib.optionals isPC (with pkgs; [
+            android-studio
+            android-studio-for-platform
+            gcc
+            protontricks
+            protonup-qt
+            steamcmd
+            texlive.combined.scheme-full
+            virt-manager
+            virtiofsd
+            wineWowPackages.stable
+            winetricks
+          ])
       )
       ++ (
         with pkgs; [
