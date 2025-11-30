@@ -31,7 +31,7 @@
     inherit (inputs.nixfigs-roles) roles utils;
     inherit (inputs) self;
     # for `nix fmt`
-    formatter = treeFmtEachSystem (pkgs: treeFmtEval.${pkgs.system}.config.build.wrapper);
+    formatter = treeFmtEachSystem (pkgs: treeFmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
     # for `nix flake check`
     checks =
       treeFmtEachSystem
@@ -58,7 +58,7 @@
     };
   };
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nixpkgs-shymega.url = "github:shymega/nixpkgs?ref=shymega/staging";
@@ -72,7 +72,7 @@
       flake = false;
     };
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      url = "github:edolstra/flake-compat?ref=v1.1.0";
       flake = false;
     };
     agenix = {
@@ -82,7 +82,7 @@
       };
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     plasma-manager = {
@@ -91,7 +91,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     stylix = {
-      url = "github:danth/stylix/release-25.05";
+      url = "github:danth/stylix/release-25.11";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
@@ -108,10 +108,6 @@
     shypkgs-public.url = "github:shymega/shypkgs-public";
     nix-index-database = {
       url = "github:Mic92/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shyemacs-cfg = {
