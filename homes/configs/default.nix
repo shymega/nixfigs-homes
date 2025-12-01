@@ -6,7 +6,7 @@
   pkgs,
   config,
   username,
-  system,
+  hostPlatform,
   lib,
   libx,
   ...
@@ -63,7 +63,7 @@ in {
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
     onepassword-shell-plugins.hmModules.default
-    shypkgs-public.hmModules.${system}.dwl
+    shypkgs-public.hmModules.${hostPlatform}.dwl
     nixfigs-secrets.user
     shyemacs-cfg.homeModules.emacs
     stylix.homeModules.stylix
@@ -494,12 +494,7 @@ in {
     git = {
       enable = true;
       lfs.enable = true;
-      extraConfig = {
-        #        gpg.format = "ssh";
-        #        "gpg \"ssh\"".program = "${getExe' pkgs._1password-gui "op-ssh-sign"}";
-        #        commit.gpgsign = true;
-      };
-      aliases = {
+      settings.alias = {
         aa = "add --all";
         amend = "commit --amend";
         br = "branch";
