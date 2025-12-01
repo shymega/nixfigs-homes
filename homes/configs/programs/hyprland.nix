@@ -15,6 +15,7 @@
       wait $(jobs -p)
     fi
   '';
+  inherit (inputs.nixpkgs-shymega.legacyPackages.${pkgs.stdenv.hostPlatform.system}) hyprproxlock;
 in {
   imports = [
     inputs.hyprland.homeManagerModules.default
@@ -257,8 +258,9 @@ in {
         "${pkgs.writeShellScriptBin "autostart" ''
           systemctl --user --no-block restart autostart.service
         ''}/bin/autostart"
-        "${pkgs.unstable.sunsetr}/bin/sunsetr"
+        "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
+        "${hyprproxlock}/bin/hyprproxlock"
       ];
 
       debug.disable_scale_checks = true;
