@@ -6,7 +6,7 @@
   pkgs,
   config,
   username,
-  system,
+  hostPlatform,
   lib,
   libx,
   ...
@@ -63,7 +63,7 @@ in {
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
     onepassword-shell-plugins.hmModules.default
-    shypkgs-public.hmModules.${system}.dwl
+    shypkgs-public.hmModules.${hostPlatform}.dwl
     nixfigs-secrets.user
     shyemacs-cfg.homeModules.emacs
     stylix.homeModules.stylix
@@ -78,7 +78,6 @@ in {
           "https://nix-community.cachix.org/?priority=10"
           "https://numtide.cachix.org/?priority=14"
           "https://pre-commit-hooks.cachix.org/?priority=16"
-          "ssh://eu.nixbuild.net?priority=20"
         ];
         trusted-public-keys = lib.mkForce [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -99,7 +98,6 @@ in {
         shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
       };
       extraOptions = ''
-        builders = @/etc/nix/machines
         !include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
       package = pkgs.nix;
@@ -117,7 +115,6 @@ in {
       };
       inherit (args.osConfig.nix) registry;
       extraOptions = ''
-        builders = @/etc/nix/machines
         !include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
     };
@@ -494,12 +491,7 @@ in {
     git = {
       enable = true;
       lfs.enable = true;
-      extraConfig = {
-        #        gpg.format = "ssh";
-        #        "gpg \"ssh\"".program = "${getExe' pkgs._1password-gui "op-ssh-sign"}";
-        #        commit.gpgsign = true;
-      };
-      aliases = {
+      settings.alias = {
         aa = "add --all";
         amend = "commit --amend";
         br = "branch";
