@@ -22,7 +22,6 @@
       pkgs = genPkgs hostPlatform;
       modules = [./configs];
       extraSpecialArgs = {
-        system = hostPlatform;
         hostType = type;
         pkgs = genPkgs hostPlatform;
         inherit
@@ -30,6 +29,7 @@
           username
           self
           libx
+          hostPlatform
           ;
       };
     };
