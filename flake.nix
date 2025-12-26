@@ -72,7 +72,7 @@
       flake = false;
     };
     flake-compat = {
-      url = "github:edolstra/flake-compat?ref=v1.1.0";
+      url = "github:edolstra/flake-compat";
       flake = false;
     };
     agenix = {
