@@ -100,7 +100,6 @@ in {
       extraOptions = ''
         !include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
-      package = pkgs.nix;
     }
     else {
       settings = {
