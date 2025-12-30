@@ -23,22 +23,24 @@ in {
 
   # Import packages for Hyprland.
   home.packages = with pkgs; [
-    dbus xorg.xlsclients
+    dbus
+    xorg.xlsclients
     foot
-    libcave
+    libcava
     lxqt.pavucontrol-qt
     ddcutil
     uutils-coreutils-noprefix
     cliphist
-    xdg-users-dirs
+    xdg-user-dirs
     yq-go
-
 
     ### illogical-impulse-fonts-themes
     adw-gtk3 #adw-gtk-theme-git (https://github.com/lassekongo83/adw-gtk3) (Used in Quickshell config)
-    kdePackages.breeze kdePackages.breeze-icons #breeze (Used in kdeglobals config)
+    kdePackages.breeze
+    kdePackages.breeze-icons #breeze (Used in kdeglobals config)
     #breeze-plus (https://github.com/mjkim0727/breeze-plus) (TODO: Not available as nixpkg) (Used in kde-material-you-colors config)
-    darkly darkly-qt5 #darkly-bin (darkly is supposed to be set as the theme for Qt apps, just have not figured out how to properly set it yet.)
+    darkly
+    darkly-qt5 #darkly-bin (darkly is supposed to be set as the theme for Qt apps, just have not figured out how to properly set it yet.)
     eza #eza (Used in Fish config: `alias ls 'eza --icons'`)
     #fish (Install via system PM instead; TODO: should install via nix in future when authentication problem fixed)
     fontconfig #fontconfig (Basic thing)
@@ -255,7 +257,7 @@ in {
         direct_scanout = 2;
       };
 
-      layerrule = [
+      layerrulev2 = [
         "blur,notifications"
         "ignorezero,notifications"
         "noanim,selection"
@@ -279,10 +281,6 @@ in {
       cursor = {
         no_hardware_cursors = 1;
       };
-
-      windowrule = [
-        "opacity 1.0 0.95, title:^(.*)$"
-      ];
 
       windowrulev2 = [
         "tag +games, class:^(gamescope)$"
