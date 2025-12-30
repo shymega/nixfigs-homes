@@ -21,6 +21,52 @@ in {
     inputs.hyprland.homeManagerModules.default
   ];
 
+  # Import packages for Hyprland.
+  home.packages = with pkgs; [
+    dbus xorg.xlsclients
+    foot
+    libcave
+    lxqt.pavucontrol-qt
+    ddcutil
+    uutils-coreutils-noprefix
+    cliphist
+    xdg-users-dirs
+    yq-go
+
+
+    ### illogical-impulse-fonts-themes
+    adw-gtk3 #adw-gtk-theme-git (https://github.com/lassekongo83/adw-gtk3) (Used in Quickshell config)
+    kdePackages.breeze kdePackages.breeze-icons #breeze (Used in kdeglobals config)
+    #breeze-plus (https://github.com/mjkim0727/breeze-plus) (TODO: Not available as nixpkg) (Used in kde-material-you-colors config)
+    darkly darkly-qt5 #darkly-bin (darkly is supposed to be set as the theme for Qt apps, just have not figured out how to properly set it yet.)
+    eza #eza (Used in Fish config: `alias ls 'eza --icons'`)
+    #fish (Install via system PM instead; TODO: should install via nix in future when authentication problem fixed)
+    fontconfig #fontconfig (Basic thing)
+    kitty #kitty (Used in fuzzel, Hyprland, kdeglobals and Quickshell config; kitty config is also included as dots)
+    matugen #matugen-bin (Used in Quickshell)
+    #otf-space-grotesk (https://events.ccc.de/congress/2024/infos/styleguide.html) (TODO: Not available as Nixpkg) (Used in Quickshell and matugen config)
+    starship #starship (Used in Fish config)
+    #ttf-gabarito-git (Font name: Gabarito) (Used in fuzzel and Quickshell config) (TODO: Not available as Nixpkg)
+    nerd-fonts.jetbrains-mono #ttf-jetbrains-mono-nerd (Font name: JetBrains Mono NF, JetBrainsMono Nerd Font) (Used in foot, kdeglobals, kitty, qt5ct, qt6ct and Quickshell config)
+    material-symbols #ttf-material-symbols-variable-git (Font name: Material Symbols Rounded, Material Symbols Outlined) (Used in Hyprland, matugen, Quickshell and wlogout config)
+    #ttf-readex-pro (Font name: Readex Pro) (Used in Quickshell config) (TODO: seems not available as nixpkg)
+    roboto-flex #ttf-roboto-flex (Font name: Roboto Flex) (Used in Hyprland, matugen and Quickshell config)
+    rubik #ttf-rubik-vf (Font name: Rubik, Rubik Light) (Used in Hyprland, kdeglobals, matugen, qt5ct, qt6ct and Quickshell config)
+    twemoji-color-font #ttf-twemoji (Not explicitly used, but it may help as fallback for displaying emoji charaters)
+
+    hyprpicker
+    hyprshot
+    slurp
+    tesseract
+    swappy
+    wtype
+    ydotool
+    fuzzel
+    songrec
+    wlogout
+    translate-shell
+  ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
