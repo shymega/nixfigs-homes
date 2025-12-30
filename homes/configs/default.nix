@@ -90,6 +90,7 @@ in {
         http-connections = 128;
         max-substitution-jobs = 128;
       };
+      package = pkgs.lix;
       registry = {
         home-manager.flake = inputs.home-manager;
         n.flake = inputs.nixpkgs;
