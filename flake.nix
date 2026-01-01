@@ -125,5 +125,9 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
+    gitalias = {
+      url = "github:GitAlias/gitalias";
+      flake = false;
+    };
   };
 }
