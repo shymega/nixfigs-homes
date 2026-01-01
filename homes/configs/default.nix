@@ -510,7 +510,7 @@ in {
         squash-all = "!f(){ git reset $(git commit-tree HEAD^{tree} -m 'A new start');};f";
       };
       includes = with inputs; [
-        { path = "${gitalias}/gitalias.txt"; }
+        {path = "${gitalias}/gitalias.txt";}
       ];
     };
     vscode = {
