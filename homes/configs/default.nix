@@ -509,6 +509,9 @@ in {
         revert = "revert --no-edit";
         squash-all = "!f(){ git reset $(git commit-tree HEAD^{tree} -m 'A new start');};f";
       };
+      includes = with inputs; [
+        { path = "${gitalias}/gitalias.txt"; }
+      ];
     };
     vscode = {
       enable = true;
