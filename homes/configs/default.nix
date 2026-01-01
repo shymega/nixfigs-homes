@@ -260,7 +260,6 @@ in {
         units
         unrar
         unstable.devenv
-        unstable.gzdoom
         unzip
         uv
         vdirsyncer
