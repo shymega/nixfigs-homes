@@ -226,7 +226,7 @@ in {
         pw-volume
         pwalarmd
         pwvucontrol
-        python3
+        (python3.withPackages (p: [p.tkinter]))
         python3Packages.pip
         python3Packages.pipx
         python3Packages.virtualenv
