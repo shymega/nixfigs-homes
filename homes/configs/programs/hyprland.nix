@@ -250,7 +250,6 @@ in {
         lockdead_screen_delay = 5000;
         mouse_move_enables_dpms = false;
         vfr = true;
-        vrr = 3;
       };
 
       render = {
