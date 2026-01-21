@@ -97,7 +97,15 @@
       };
     };
     base16-schemes.url = "github:SenchoPens/base16.nix";
-    nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
+    doom-emacs = {
+      url = "github:doomemacs/doomemacs";
+      flake = false;
+    };
+    nix-doom-emacs-unstraightened = {
+        url = "github:marienz/nix-doom-emacs-unstraightened";
+        inputs.nixpkgs.follows = "";
+        inputs.doomemacs.follows = "doom-emacs";
+    };
     nixfigs-doom-emacs = {
       url = "github:shymega/nixfigs-doom-emacs";
       flake = false;
