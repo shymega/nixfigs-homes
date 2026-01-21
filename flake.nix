@@ -102,9 +102,9 @@
       flake = false;
     };
     nix-doom-emacs-unstraightened = {
-        url = "github:marienz/nix-doom-emacs-unstraightened";
-        inputs.nixpkgs.follows = "";
-        inputs.doomemacs.follows = "doom-emacs";
+      url = "github:marienz/nix-doom-emacs-unstraightened";
+      inputs.nixpkgs.follows = "";
+      inputs.doomemacs.follows = "doom-emacs";
     };
     nixfigs-doom-emacs = {
       url = "github:shymega/nixfigs-doom-emacs";
