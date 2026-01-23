@@ -7,8 +7,7 @@
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
     #!/usr/bin/env bash
     if pidof ${pkgs.hyprlock}/bin/hyprlock > /dev/null; then
-      exit 0
-    else
+      pkill -9 ${pkgs.hyprlock}/bin/hyprlock
       ${pkgs.hyprlock}/bin/hyprlock --immediate &
       sleep 2s
       hyprctl dispatch dpms off
