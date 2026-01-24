@@ -255,7 +255,7 @@ in {
         direct_scanout = 2;
       };
 
-      layerrulev2 = [
+      layerrule = [
         "blur,notifications"
         "ignorezero,notifications"
         "noanim,selection"
@@ -280,7 +280,7 @@ in {
         no_hardware_cursors = 1;
       };
 
-      windowrulev2 = [
+      windowrule = [
         "tag +games, class:^(gamescope)$"
         "tag +games, class:^(steam_app_\d+)$"
         "noblur, tag:games*"
