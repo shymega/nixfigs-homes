@@ -280,11 +280,11 @@ in {
         zathura
         zellij
         zip
-        (pkgs.doomEmacs {
-          doomDir = inputs.nixfigs-doom-emacs;
-          doomLocalDir = "${homeDirectory}/.local/state/doom";
-          emacs = pkgs.emacs30-pgtk;
-        })
+        # (pkgs.doomEmacs {
+        #   doomDir = inputs.nixfigs-doom-emacs;
+        #   doomLocalDir = "${homeDirectory}/.local/state/doom";
+        #   emacs = pkgs.emacs30-pgtk;
+        # })
         unstable.isync-patched
         inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
