@@ -126,7 +126,7 @@
       };
     };
     hyprland = {
-      url = "github:shymega/Hyprland?ref=shymega/apply-nix-glaze-patch";
+      url = "github:hyprwm/Hyprland?ref=v0.53.3";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     hyprland-plugins = {
