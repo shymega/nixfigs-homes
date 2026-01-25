@@ -6,7 +6,8 @@
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
     #!/usr/bin/env bash
-    if pidof ${pkgs.hyprlock}/bin/hyprlock > /dev/null; then
+    pidof -x hyprlock >/dev/null 2>&1
+    if [[ "$?" -eq 1 ]]; then
       ${pkgs.hyprlock}/bin/hyprlock --immediate &
       sleep 2s
       hyprctl dispatch dpms off
