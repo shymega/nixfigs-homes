@@ -99,7 +99,7 @@ in {
         shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
       };
       extraOptions = ''
-        !include ${config.age.secrets.nix_conf_access_tokens.path}
+        include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
     }
     else {
@@ -115,7 +115,7 @@ in {
       };
       inherit (args.osConfig.nix) registry;
       extraOptions = ''
-        !include ${config.age.secrets.nix_conf_access_tokens.path}
+        include ${config.age.secrets.nix_conf_access_tokens.path}
       '';
     };
 
