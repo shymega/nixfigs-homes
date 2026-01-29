@@ -140,7 +140,7 @@ in {
         bat
         bc
         beancount
-        unstable.beeper
+        beeper
         black
         brightnessctl
         buildpack
