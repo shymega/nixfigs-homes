@@ -204,7 +204,7 @@ in {
       };
 
       render = {
-        direct_scanout = 2;
+        direct_scanout = 0;
       };
 
       layerrule = [
