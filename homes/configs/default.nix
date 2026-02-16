@@ -284,6 +284,7 @@ in {
           doomDir = inputs.nixfigs-doom-emacs;
           doomLocalDir = "${homeDirectory}/.local/state/doom";
           emacs = pkgs.emacs-pgtk;
+          experimentalFetchTree = true;
         })
         unstable.isync-patched
         inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
