@@ -10,10 +10,9 @@
   lib,
   libx,
   ...
-} @ args: let
+}: let
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
-  isModule = builtins.hasAttr "osConfig" args;
   getHomeDirectory = username: homePrefix + "/${username}";
   homeDirectory = getHomeDirectory username;
   rustCrates = with pkgs; [
