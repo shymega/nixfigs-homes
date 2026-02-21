@@ -69,56 +69,6 @@ in {
     stylix.homeModules.stylix
   ];
 
-  nix =
-    if !isModule
-    then {
-      settings = rec {
-        substituters = lib.mkForce [
-          "https://cache.nixos.org/?priority=15"
-          "https://nix-community.cachix.org/?priority=10"
-          "https://numtide.cachix.org/?priority=14"
-          "https://pre-commit-hooks.cachix.org/?priority=16"
-        ];
-        trusted-public-keys = lib.mkForce [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          "nixbuild.net/VNUM6K-1:ha1G8guB68/E1npRiatdXfLZfoFBddJ5b2fPt3R9JqU="
-          "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-          "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
-        ];
-        builders-use-substitutes = true;
-        http-connections = 128;
-        max-substitution-jobs = 128;
-      };
-      package = pkgs.nix;
-      registry = {
-        home-manager.flake = inputs.home-manager;
-        n.flake = inputs.nixpkgs;
-        nixpkgs.flake = inputs.nixpkgs;
-        nu.flake = inputs.nixpkgs-unstable;
-        shypkgs.flake = inputs.shypkgs-public // inputs.shypkgs-public;
-      };
-      extraOptions = ''
-        !include ${config.age.secrets.nix_conf_access_tokens.path}
-      '';
-    }
-    else {
-      settings = {
-        inherit
-          (args.osConfig.nix.settings)
-          substituters
-          trusted-public-keys
-          builders-use-substitutes
-          http-connections
-          max-substitution-jobs
-          ;
-      };
-      inherit (args.osConfig.nix) registry;
-      extraOptions = ''
-        !include ${config.age.secrets.nix_conf_access_tokens.path}
-      '';
-    };
-
   home = {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
