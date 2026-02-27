@@ -203,10 +203,6 @@ in {
         vfr = true;
       };
 
-      render = {
-        direct_scanout = 0;
-      };
-
       layerrule = [
         "blur on, ignore_alpha 0, match:namespace notifications"
         "no_anim on, match:namespace selection"
