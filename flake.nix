@@ -125,7 +125,7 @@
         home-manager.follows = "home-manager";
       };
     };
-     hyprland = {
+    hyprland = {
       url = "github:hyprwm/Hyprland?ref=v0.54.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
