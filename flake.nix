@@ -125,13 +125,26 @@
         home-manager.follows = "home-manager";
       };
     };
-    hyprland = {
+     hyprland = {
       url = "github:hyprwm/Hyprland?ref=v0.54.0";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
+    };
+    split-monitor-workspaces = {
+      url = "github:Duckonaut/split-monitor-workspaces?rev=1680bf943b86e373db4b770d3280cf09ee08f208";
+      inputs.hyprland.follows = "hyprland"; # <- make sure this line is present for the plugin to work as intended
+    };
+    snappy-switcher.url = "github:OpalAayan/snappy-switcher";
+    hy3 = {
+      url = "github:outfoxxed/hy3?ref=hl0.53.0.1";
+      inputs.hyprland.follows = "hyprland";
+    };
+    Hyprspace = {
+      url = "github:KZDKM/Hyprspace";
+      inputs.hyprland.follows = "hyprland";
     };
     gitalias = {
       url = "github:GitAlias/gitalias";
