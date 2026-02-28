@@ -40,10 +40,10 @@ in {
         "$mainMod, P, exec, wm-menu"
 
         # Move focus with mainMod + arrow keys
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
+        "$mainMod, left, hy3:movefocus, l"
+        "$mainMod, right, hy3:movefocus, r"
+        "$mainMod, up, hy3:movefocus, u"
+        "$mainMod, down, hy3:movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, workspace, 1"
@@ -100,8 +100,7 @@ in {
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod, S, movetoworkspace, special:magic"
         "$mainMod, S, togglespecialworkspace, magic"
-        "ALT, Tab, cyclenext"
-        "ALT, Tab, bringactivetotop"
+        "ALT, Tab, overview:toggle"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
       ];
 
@@ -112,7 +111,7 @@ in {
       };
 
       bindm = [
-        "$mainMod,mouse:272,movewindow"
+        "$mainMod,mouse:272,hy3:movewindow"
         "$mainMod,mouse:273,resizewindow"
       ];
 
