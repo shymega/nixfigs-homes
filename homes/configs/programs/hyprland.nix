@@ -17,7 +17,7 @@
   inherit (inputs.nixpkgs-shymega.legacyPackages.${pkgs.stdenv.hostPlatform.system}) hyprproxlock;
 in {
   imports = [
-    inputs.hyprland.inputs.hyprland.homeManagerModules.default
+    inputs.hyprland.homeManagerModules.default
   ];
 
   wayland.windowManager.hyprland = {
@@ -29,7 +29,6 @@ in {
     plugins = with inputs; [
       hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
       Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace
-      split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
     settings = {
       bind = [
@@ -135,7 +134,7 @@ in {
         gaps_in = 2;
         gaps_out = 2;
         border_size = 2;
-        layout = "hy3";
+        layout = "master";
       };
 
       ecosystem = {
