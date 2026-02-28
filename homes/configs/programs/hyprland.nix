@@ -6,6 +6,7 @@
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
     #!/usr/bin/env bash
+    pkill -9 hyprlock
     pidof -x hyprlock >/dev/null 2>&1
     if [[ "$?" -eq 1 ]]; then
       ${pkgs.hyprlock}/bin/hyprlock --immediate &
@@ -27,8 +28,8 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
-      hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
-      Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace
+      # hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+      split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
     settings = {
       bind = [
@@ -40,10 +41,10 @@ in {
         "$mainMod, P, exec, wm-menu"
 
         # Move focus with mainMod + arrow keys
-        "$mainMod, left, hy3:movefocus, l"
-        "$mainMod, right, hy3:movefocus, r"
-        "$mainMod, up, hy3:movefocus, u"
-        "$mainMod, down, hy3:movefocus, d"
+        "$mainMod, left, movefocus, l"
+        "$mainMod, right, movefocus, r"
+        "$mainMod, up, movefocus, u"
+        "$mainMod, down, movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, workspace, 1"
@@ -100,7 +101,8 @@ in {
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod, S, movetoworkspace, special:magic"
         "$mainMod, S, togglespecialworkspace, magic"
-        "ALT, Tab, overview:toggle"
+        "ALT, Tab, exec, snappy-switcher next"
+        "ALT SHIFT, Tab, exec, snappy-switcher prev"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
       ];
 
@@ -111,7 +113,7 @@ in {
       };
 
       bindm = [
-        "$mainMod,mouse:272,hy3:movewindow"
+        "$mainMod,mouse:272,movewindow"
         "$mainMod,mouse:273,resizewindow"
       ];
 
@@ -234,6 +236,7 @@ in {
         "tag +games, match:class ^(gamescope)$"
         "tag +games, match:class ^(steam_app_d+)$"
         "no_blur on, fullscreen on, match:tag games*"
+        "match:class mpv, content none"
       ];
 
       exec-once = [
@@ -252,6 +255,7 @@ in {
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
         "${hyprproxlock}/bin/hyprproxlock"
+        "snappy-switcher --daemon"
       ];
 
       debug.disable_scale_checks = true;
@@ -274,19 +278,16 @@ in {
       general = {
         lock_cmd = lib.getExe lock_cmd;
         before_sleep_cmd = "loginctl lock-session";
-
-        after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
       listener = [
         {
-          timeout = 300;
-          on-timeout = "loginctl lock-session";
+          timeoout = 600;
+          on-timeout = lib.getExe lock_cmd;
         }
         {
-          timeout = 330;
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
+          timeout = 600;
+          on-timeout = "loginctl lock-session";
         }
       ];
     };

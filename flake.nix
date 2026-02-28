@@ -127,7 +127,6 @@
     };
     hyprland = {
       url = "github:hyprwm/Hyprland?ref=v0.54.0";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
@@ -139,11 +138,7 @@
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.53.0.1";
-      inputs.hyprland.follows = "hyprland";
-    };
-    Hyprspace = {
-      url = "github:KZDKM/Hyprspace";
+      url = "github:outfoxxed/hy3";
       inputs.hyprland.follows = "hyprland";
     };
     gitalias = {
