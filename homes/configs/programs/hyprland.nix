@@ -26,6 +26,10 @@ in {
     portalPackage = null;
     systemd.enable = true;
     xwayland.enable = true;
+    plugins = with inputs; [
+      hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+      Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace
+    ];
     settings = {
       bind = [
         "SUPER, Return, exec, alacritty"
