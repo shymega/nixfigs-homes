@@ -126,14 +126,20 @@
       };
     };
     hyprland = {
-      url = "github:hyprwm/hyprnix";
+      url = "github:hyprwm/Hyprland?ref=v0.54.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
+      inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces?rev=1680bf943b86e373db4b770d3280cf09ee08f208";
-      inputs.hyprland.follows = "hyprland";
+      inputs.hyprland.follows = "hyprland"; # <- make sure this line is present for the plugin to work as intended
     };
+    snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     hy3 = {
-      url = "github:outfoxxed/hy3?rev=962580115a99d5fb29c22ae4098353cf39a56e6f";
+      url = "github:outfoxxed/hy3?ref=hl0.53.0.1";
       inputs.hyprland.follows = "hyprland";
     };
     Hyprspace = {
