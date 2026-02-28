@@ -17,7 +17,7 @@
   inherit (inputs.nixpkgs-shymega.legacyPackages.${pkgs.stdenv.hostPlatform.system}) hyprproxlock;
 in {
   imports = [
-    inputs.hyprland.homeManagerModules.default
+    inputs.hyprland.inputs.hyprland.homeManagerModules.default
   ];
 
   wayland.windowManager.hyprland = {
