@@ -265,10 +265,7 @@ in {
       ++ (with pkgs.unstable.vimPlugins; [
         astrocore
       ])
-      ++ rustCrates
-      ++ [
-        inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default
-      ];
+      ++ rustCrates;
   };
 
   services = {
