@@ -4,12 +4,11 @@
   inputs,
   ...
 }: let
-  lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
+  lock_cmd = pkgs.writeShellScriptBin "swaylock-wrapped" ''
     #!/usr/bin/env bash
-    pkill -9 hyprlock
-    pidof -x hyprlock >/dev/null 2>&1
+    pidof -x swaylock >/dev/null 2>&1
     if [[ "$?" -eq 1 ]]; then
-      ${pkgs.hyprlock}/bin/hyprlock --immediate &
+      ${pkgs.swaylock}/bin/swaylock --immediate &
       sleep 2s
       hyprctl dispatch dpms off
       wait $(jobs -p)
@@ -254,7 +253,6 @@ in {
         ''}/bin/autostart"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
-        "${hyprproxlock}/bin/hyprproxlock"
         "snappy-switcher --daemon"
       ];
 
