@@ -8,13 +8,12 @@
     #!/usr/bin/env bash
     pidof -x swaylock >/dev/null 2>&1
     if [[ "$?" -eq 1 ]]; then
-      ${pkgs.swaylock}/bin/swaylock --immediate &
+      ${pkgs.swaylock}/bin/swaylock &
       sleep 2s
       hyprctl dispatch dpms off
       wait $(jobs -p)
     fi
   '';
-  inherit (inputs.nixpkgs-shymega.legacyPackages.${pkgs.stdenv.hostPlatform.system}) hyprproxlock;
 in {
   imports = [
     inputs.hyprland.homeManagerModules.default
@@ -197,14 +196,13 @@ in {
       misc = {
         allow_session_lock_restore = true;
         anr_missed_pings = 10;
-        disable_autoreload = true;
+        disable_autoreload = false;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         focus_on_activate = false;
         key_press_enables_dpms = true;
         lockdead_screen_delay = 5000;
         mouse_move_enables_dpms = false;
-        vfr = true;
       };
 
       layerrule = [
