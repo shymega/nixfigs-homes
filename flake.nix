@@ -31,11 +31,12 @@
     inherit (inputs.nixfigs-roles) roles utils;
     inherit (inputs) self;
     # for `nix fmt`
-    formatter = treeFmtEachSystem (pkgs: treeFmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
+    formatter = treeFmtEachSystem (
+      pkgs: treeFmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper
+    );
     # for `nix flake check`
     checks =
-      treeFmtEachSystem
-      (pkgs: {
+      treeFmtEachSystem (pkgs: {
         formatting = treeFmtEval.${pkgs}.config.build.wrapper;
       })
       // forEachSystem (system: {
@@ -126,14 +127,14 @@
       };
     };
     hyprland = {
-      url = "github:hyprwm/Hyprland?ref=v0.54.0";
+      url = "github:hyprwm/Hyprland?ref=v0.54.1";
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces?rev=1680bf943b86e373db4b770d3280cf09ee08f208";
+      url = "github:Duckonaut/split-monitor-workspaces?rev=601a3833af130fa3644dcd5b56f33db8db0a5e43";
       inputs.hyprland.follows = "hyprland"; # <- make sure this line is present for the plugin to work as intended
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
