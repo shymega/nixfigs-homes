@@ -252,7 +252,6 @@ in {
         ''}/bin/autostart"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
-        "${hyprproxlock}/bin/hyprproxlock"
         "snappy-switcher --daemon"
       ];
 
