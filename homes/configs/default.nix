@@ -74,6 +74,7 @@ in {
     stateVersion = "25.05";
     packages = with pkgs;
       [
+        (python3.withPackages (p: [p.tkinter]))
         aerc
         age
         agebox
@@ -144,6 +145,7 @@ in {
         maven
         mkcert
         mpc
+        mprisence
         mpv
         mpvScripts.mpris
         mupdf
@@ -160,6 +162,7 @@ in {
         nodejs
         notmuch
         offlineimap
+        opencode
         p7zip
         parallel
         pass
@@ -175,7 +178,6 @@ in {
         pw-volume
         pwalarmd
         pwvucontrol
-        (python3.withPackages (p: [p.tkinter]))
         python3Packages.pip
         python3Packages.pipx
         python3Packages.virtualenv
@@ -241,34 +243,26 @@ in {
       ++ rustCrates
       ++ (
         with pkgs;
-          lib.optionals isPC (with pkgs; [
-            android-studio
-            android-studio-for-platform
-            gcc
-            protontricks
-            protonup-qt
-            steamcmd
-            texlive.combined.scheme-full
-            virt-manager
-            virtiofsd
-            wineWowPackages.stable
-            winetricks
-          ])
+          lib.optionals isPC (
+            with pkgs; [
+              android-studio
+              android-studio-for-platform
+              gcc
+              protontricks
+              protonup-qt
+              steamcmd
+              texlive.combined.scheme-full
+              virt-manager
+              virtiofsd
+              wineWowPackages.stable
+              winetricks
+            ]
+          )
       )
-      ++ (
-        with pkgs; [
-          (git-wip.override {
-            wipPrefix = "shymega";
-          })
-        ]
-      )
-      ++ (with pkgs.unstable.vimPlugins; [
-        astrocore
-      ])
+      ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
+      ++ (with pkgs.unstable.vimPlugins; [astrocore])
       ++ rustCrates
-      ++ [
-        inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default
-      ];
+      ++ [inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default];
   };
 
   services = {
@@ -462,9 +456,7 @@ in {
         revert = "revert --no-edit";
         squash-all = "!f(){ git reset $(git commit-tree HEAD^{tree} -m 'A new start');};f";
       };
-      includes = with inputs; [
-        {path = "${gitalias}/gitalias.txt";}
-      ];
+      includes = with inputs; [{path = "${gitalias}/gitalias.txt";}];
     };
     vscode = {
       enable = true;
