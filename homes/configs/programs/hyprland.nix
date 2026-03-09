@@ -3,23 +3,21 @@
   lib,
   inputs,
   ...
-}:
-let
+}: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
-         #!/usr/bin/env bash
-         kill -9 $(pidof swaylock)
-         pidof -x swaylock >/dev/null 2>&1
-         if [[ "$?" -eq 1 ]]; then
-    	    loginctl lock-session
-           ${pkgs.swaylock}/bin/swaylock -f &
-           sleep 4s
-           hyprctl dispatch dpms off
-           wait $(jobs -p)
-         fi
+    #!/usr/bin/env bash
+    kill -9 $(pidof swaylock)
+    pidof -x swaylock >/dev/null 2>&1
+    if [[ "$?" -eq 1 ]]; then
+    loginctl lock-session
+      ${pkgs.swaylock}/bin/swaylock -f &
+      sleep 4s
+      hyprctl dispatch dpms off
+      wait $(jobs -p)
+    fi
   '';
-in
-{
-  imports = [ inputs.hyprland.homeManagerModules.default ];
+in {
+  imports = [inputs.hyprland.homeManagerModules.default];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -127,7 +125,7 @@ in
         "$mainMod,mouse:273,resizewindow"
       ];
 
-      monitor = [ "WAYLAND-1,disabled" ];
+      monitor = ["WAYLAND-1,disabled"];
 
       input = {
         follow_mouse = 1;
@@ -201,7 +199,7 @@ in
         ];
       };
 
-      gestures = { };
+      gestures = {};
 
       misc = {
         allow_session_lock_restore = true;
