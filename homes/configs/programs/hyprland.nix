@@ -3,21 +3,19 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
-    #!/usr/bin/env bash
-    kill -9 $(pidof swaylock)
-    pidof -x swaylock >/dev/null 2>&1
-    if [[ "$?" -eq 1 ]]; then
-    loginctl lock-session
-      ${pkgs.swaylock}/bin/swaylock -f &
-      sleep 4s
-      hyprctl dispatch dpms off
-      wait $(jobs -p)
-    fi
+        #!/usr/bin/env bash
+        kill -9 $(pidof hyprlock)
+        pidof -x hyprlock >/dev/null 2>&1
+        if [[ "$?" -eq 1 ]]; then
+          ${pkgs.hyprlock}/bin/hyprlock --immediate
+    		fi
   '';
-in {
-  imports = [inputs.hyprland.homeManagerModules.default];
+in
+{
+  imports = [ inputs.hyprland.homeManagerModules.default ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -29,16 +27,6 @@ in {
       # hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
       split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
-    extraConfig = ''
-       	plugin {
-      	split-monitor-workspaces {
-      	    count = 10
-           	keep_focused = 0
-         		enable_notifications = 1
-         		enable_persistent_workspaces = 1
-       		}
-      }
-    '';
     settings = {
       bind = [
         "SUPER, Return, exec, alacritty"
@@ -55,32 +43,32 @@ in {
         "$mainMod, down, movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
-        "$mainMod, 1, split-workspace, 1"
-        "$mainMod, 2, split-workspace, 2"
-        "$mainMod, 3, split-workspace, 3"
-        "$mainMod, 4, split-workspace, 4"
-        "$mainMod, 5, split-workspace, 5"
-        "$mainMod, 6, split-workspace, 6"
-        "$mainMod, 7, split-workspace, 7"
-        "$mainMod, 8, split-workspace, 8"
-        "$mainMod, 9, split-workspace, 9"
-        "$mainMod, 0, split-workspace, 10"
+        "$mainMod, 1, workspace, 1"
+        "$mainMod, 2, workspace, 2"
+        "$mainMod, 3, workspace, 3"
+        "$mainMod, 4, workspace, 4"
+        "$mainMod, 5, workspace, 5"
+        "$mainMod, 6, workspace, 6"
+        "$mainMod, 7, workspace, 7"
+        "$mainMod, 8, workspace, 8"
+        "$mainMod, 9, workspace, 9"
+        "$mainMod, 0, workspace, 10"
 
         # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, split-movetoworkspace, 1"
-        "$mainMod SHIFT, 2, split-movetoworkspace, 2"
-        "$mainMod SHIFT, 3, split-movetoworkspace, 3"
-        "$mainMod SHIFT, 4, split-movetoworkspace, 4"
-        "$mainMod SHIFT, 5, split-movetoworkspace, 5"
-        "$mainMod SHIFT, 6, split-movetoworkspace, 6"
-        "$mainMod SHIFT, 7, split-movetoworkspace, 7"
-        "$mainMod SHIFT, 8, split-movetoworkspace, 8"
-        "$mainMod SHIFT, 9, split-movetoworkspace, 9"
-        "$mainMod SHIFT, 0, split-movetoworkspace, 10"
+        "$mainMod SHIFT, 1, movetoworkspace, 1"
+        "$mainMod SHIFT, 2, movetoworkspace, 2"
+        "$mainMod SHIFT, 3, movetoworkspace, 3"
+        "$mainMod SHIFT, 4, movetoworkspace, 4"
+        "$mainMod SHIFT, 5, movetoworkspace, 5"
+        "$mainMod SHIFT, 6, movetoworkspace, 6"
+        "$mainMod SHIFT, 7, movetoworkspace, 7"
+        "$mainMod SHIFT, 8, movetoworkspace, 8"
+        "$mainMod SHIFT, 9, movetoworkspace, 9"
+        "$mainMod SHIFT, 0, movetoworkspace, 10"
 
         # Move workspace to monitor
-        "$mainMod ALT, left, split-changemonitor, prev"
-        "$mainMod ALT, left, split-changemonitor, next"
+        "$mainMod ALT, left, movecurrentworkspacetomonitor, l"
+        "$mainMod ALT, right, movecurrentworkspacetomonitor, r"
 
         # full screen
         "SUPER, F, fullscreen"
@@ -125,7 +113,7 @@ in {
         "$mainMod,mouse:273,resizewindow"
       ];
 
-      monitor = ["WAYLAND-1,disabled"];
+      monitor = [ "WAYLAND-1,disabled" ];
 
       input = {
         follow_mouse = 1;
@@ -154,7 +142,7 @@ in {
         rounding = 8;
 
         blur = {
-          enabled = false;
+          enabled = true;
           size = 12;
           passes = 5;
           new_optimizations = true;
@@ -199,12 +187,12 @@ in {
         ];
       };
 
-      gestures = {};
+      gestures = { };
 
       misc = {
         allow_session_lock_restore = true;
         anr_missed_pings = 10;
-        disable_autoreload = false;
+        disable_autoreload = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         focus_on_activate = false;
@@ -259,7 +247,6 @@ in {
         ''}/bin/autostart"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
-        "${pkgs.swayidle}/bin/swayidle -w"
         "snappy-switcher --daemon"
       ];
 
@@ -278,26 +265,30 @@ in {
   };
 
   services.hypridle = {
-    enable = false;
+    enable = true;
     settings = {
       general = {
         lock_cmd = lib.getExe lock_cmd;
+        on_lock_cmd = "hyprctl dispatch dpms off";
+        on_unlock_cmd = "hyprctl dispatch dpms on";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
-        ignore_empty_input = true;
       };
-
       listener = [
         {
-          timeoout = 330;
+          timeoout = 300;
           on-timeout = lib.getExe lock_cmd;
+        }
+        {
+          timeout = 320;
+          on-timeout = "loginctl lock-session";
         }
       ];
     };
   };
 
   programs.hyprlock = {
-    enable = false;
+    enable = true;
   };
 
   services.swaync.enable = true;
