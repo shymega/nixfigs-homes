@@ -15,14 +15,29 @@
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
 
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = let
+    inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
+  in {
     enable = true;
-    package = null;
-    portalPackage = null;
+    package = hyprland;
+    portalPackage =
+      (
+        inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.overrideAttrs
+        (_oldAttrs: {
+          version = "unstable-git-revert";
+          src = pkgs.fetchFromGitHub {
+            owner = "hyprwm";
+            repo = "xdg-desktop-portal-hyprland";
+            rev = "eb6c02a2ead882f3474f3d7f2fbe966b64ed5110";
+            hash = "sha256-N/ZwsRLULLpBP5ecvAUzNq8E/CgLRwPwSrHyY3xB5KM=";
+          };
+        })
+      ).override
+      {inherit hyprland;};
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
-      # hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+      hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
       split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
     extraConfig = ''
@@ -45,10 +60,10 @@ in {
         "$mainMod, P, exec, wm-menu"
 
         # Move focus with mainMod + arrow keys
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
+        "$mainMod, left, hy3:movefocus, l"
+        "$mainMod, right, hy3:movefocus, r"
+        "$mainMod, up, hy3:movefocus, u"
+        "$mainMod, down, hy3:movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, split-workspace, 1"
@@ -140,7 +155,7 @@ in {
         gaps_in = 2;
         gaps_out = 2;
         border_size = 2;
-        layout = "master";
+        layout = "hy3";
       };
 
       ecosystem = {
