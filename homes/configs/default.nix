@@ -10,8 +10,7 @@
   lib,
   libx,
   ...
-}:
-let
+}: let
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
   getHomeDirectory = username: homePrefix + "/${username}";
@@ -56,8 +55,7 @@ let
     worker-build
     zoxide
   ];
-in
-{
+in {
   imports = with inputs; [
     ./network-targets.nix
     ./programs/hyprland.nix
@@ -74,10 +72,9 @@ in
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
     stateVersion = "25.05";
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
-        (python3.withPackages (p: [ p.tkinter ]))
+        (python3.withPackages (p: [p.tkinter]))
         aerc
         age
         agebox
@@ -246,27 +243,26 @@ in
       ++ rustCrates
       ++ (
         with pkgs;
-        lib.optionals isPC (
-          with pkgs;
-          [
-            android-studio
-            android-studio-for-platform
-            gcc
-            protontricks
-            protonup-qt
-            steamcmd
-            texlive.combined.scheme-full
-            virt-manager
-            virtiofsd
-            wineWowPackages.stable
-            winetricks
-          ]
-        )
+          lib.optionals isPC (
+            with pkgs; [
+              android-studio
+              android-studio-for-platform
+              gcc
+              protontricks
+              protonup-qt
+              steamcmd
+              texlive.combined.scheme-full
+              virt-manager
+              virtiofsd
+              wineWowPackages.stable
+              winetricks
+            ]
+          )
       )
-      ++ (with pkgs; [ (git-wip.override { wipPrefix = "shymega"; }) ])
-      ++ (with pkgs.unstable.vimPlugins; [ astrocore ])
+      ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
+      ++ (with pkgs.unstable.vimPlugins; [astrocore])
       ++ rustCrates
-      ++ [ inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+      ++ [inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default];
   };
 
   services = {
@@ -309,7 +305,7 @@ in
     };
     gnome-keyring = {
       enable = true;
-      components = [ "secrets" ];
+      components = ["secrets"];
     };
     dunst.enable = false;
     mpd-discord-rpc.enable = true;
@@ -461,7 +457,7 @@ in
         revert = "revert --no-edit";
         squash-all = "!f(){ git reset $(git commit-tree HEAD^{tree} -m 'A new start');};f";
       };
-      includes = with inputs; [ { path = "${gitalias}/gitalias.txt"; } ];
+      includes = with inputs; [{path = "${gitalias}/gitalias.txt";}];
     };
     vscode = {
       enable = true;
@@ -502,115 +498,121 @@ in
   };
   news.display = "silent";
 
-  systemd.user =
-    let
-      atuinDataDir = "${config.xdg.dataHome}/atuin";
-      atuinCommonConfig = {
-        ConditionPathIsDirectory = atuinDataDir;
-        ConditionPathExists = "${config.xdg.configHome}/atuin/config.toml";
-      };
-      taskwCommonConfig = {
-        ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
-        ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
-      };
-    in
-    {
-      sockets.atuin-daemon = {
-        Unit = {
-          Description = "Unix socket activation for atuin shell history daemon";
-        };
-
-        Socket = {
-          ListenStream = "%t/atuin.sock";
-          SocketMode = "0600";
-          RemoveOnStop = true;
-        };
-
-        Install = {
-          WantedBy = [ "sockets.target" ];
-        };
+  systemd.user = let
+    atuinDataDir = "${config.xdg.dataHome}/atuin";
+    atuinCommonConfig = {
+      ConditionPathIsDirectory = atuinDataDir;
+      ConditionPathExists = "${config.xdg.configHome}/atuin/config.toml";
+    };
+    taskwCommonConfig = {
+      ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
+      ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
+    };
+  in {
+    sockets.atuin-daemon = {
+      Unit = {
+        Description = "Unix socket activation for atuin shell history daemon";
       };
 
-      timers = {
-        atuin-sync = {
-          Unit = atuinCommonConfig // {
+      Socket = {
+        ListenStream = "%t/atuin.sock";
+        SocketMode = "0600";
+        RemoveOnStop = true;
+      };
+
+      Install = {
+        WantedBy = ["sockets.target"];
+      };
+    };
+
+    timers = {
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
             Description = "Atuin - Sync Service Timer";
           };
-          Timer.OnCalendar = "*:0/30";
-          Install.WantedBy = [ "timers.target" ];
-        };
-        task-sync = {
-          Unit = taskwCommonConfig // {
+        Timer.OnCalendar = "*:0/30";
+        Install.WantedBy = ["timers.target"];
+      };
+      task-sync = {
+        Unit =
+          taskwCommonConfig
+          // {
             Description = "Taskwarrior auto sync timer";
           };
-          Timer.OnCalendar = "*:0/30";
-          Install.WantedBy = [ "timers.target" ];
+        Timer.OnCalendar = "*:0/30";
+        Install.WantedBy = ["timers.target"];
+      };
+    };
+    sessionVariables = {
+      CLUTTER_BACKEND = "wayland";
+      GDK_BACKEND = "wayland,x11";
+      QT_QPA_PLATFORM = "wayland;xcb";
+      MOZ_ENABLE_WAYLAND = "1";
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+    };
+    tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
+    services = {
+      atuin-daemon = {
+        Unit = {
+          Description = "atuin shell history daemon";
+          Requires = ["atuin-daemon.socket"];
+        };
+        Service = {
+          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} daemon";
+          Environment = ["ATUIN_LOG=info"];
+          Restart = "on-failure";
+          RestartSteps = 5;
+          RestartMaxDelaySec = 10;
+        };
+        Install = {
+          Also = ["atuin-daemon.socket"];
+          WantedBy = ["default.target"];
         };
       };
-      sessionVariables = {
-        CLUTTER_BACKEND = "wayland";
-        GDK_BACKEND = "wayland,x11";
-        QT_QPA_PLATFORM = "wayland;xcb";
-        MOZ_ENABLE_WAYLAND = "1";
-        _JAVA_AWT_WM_NONREPARENTING = "1";
+      polkit-gnome-authentication-agent-1 = {
+        Unit = {
+          Description = "polkit-gnome-authentication-agent-1";
+          After = ["default.target"];
+          BindsTo = ["default.target"];
+          PartOf = ["default.target"];
+        };
+        Install.WantedBy = ["default.target"];
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
       };
-      tmpfiles.rules = [ "L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0" ];
-      services = {
-        atuin-daemon = {
-          Unit = {
-            Description = "atuin shell history daemon";
-            Requires = [ "atuin-daemon.socket" ];
-          };
-          Service = {
-            ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} daemon";
-            Environment = [ "ATUIN_LOG=info" ];
-            Restart = "on-failure";
-            RestartSteps = 5;
-            RestartMaxDelaySec = 10;
-          };
-          Install = {
-            Also = [ "atuin-daemon.socket" ];
-            WantedBy = [ "default.target" ];
-          };
-        };
-        polkit-gnome-authentication-agent-1 = {
-          Unit = {
-            Description = "polkit-gnome-authentication-agent-1";
-            After = [ "default.target" ];
-            BindsTo = [ "default.target" ];
-            PartOf = [ "default.target" ];
-          };
-          Install.WantedBy = [ "default.target" ];
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-            Restart = "on-failure";
-            RestartSec = 1;
-            TimeoutStopSec = 10;
-          };
-        };
-        atuin-sync = {
-          Unit = atuinCommonConfig // {
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
             Description = "Atuin - Sync Service";
           };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} sync";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} sync";
         };
-        task-sync = {
-          Unit = taskwCommonConfig // {
+      };
+      task-sync = {
+        Unit =
+          taskwCommonConfig
+          // {
             Description = "Taskwarrior auto sync service";
           };
-          Service = {
-            Type = "oneshot";
-            ExecStartPre = "${getExe' pkgs.taskwarrior2 "task"}";
-            ExecStart = "${getExe' pkgs.taskwarrior2 "task"} sync";
-            ExecStartPost = "${getExe' pkgs.taskwarrior2 "task"} sync";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStartPre = "${getExe' pkgs.taskwarrior2 "task"}";
+          ExecStart = "${getExe' pkgs.taskwarrior2 "task"} sync";
+          ExecStartPost = "${getExe' pkgs.taskwarrior2 "task"} sync";
         };
       };
     };
+  };
   services.kdeconnect = {
     enable = true;
     indicator = true;
