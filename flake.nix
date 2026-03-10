@@ -139,7 +139,7 @@
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     hy3 = {
-      url = "github:outfoxxed/hy3";
+      url = "github:outfoxxed/hy3?ref=hl0.54.2";
       inputs.hyprland.follows = "hyprland";
     };
     gitalias = {
