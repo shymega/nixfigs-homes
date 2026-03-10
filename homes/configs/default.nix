@@ -301,7 +301,6 @@ in {
     kanshi = {
       enable = true;
       systemdTarget = "wlroots-session.target";
-      settings = import ./aux/kanshi-config.nix;
     };
     gnome-keyring = {
       enable = true;
