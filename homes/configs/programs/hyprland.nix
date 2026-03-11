@@ -5,12 +5,8 @@
   ...
 }: let
   lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
-      #!/usr/bin/env bash
-      kill -9 $(pidof hyprlock)
-      pidof -x hyprlock >/dev/null 2>&1
-      if [[ "$?" -eq 1 ]]; then
-        ${pkgs.hyprlock}/bin/hyprlock --immediate
-    fi
+    #!/usr/bin/env bash
+    pidof -x hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate
   '';
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
@@ -31,11 +27,10 @@ in {
         })
       ).override
       {inherit hyprland;};
-
   in {
     enable = true;
-    package = hyprland;
-    inherit portalPackage;
+    package = null;
+    portalPackage = null;
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
