@@ -17,9 +17,6 @@ in {
 
   wayland.windowManager.hyprland = let
     inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
-  in {
-    enable = true;
-    package = hyprland;
     portalPackage =
       (
         inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.overrideAttrs
@@ -34,6 +31,11 @@ in {
         })
       ).override
       {inherit hyprland;};
+
+  in {
+    enable = true;
+    package = hyprland;
+    inherit portalPackage;
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
@@ -265,7 +267,7 @@ in {
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
         "${pkgs.waybar}/bin/waybar"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
-        "${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland"
+        "${portalPackage}/libexec/xdg-desktop-portal-hyprland"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.writeShellScriptBin "autostart" ''
           systemctl --user --no-block restart autostart.service
