@@ -4,9 +4,9 @@
   inputs,
   ...
 }: let
-  lock_cmd = pkgs.writeShellScriptBin "hyprlock-wrapped" ''
+  lock_cmd = pkgs.writeShellScriptBin "lock-cmd" ''
     #!/usr/bin/env bash
-    pidof -x hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate
+    pidof hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate
   '';
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
