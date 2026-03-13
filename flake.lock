@@ -10701,7 +10701,8 @@
         "shypkgs-public": "shypkgs-public_4",
         "snappy-switcher": "snappy-switcher",
         "split-monitor-workspaces": "split-monitor-workspaces",
-        "stylix": "stylix"
+        "stylix": "stylix",
+        "wallpaper": "wallpaper"
       }
     },
     "rust-overlay": {
@@ -11855,6 +11856,18 @@
         "owner": "emacs-twist",
         "repo": "registries",
         "type": "github"
+      }
+    },
+    "wallpaper": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-DEkBhWYTKCYEt73i0HeDBFia49IKsFuNSN0OfgKgfNI=",
+        "type": "file",
+        "url": "https://getoutside.ordnancesurvey.co.uk/blobgetoutside5db8a681d3/wp-content/uploads/2025/10/crummock-water-go-wp-2560-x-1440.jpg"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://getoutside.ordnancesurvey.co.uk/blobgetoutside5db8a681d3/wp-content/uploads/2025/10/crummock-water-go-wp-2560-x-1440.jpg"
       }
     },
     "xdph": {
