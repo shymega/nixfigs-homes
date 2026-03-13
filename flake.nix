@@ -150,5 +150,6 @@
       url = "https://getoutside.ordnancesurvey.co.uk/blobgetoutside5db8a681d3/wp-content/uploads/2025/10/crummock-water-go-wp-2560-x-1440.jpg";
       flake = false;
     };
+    nix-openclaw.url = "github:openclaw/nix-openclaw";
   };
 }
