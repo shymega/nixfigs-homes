@@ -620,24 +620,21 @@ in {
     enable = true;
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
-    image = pkgs.fetchurl {
-      url = "https://getoutside.ordnancesurvey.co.uk/blobgetoutside5db8a681d3/wp-content/uploads/2024/10/river-nene-circular-walk-2560-x-1440.jpg";
-      hash = "sha256-1py6MskXEeG8o30IdDVpWjInWenFxjDWVth2m7X5uOM=";
-    };
+    image = inputs.wallpaper;
     targets = {
       alacritty.enable = true;
-      kde.enable = false;
       gnome.enable = true;
+      kde.enable = true;
       hyprland = {
         enable = true;
         hyprpaper.enable = true;
       };
+      hyprlock.enable = true;
       rofi.enable = true;
-      waybar.enable = true;
-      tmux.enable = true;
       sway.enable = true;
       swaylock.enable = true;
-      hyprlock.enable = true;
+      tmux.enable = true;
+      waybar.enable = true;
     };
   };
 }
