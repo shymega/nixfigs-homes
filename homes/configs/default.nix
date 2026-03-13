@@ -80,7 +80,6 @@ in {
         agebox
         aider-chat
         alejandra
-        alpaca
         alsa-utils
         android-tools
         asciinema
