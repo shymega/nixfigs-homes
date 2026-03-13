@@ -160,54 +160,51 @@ in {
         no_donation_nag = true;
       };
 
-      decoration = {
-        rounding = 8;
 
-        blur = {
-          enabled = true;
-          size = 12;
-          passes = 5;
-          new_optimizations = true;
-          xray = false;
-        };
+    decoration = {
+      rounding = 7;
+      rounding_power = 4;
+      active_opacity = 1;
+      # CONFIG: choose between dim and opacity for inactive windows
+      #        inactive_opacity = 0.7;
+      #        dim_inactive = true;
 
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-        };
-      };
-
-      # https://github.com/prasanthrangan/hyprdots/blob/47572bbcac007d1d51e9251debb5dad5df4bbbb9/Configs/.config/hypr/animations/animations-diablo-1.conf
-      animations = {
+      blur = {
         enabled = true;
-        bezier = [
-          "default, 0.05, 0.9, 0.1, 1.05"
-          "wind, 0.05, 0.9, 0.1, 1.05"
-          "overshot, 0.13, 0.99, 0.29, 1.08"
-          "liner, 1, 1, 1, 1"
-          "bounce, 0.4, 0.9, 0.6, 1.0"
-          "snappyReturn, 0.4, 0.9, 0.6, 1.0"
-          "slideInFromRight, 0.5, 0.0, 0.5, 1.0"
-        ];
-        animation = [
-          "windows, 1, 5,  snappyReturn, slidevert"
-          "windowsIn, 1, 5, snappyReturn, slidevert right"
-          "windowsOut, 1, 5, snappyReturn, slide"
-          "windowsMove, 1, 6, bounce, slide"
-          "layersOut, 1, 5, bounce, slidevert right"
-          "fadeIn, 1, 10, default"
-          "fadeOut, 1, 10, default"
-          "fadeSwitch, 1, 10, default"
-          "fadeShadow, 1, 10, default"
-          "fadeDim, 1, 10, default"
-          "fadeLayers, 1, 10, default"
-          "workspaces, 1, 7, overshot, slide"
-          "border, 1, 50, liner"
-          "layers, 1, 4, bounce, slidevert right"
-          "borderangle, 1, 30, liner, loop"
-        ];
+        size = 8;
+        passes = 3;
+        noise = 0.01;
+        contrast = 0.9;
+        brightness = 0.8;
+        popups = true;
       };
+    };
+
+    animations = {
+      enabled = true;
+
+      bezier = [
+        "wind,0.05,0.9,0.1,1.05" # Wind-like curve
+        "winIn,0.1,1.1,0.1,1.1" # Smooth in
+        "winOut,0.3,-0.3,0,1" # Smooth out with a bounce
+        "liner,1,1,1,1" # Linear curve
+        "overshot,0.05,0.9,0.1,1.05" # Overshooting effect
+        "smoothOut,0.5,0,0.99,0.99" # Smooth out curve
+        "smoothIn,0.5,-0.5,0.68,1.5" # Smooth in curve
+      ];
+      animation = [
+        "windows,1,6,wind,slide" # Window animations using wind curve
+        "windowsIn,1,5,winIn,slide" # Windows slide in with winIn curve
+        "windowsOut,1,3,smoothOut,slide" # Windows slide out with smoothOut curve
+        "windowsMove,1,5,wind,slide" # Window movement with wind curve
+        "border,1,1,liner" # Border animation using linear curve
+        "borderangle,1,180,liner,loop" # Rotating border animations
+        "fade,1,3,smoothOut" # Fade animation with smoothOut curve
+        "workspaces,1,5,overshot" # Workspace animation with overshooting curve
+        "workspacesIn,1,5,winIn,slide" # Slide in
+        "workspacesOut,1,5,winOut,slide" # Slide out
+      ];
+    };
 
       gestures = {};
 
