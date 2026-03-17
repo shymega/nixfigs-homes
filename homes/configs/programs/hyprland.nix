@@ -35,18 +35,19 @@ in {
     xwayland.enable = true;
     plugins = with inputs; [
       hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
-      split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
+      hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hypersplit
+      # split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
-    extraConfig = ''
-       	plugin {
-      	split-monitor-workspaces {
-      	    count = 10
-           	keep_focused = 0
-         		enable_notifications = 1
-         		enable_persistent_workspaces = 0
-       		}
-      }
-    '';
+    #extraConfig = ''
+    #   	plugin {
+    #  	split-monitor-workspaces {
+    #  	    count = 10
+    #       	keep_focused = 0
+    #     		enable_notifications = 1
+    #     		enable_persistent_workspaces = 0
+    #   		}
+    #  }
+    #'';
     settings = {
       bind = [
         "SUPER, Return, exec, alacritty"
@@ -63,34 +64,28 @@ in {
         "$mainMod, down, hy3:movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
-        "$mainMod, 1, split-workspace, 1"
-        "$mainMod, 2, split-workspace, 2"
-        "$mainMod, 3, split-workspace, 3"
-        "$mainMod, 4, split-workspace, 4"
-        "$mainMod, 5, split-workspace, 5"
-        "$mainMod, 6, split-workspace, 6"
-        "$mainMod, 7, split-workspace, 7"
-        "$mainMod, 8, split-workspace, 8"
-        "$mainMod, 9, split-workspace, 9"
-        "$mainMod, 0, split-workspace, 10"
+        "$mainMod, 1, split:workspace, 1"
+        "$mainMod, 2, split:workspace, 2"
+        "$mainMod, 3, split:workspace, 3"
+        "$mainMod, 4, split:workspace, 4"
+        "$mainMod, 5, split:workspace, 5"
+        "$mainMod, 6, split:workspace, 6"
+        "$mainMod, 7, split:workspace, 7"
+        "$mainMod, 8, split:workspace, 8"
+        "$mainMod, 9, split:workspace, 9"
+        "$mainMod, 0, split:workspace, 10"
 
         # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, split-movetoworkspace, 1"
-        "$mainMod SHIFT, 2, split-movetoworkspace, 2"
-        "$mainMod SHIFT, 3, split-movetoworkspace, 3"
-        "$mainMod SHIFT, 4, split-movetoworkspace, 4"
-        "$mainMod SHIFT, 5, split-movetoworkspace, 5"
-        "$mainMod SHIFT, 6, split-movetoworkspace, 6"
-        "$mainMod SHIFT, 7, split-movetoworkspace, 7"
-        "$mainMod SHIFT, 8, split-movetoworkspace, 8"
-        "$mainMod SHIFT, 9, split-movetoworkspace, 9"
-        "$mainMod SHIFT, 0, split-movetoworkspace, 10"
-
-        "$mainMod ALT, M, split-cycleworkspaces, next"
-
-        # Move workspace to monitor
-        "$mainMod ALT, left, split-changemonitor, prev"
-        "$mainMod ALT, right, split-changemonitor, next"
+        "$mainMod SHIFT, 1, hy3:movetoworkspace, 1"
+        "$mainMod SHIFT, 2, hy3:movetoworkspace, 2"
+        "$mainMod SHIFT, 3, hy3:movetoworkspace, 3"
+        "$mainMod SHIFT, 4, hy3:movetoworkspace, 4"
+        "$mainMod SHIFT, 5, hy3:movetoworkspace, 5"
+        "$mainMod SHIFT, 6, hy3:movetoworkspace, 6"
+        "$mainMod SHIFT, 7, hy3:movetoworkspace, 7"
+        "$mainMod SHIFT, 8, hy3:movetoworkspace, 8"
+        "$mainMod SHIFT, 9, hy3:movetoworkspace, 9"
+        "$mainMod SHIFT, 0, hy3:movetoworkspace, 10"
 
         # full screen
         "SUPER, F, fullscreen"
