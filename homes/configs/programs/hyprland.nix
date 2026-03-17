@@ -35,7 +35,7 @@ in {
     xwayland.enable = true;
     plugins = with inputs; [
       hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
-      hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hypersplit
+      hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hyprsplit
       # split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
     #extraConfig = ''
