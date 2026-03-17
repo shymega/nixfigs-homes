@@ -133,9 +133,9 @@
       url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
-    split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces?rev=7f15447980ba2e6e3c57ca268ab556eb70ef562e";
-      inputs.hyprland.follows = "hyprland"; # <- make sure this line is present for the plugin to work as intended
+    hyprsplit = {
+      url = "github:shezdy/hyprsplit?ref=v0.54.1";
+      inputs.hyprland.follows = "hyprland";
     };
     snappy-switcher.url = "github:OpalAayan/snappy-switcher";
     hy3 = {
