@@ -6,7 +6,7 @@
 }: let
   lock_cmd = pkgs.writeShellScriptBin "lock-cmd" ''
     #!/usr/bin/env bash
-    pidof hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate
+    loginctl lock-session
   '';
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
@@ -281,7 +281,7 @@ in {
     enable = true;
     settings = {
       general = {
-        lock_cmd = lib.getExe lock_cmd;
+        lock_cmd = "pidof hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate";
         on_lock_cmd = "hyprctl dispatch dpms off";
         on_unlock_cmd = "hyprctl dispatch dpms on";
         before_sleep_cmd = "loginctl lock-session";
