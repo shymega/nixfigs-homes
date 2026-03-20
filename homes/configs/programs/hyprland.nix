@@ -3,16 +3,17 @@
   lib,
   inputs,
   ...
-}@args: let
+} @ args: let
   lock_cmd = pkgs.writeShellScriptBin "lock-cmd" ''
     #!/usr/bin/env bash
     loginctl lock-session
   '';
   isMjolnir = let
     hasosConfig = builtins.hasAttr "osConfig" args;
-  in if hasosConfig then
-    args.osConfig.networking.hostname == "MJOLNIR-LINUX"
-  else false;
+  in
+    if hasosConfig
+    then args.osConfig.networking.hostName == "MJOLNIR-LINUX"
+    else false;
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
 
@@ -193,23 +194,25 @@ in {
         "no_anim on, match:namespace selection"
       ];
 
-      env = [
-        "GDK_BACKEND,wayland"
-        "GDK_SCALE,1"
-        "MOZ_ENABLE_WAYLAND,1"
-        "QT_AUTO_SCREEN_SCALE_FACTOR,1"
-        "QT_QPA_PLATFORM,wayland;xcb"
-        "QT_ENABLE_HIGHDPI_SCALING,1"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-        "SDL_VIDEODRIVER,wayland"
-        "XDG_SESSION_TYPE,wayland"
-        "XCURSOR_SIZE,24"
-        "HYPRCURSOR_SIZE,24"
-        "_JAVA_AWT_WM_NONREPARENTING,1"
-      ] ++ lib.optionals isMjolnir [
-        "LIBVA_DRIVER_NAME,nvidia"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-      ];
+      env =
+        [
+          "GDK_BACKEND,wayland"
+          "GDK_SCALE,1"
+          "MOZ_ENABLE_WAYLAND,1"
+          "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+          "QT_QPA_PLATFORM,wayland;xcb"
+          "QT_ENABLE_HIGHDPI_SCALING,1"
+          "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+          "SDL_VIDEODRIVER,wayland"
+          "XDG_SESSION_TYPE,wayland"
+          "XCURSOR_SIZE,24"
+          "HYPRCURSOR_SIZE,24"
+          "_JAVA_AWT_WM_NONREPARENTING,1"
+        ]
+        ++ lib.optionals isMjolnir [
+          "LIBVA_DRIVER_NAME,nvidia"
+          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        ];
 
       cursor = {
         no_hardware_cursors = 1;
