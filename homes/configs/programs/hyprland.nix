@@ -129,9 +129,8 @@ in {
         rounding = 7;
         rounding_power = 4;
         active_opacity = 1;
-        # CONFIG: choose between dim and opacity for inactive windows
-        #        inactive_opacity = 0.7;
-        #        dim_inactive = true;
+        inactive_opacity = 0.7;
+        dim_inactive = true;
 
         blur = {
           enabled = true;
