@@ -3,11 +3,16 @@
   lib,
   inputs,
   ...
-}: let
+}@args: let
   lock_cmd = pkgs.writeShellScriptBin "lock-cmd" ''
     #!/usr/bin/env bash
     loginctl lock-session
   '';
+  isMjolnir = let
+    hasosConfig = builtins.hasAttr "osConfig" args;
+  in if hasosConfig then
+    args.osConfig.networking.hostname == "MJOLNIR-LINUX"
+  else false;
 in {
   imports = [inputs.hyprland.homeManagerModules.default];
 
@@ -201,6 +206,9 @@ in {
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
         "_JAVA_AWT_WM_NONREPARENTING,1"
+      ] ++ lib.optionals isMjolnir [
+        "LIBVA_DRIVER_NAME,nvidia"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
       ];
 
       cursor = {
