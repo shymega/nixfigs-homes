@@ -12,7 +12,6 @@ in {
   imports = [inputs.hyprland.homeManagerModules.default];
 
   wayland.windowManager.hyprland = let
-    inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
     snappy-switcher = lib.getExe inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   in {
