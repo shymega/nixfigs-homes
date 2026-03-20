@@ -13,20 +13,7 @@ in {
 
   wayland.windowManager.hyprland = let
     inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
-    portalPackage =
-      (
-        inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.overrideAttrs
-        (_oldAttrs: {
-          version = "unstable-git-revert";
-          src = pkgs.fetchFromGitHub {
-            owner = "hyprwm";
-            repo = "xdg-desktop-portal-hyprland";
-            rev = "eb6c02a2ead882f3474f3d7f2fbe966b64ed5110";
-            hash = "sha256-N/ZwsRLULLpBP5ecvAUzNq8E/CgLRwPwSrHyY3xB5KM=";
-          };
-        })
-      ).override
-      {inherit hyprland;};
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   in {
     enable = true;
     package = null;
