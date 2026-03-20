@@ -24,18 +24,7 @@ in {
     plugins = with inputs; [
       hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
       hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hyprsplit
-      # split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
     ];
-    #extraConfig = ''
-    #   	plugin {
-    #  	split-monitor-workspaces {
-    #  	    count = 10
-    #       	keep_focused = 0
-    #     		enable_notifications = 1
-    #     		enable_persistent_workspaces = 0
-    #   		}
-    #  }
-    #'';
     settings = {
       bind = [
         "SUPER, Return, exec, alacritty"
@@ -96,12 +85,6 @@ in {
         "$mainMod, SPACE, exec, ${pkgs.cliphist}/bin/cliphist list"
         "SUPER, X, exec, ${pkgs.alacritty}/bin/alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"
 
-        # Replicate minimising
-        "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod, S, movetoworkspace, +0"
-        "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod, S, movetoworkspace, special:magic"
-        "$mainMod, S, togglespecialworkspace, magic"
         "ALT, Tab, exec, ${snappy-switcher} next"
         "ALT SHIFT, Tab, exec, ${snappy-switcher} prev"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
