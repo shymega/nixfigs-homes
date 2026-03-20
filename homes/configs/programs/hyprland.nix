@@ -34,10 +34,10 @@ in {
         "$mainMod, P, exec, wm-menu"
 
         # Move focus with mainMod + arrow keys
-        "$mainMod, left, hy3:movefocus, l"
-        "$mainMod, right, hy3:movefocus, r"
-        "$mainMod, up, hy3:movefocus, u"
-        "$mainMod, down, hy3:movefocus, d"
+        "$mainMod, left, movefocus, l"
+        "$mainMod, right, movefocus, r"
+        "$mainMod, up, movefocus, u"
+        "$mainMod, down, movefocus, d"
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, split:workspace, 1"
@@ -52,16 +52,16 @@ in {
         "$mainMod, 0, split:workspace, 10"
 
         # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, hy3:movetoworkspace, 1"
-        "$mainMod SHIFT, 2, hy3:movetoworkspace, 2"
-        "$mainMod SHIFT, 3, hy3:movetoworkspace, 3"
-        "$mainMod SHIFT, 4, hy3:movetoworkspace, 4"
-        "$mainMod SHIFT, 5, hy3:movetoworkspace, 5"
-        "$mainMod SHIFT, 6, hy3:movetoworkspace, 6"
-        "$mainMod SHIFT, 7, hy3:movetoworkspace, 7"
-        "$mainMod SHIFT, 8, hy3:movetoworkspace, 8"
-        "$mainMod SHIFT, 9, hy3:movetoworkspace, 9"
-        "$mainMod SHIFT, 0, hy3:movetoworkspace, 10"
+        "$mainMod SHIFT, 1, movetoworkspace, 1"
+        "$mainMod SHIFT, 2, movetoworkspace, 2"
+        "$mainMod SHIFT, 3, movetoworkspace, 3"
+        "$mainMod SHIFT, 4, movetoworkspace, 4"
+        "$mainMod SHIFT, 5, movetoworkspace, 5"
+        "$mainMod SHIFT, 6, movetoworkspace, 6"
+        "$mainMod SHIFT, 7, movetoworkspace, 7"
+        "$mainMod SHIFT, 8, movetoworkspace, 8"
+        "$mainMod SHIFT, 9, movetoworkspace, 9"
+        "$mainMod SHIFT, 0, movetoworkspace, 10"
 
         # full screen
         "SUPER, F, fullscreen"
@@ -117,7 +117,7 @@ in {
         gaps_in = 2;
         gaps_out = 2;
         border_size = 2;
-        layout = "hy3";
+        layout = "master";
       };
 
       ecosystem = {
