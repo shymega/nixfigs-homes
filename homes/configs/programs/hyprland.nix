@@ -13,6 +13,7 @@ in {
 
   wayland.windowManager.hyprland = let
     inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
+    snappy-switcher = lib.getExe inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   in {
     enable = true;
@@ -101,8 +102,8 @@ in {
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod, S, movetoworkspace, special:magic"
         "$mainMod, S, togglespecialworkspace, magic"
-        "ALT, Tab, exec, snappy-switcher next"
-        "ALT SHIFT, Tab, exec, snappy-switcher prev"
+        "ALT, Tab, exec, ${snappy-switcher} next"
+        "ALT SHIFT, Tab, exec, ${snappy-switcher} prev"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
       ];
 
@@ -247,7 +248,7 @@ in {
         ''}/bin/autostart"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
-        "snappy-switcher --daemon"
+        "${snappy-switcher} --daemon"
       ];
 
       debug.disable_scale_checks = true;
