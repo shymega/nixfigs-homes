@@ -105,7 +105,10 @@ in {
         "$mainMod,mouse:273,resizewindow"
       ];
 
-      monitor = ["WAYLAND-1,disabled"];
+      monitor = [
+        "WAYLAND-1,disabled"
+        ",preferred,auto,1"
+      ];
 
       input = {
         follow_mouse = 1;
