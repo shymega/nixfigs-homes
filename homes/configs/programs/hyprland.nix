@@ -27,7 +27,6 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
-      hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
       hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hyprsplit
     ];
     settings = {
