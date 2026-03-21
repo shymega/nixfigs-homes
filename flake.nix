@@ -27,7 +27,7 @@
 
     forEachSystem = inputs.nixpkgs.lib.genAttrs systems;
   in {
-    inherit (inputs.nixfigs-pkgs) overlays packages nixpkgs-config;
+    inherit (inputs.nixfigs-pkgs) overlays nixpkgs-config;
     inherit (inputs.nixfigs-roles) roles utils;
     inherit (inputs) self;
     # for `nix fmt`
@@ -143,7 +143,7 @@
       flake = false;
     };
     wallpaper = {
-      url = "https://getoutside.ordnancesurvey.co.uk/blobgetoutside5db8a681d3/wp-content/uploads/2025/10/crummock-water-go-wp-2560-x-1440.jpg";
+      url = "https://svs.gsfc.nasa.gov/vis/a010000/a014100/a014146/HerculesA_desktop.png";
       flake = false;
     };
     nix-openclaw.url = "github:openclaw/nix-openclaw";
