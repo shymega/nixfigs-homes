@@ -278,7 +278,7 @@ in {
     enable = true;
     settings = {
       general = {
-        lock_cmd = "pidof hyprland || ${pkgs.hyprlock}/bin/hyprlock --immediate";
+        lock_cmd = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock --immediate";
         on_lock_cmd = "hyprctl dispatch dpms off";
         on_unlock_cmd = "hyprctl dispatch dpms on";
         before_sleep_cmd = "loginctl lock-session";
