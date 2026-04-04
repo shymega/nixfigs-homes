@@ -6232,16 +6232,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1774119820,
-        "narHash": "sha256-NFMLZmM6lM7v6WFcewOp7pKPlr6ampX/MB/kGxt/gPE=",
+        "lastModified": 1771906872,
+        "narHash": "sha256-0/b9n3NvXiA2NGz2Bt/h8TLyBc+twJiHriHyI8JovdI=",
         "owner": "shezdy",
         "repo": "hyprsplit",
-        "rev": "1972e9ef373ea56bfcc50f86a0f7c52f7f5b00a1",
+        "rev": "1d8ab25e03a68e136a5534c25890da2e5b25488b",
         "type": "github"
       },
       "original": {
         "owner": "shezdy",
-        "ref": "v0.54.2",
+        "ref": "v0.54.3",
         "repo": "hyprsplit",
         "type": "github"
       }
@@ -9493,22 +9493,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_73": {
-      "locked": {
-        "lastModified": 1774709303,
-        "narHash": "sha256-D3Q07BbIA2KnTcSXIqqu9P586uWxN74zNoCH3h2ESHg=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8110df5ad7abf5d4c0f6fb0f8f978390e77f9685",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_8": {
       "locked": {
         "lastModified": 1770107345,
@@ -10213,7 +10197,9 @@
     "snappy-switcher": {
       "inputs": {
         "flake-utils": "flake-utils_27",
-        "nixpkgs": "nixpkgs_73"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1775066645,

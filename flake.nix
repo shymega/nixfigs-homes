@@ -134,10 +134,13 @@
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     hyprsplit = {
-      url = "github:shezdy/hyprsplit?ref=v0.54.2";
+      url = "github:shezdy/hyprsplit?ref=v0.54.3";
       inputs.hyprland.follows = "hyprland";
     };
-    snappy-switcher.url = "github:OpalAayan/snappy-switcher";
+    snappy-switcher = {
+      url = "github:OpalAayan/snappy-switcher";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gitalias = {
       url = "github:GitAlias/gitalias";
       flake = false;
