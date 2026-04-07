@@ -15,12 +15,14 @@
     then args.osConfig.networking.hostName == "MJOLNIR-LINUX"
     else false;
 in {
-  imports = [inputs.hyprland.homeManagerModules.default];
+  imports = with inputs; [
+    hyprland.homeManagerModules.default
+  ];
 
   wayland.windowManager.hyprland = let
-    snappy-switcher = lib.getExe inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    inherit (inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}) hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    inherit (pkgs.stdenv.hostPlatform) system;
+    snappy-switcher = lib.getExe inputs.snappy-switcher.packages.${system}.default;
+    portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
   in {
     enable = true;
     package = null;
@@ -28,11 +30,11 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     plugins = with inputs; [
-      hyprsplit.packages.${pkgs.stdenv.hostPlatform.system}.hyprsplit
+      hyprsplit.packages.${system}.hyprsplit
     ];
     settings = {
       bind = [
-        "SUPER, Return, exec, alacritty"
+        "$mainMod, Return, exec, alacritty"
 
         "$mainMod, Q, killactive,"
         "$mainMod, M, exit,"
@@ -70,15 +72,13 @@ in {
         "$mainMod SHIFT, 0, movetoworkspace, 10"
 
         # full screen
-        "SUPER, F, fullscreen"
+        "$mainMod, F, fullscreen"
 
         # Hyprshot
         # Screenshot a window
         "$mainMod, PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m window"
         # Screenshot a monitor
-        # "PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m output"
-        # Screenshot a region
-        "$shiftMod, PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m region"
+        ", PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m output"
 
         # random bindings
         ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
@@ -88,11 +88,13 @@ in {
         ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
 
         "$mainMod, SPACE, exec, ${pkgs.cliphist}/bin/cliphist list"
-        "SUPER, X, exec, ${pkgs.alacritty}/bin/alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"
+        "$mainMod, X, exec, ${pkgs.alacritty}/bin/alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"
 
         "ALT, Tab, exec, ${snappy-switcher} next"
         "ALT SHIFT, Tab, exec, ${snappy-switcher} prev"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
+
+        "$mainMod, code:9, exec, killall hyprland-cursor-lock || ${lib.getExe pkgs.hyprland-cursor-lock}"
       ];
 
       "$mainMod" = "SUPER";
@@ -112,7 +114,7 @@ in {
       ];
 
       input = {
-        follow_mouse = 1;
+        follow_mouse = true;
         touchpad = {
           natural_scroll = false;
         };
@@ -126,7 +128,7 @@ in {
         gaps_in = 2;
         gaps_out = 2;
         border_size = 2;
-        layout = "master";
+        layout = "dwindle";
       };
 
       ecosystem = {
@@ -138,12 +140,8 @@ in {
         rounding = 7;
         rounding_power = 4;
         active_opacity = 1;
-        # CONFIG: choose between dim and opacity for inactive windows
-        #        inactive_opacity = 0.7;
-        #        dim_inactive = true;
-
         blur = {
-          enabled = true;
+          enabled = false;
           size = 8;
           passes = 3;
           noise = 0.01;
@@ -151,6 +149,7 @@ in {
           brightness = 0.8;
           popups = true;
         };
+        shadow.enabled = false;
       };
 
       animations = {
@@ -184,13 +183,15 @@ in {
       misc = {
         allow_session_lock_restore = true;
         anr_missed_pings = 10;
-        disable_autoreload = true;
+        disable_autoreload = false;
+        disable_hyprland_guiutils_check = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         focus_on_activate = false;
         key_press_enables_dpms = true;
         lockdead_screen_delay = 5000;
         mouse_move_enables_dpms = false;
+        vfr = true;
       };
 
       layerrule = [
@@ -219,7 +220,7 @@ in {
         ];
 
       cursor = {
-        no_hardware_cursors = 1;
+        no_hardware_cursors = true;
       };
 
       windowrule = [
