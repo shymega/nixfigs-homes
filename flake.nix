@@ -146,7 +146,7 @@
       flake = false;
     };
     wallpaper = {
-      url = "https://svs.gsfc.nasa.gov/vis/a010000/a014100/a014146/HerculesA_desktop.png";
+      url = "https://images-assets.nasa.gov/image/art002e021283/art002e021283~large.jpg";
       flake = false;
     };
     nix-openclaw.url = "github:openclaw/nix-openclaw";
