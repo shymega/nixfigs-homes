@@ -145,6 +145,10 @@
       url = "github:GitAlias/gitalias";
       flake = false;
     };
+    nixfigs-wallpapers = {
+      url = "github:shymega/nixfigs-wallpapers";
+      flake = false;
+    };
     wallpaper = {
       url = "https://images-assets.nasa.gov/image/art002e021283/art002e021283~large.jpg";
       flake = false;
