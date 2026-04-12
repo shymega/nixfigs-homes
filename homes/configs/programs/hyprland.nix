@@ -258,9 +258,7 @@ in {
     };
   };
 
-  services.hyprpaper = {
-    enable = true;
-  };
+  services.hyprpaper.enable = false;
 
   services.hypridle = {
     enable = true;
@@ -290,4 +288,17 @@ in {
   };
 
   services.swaync.enable = true;
+
+  services.wpaperd = {
+    enable = true;
+    settings = {
+      default = {
+        duration = "15m";
+        sorting = "random";
+      };
+      any = {
+        path = "${inputs.nixfigs-wallpapers}/wallpapers/";
+      };
+    };
+  };
 }
