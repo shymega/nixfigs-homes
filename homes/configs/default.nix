@@ -626,7 +626,7 @@ in {
       kde.enable = true;
       hyprland = {
         enable = true;
-        hyprpaper.enable = true;
+        hyprpaper.enable = false;
       };
       hyprlock.enable = true;
       rofi.enable = true;
