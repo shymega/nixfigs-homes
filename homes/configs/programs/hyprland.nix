@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   lib,
   inputs,
   ...
@@ -24,8 +25,14 @@ in {
 
   wayland.windowManager.hyprland = let
     inherit (pkgs.stdenv.hostPlatform) system;
-    snappy-switcher = lib.getExe inputs.snappy-switcher.packages.${system}.default;
-    portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+    snappy-switcher = let
+      inherit (inputs.snappy-switcher.packages.${system}) default;
+    in
+      lib.getExe default;
+    portalPackage = let
+      inherit (inputs.hyprland.packages.${system}) xdg-desktop-portal-hyprland;
+    in
+      xdg-desktop-portal-hyprland;
   in {
     enable = true;
     package = null;
@@ -84,7 +91,7 @@ in {
         ", PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m output"
 
         # random bindings
-        ",  XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
+        ", XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl -a play-pause"
         ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -248,14 +255,10 @@ in {
         "${pkgs.bat}/bin/bat cache --build"
         "${pkgs.clipse}/bin/clipse -listen"
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
         "${portalPackage}/libexec/xdg-desktop-portal-hyprland"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
-        "${pkgs.writeShellScriptBin "autostart" ''
-          systemctl --user --no-block restart autostart.service
-        ''}/bin/autostart"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
         "${snappy-switcher} --daemon"
@@ -274,10 +277,29 @@ in {
   services.hypridle = {
     enable = true;
     settings = {
-      general = {
-        lock_cmd = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock --immediate";
-        on_lock_cmd = "hyprctl dispatch dpms off && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 1";
-        on_unlock_cmd = "hyprctl dispatch dpms on && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
+      general = let
+        media-pause = let
+          cmd = pkgs.writeShellScriptBin "media-pause-locker" ''
+            ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 1
+            ${pkgs.playerctl}/bin/playerctl -a pause
+          '';
+        in
+          lib.getExe cmd;
+      in {
+        lock_cmd = let
+          cmd = pkgs.writeShellScriptBin "lock_wraper" ''
+            pidof hyprlock >/dev/null
+            if [ "$?" -eq 1 ]; then
+              ${pkgs.hyprlock}/bin/hyprlock
+            else
+              pkill -9 hyprlock
+              $0
+            fi
+          '';
+        in
+          lib.getExe cmd;
+        on_lock_cmd = "hyprctl dispatch dpms off && ${media-pause}";
+        on_unlock_cmd = "hyprctl dispatch dpms on; ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
@@ -368,8 +390,12 @@ in {
     };
   };
 
+  programs.hyprshot.enable = true;
+  services.hyprpolkitagent.enable = true;
+
   programs.waybar = {
     enable = true;
+    systemd.enable = config.programs.waybar.enable;
     style = import ./waybar-style.nix;
     settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
   };
