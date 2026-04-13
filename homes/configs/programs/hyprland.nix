@@ -276,8 +276,8 @@ in {
     settings = {
       general = {
         lock_cmd = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock --immediate";
-        on_lock_cmd = "hyprctl dispatch dpms off";
-        on_unlock_cmd = "hyprctl dispatch dpms on";
+        on_lock_cmd = "hyprctl dispatch dpms off && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 1";
+        on_unlock_cmd = "hyprctl dispatch dpms on && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
@@ -287,7 +287,7 @@ in {
           on-timeout = lib.getExe lock_cmd;
         }
         {
-          timeout = 320;
+          timeout = 300;
           on-timeout = "loginctl lock-session";
         }
       ];
@@ -296,6 +296,47 @@ in {
 
   programs.hyprlock = {
     enable = true;
+    settings = {
+      general = {
+        hide_cursor = true;
+        ignore_empty_input = true;
+      };
+
+      animations = {
+        enabled = true;
+        fade_in = {
+          duration = 300;
+          bezier = "easeOutQuint";
+        };
+        fade_out = {
+          duration = 300;
+          bezier = "easeOutQuint";
+        };
+      };
+      background = [
+        {
+          path = "screenshot";
+          blur_passes = 3;
+          blur_size = 8;
+        }
+      ];
+
+      input-field = [
+        {
+          size = "200, 50";
+          position = "0, -80";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          font_color = "rgb(202, 211, 245)";
+          inner_color = "rgb(91, 96, 120)";
+          outer_color = "rgb(24, 25, 38)";
+          outline_thickness = 5;
+          placeholder_text = "<span foreground=\"##cad3f5\">Password...</span>";
+          shadow_passes = 2;
+        }
+      ];
+    };
   };
 
   services.swaync.enable = true;
