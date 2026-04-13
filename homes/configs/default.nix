@@ -628,7 +628,7 @@ in {
         enable = true;
         hyprpaper.enable = false;
       };
-      hyprlock.enable = true;
+      hyprlock.enable = false;
       rofi.enable = true;
       sway.enable = true;
       swaylock.enable = true;
