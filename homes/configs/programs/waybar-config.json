@@ -1,0 +1,305 @@
+{
+  "layer": "top",
+  "position": "top",
+  "modules-left": [
+    "group/workspaces",
+    "custom/right-spacer-workspaces",
+    "group/tray",
+    "custom/right-spacer-tray"
+  ],
+  "modules-center": [
+    "custom/left-spacer-organisation",
+    "group/organisation",
+    "custom/right-spacer-organisation"
+  ],
+  "modules-right": [
+    "custom/left-spacer-audio",
+    "pulseaudio",
+    "group/network",
+    "backlight",
+    "battery",
+    "custom/logout",
+    "custom/swaync"
+  ],
+  "custom/right-spacer-workspaces": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/right-spacer-tray": {
+    "format": "▓▒░",
+    "tooltip": false
+  },
+  "custom/left-spacer-organisation": {
+    "format": "░▒▓",
+    "tooltip": false
+  },
+  "custom/right-spacer-organisation": {
+    "format": "",
+    "tooltip": false
+  },
+  "custom/left-spacer-audio": {
+    "format": "░▒▓",
+    "tooltip": false
+  },
+  "sway/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": false,
+    "format": "{name} {icon}",
+    "format-icons": {
+      "urgent": "",
+      "focused": "",
+      "default": ""
+    }
+  },
+  "hyprland/workspaces": {
+    "disable-scroll": false,
+    "all-outputs": false,
+    "format": "{name} {icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "urgent": "",
+      "active": "",
+      "default": ""
+    },
+    "on-scroll-up": "hyprctl dispatch split-cycleworkspaces -1",
+    "on-scroll-down": "hyprctl dispatch split-cycleworkspaces +1"
+  },
+  "sway/mode": {
+    "format": " <span style=\"italic\">{}</span>"
+  },
+  "idle_inhibitor": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": ""
+    }
+  },
+  "group/workspaces": {
+    "orientation": "horizontal",
+    "children-class": "group-workspaces",
+    "modules": [
+      "sway/workspaces",
+      "hyprland/workspaces",
+      "sway/mode",
+      "idle_inhibitor"
+    ]
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8,
+    "show-passive-items": true,
+    "icons": {
+      "Nextcloud": "nextcloud",
+      "steam": "steam",
+      "Evolution Tray": "evolution",
+      "qBittorrent": "qbittorrent"
+    }
+  },
+  "systemd-failed-units": {
+    "hide-on-ok": true,
+    "format": " {nr_failed_system}  {nr_failed_user} ",
+    "system": true,
+    "user": true
+  },
+  "group/tray": {
+    "orientation": "horizontal",
+    "children-class": "group-tray",
+    "modules": [
+      "tray",
+      "systemd-failed-units",
+      "privacy",
+      "gamemode"
+    ]
+  },
+  "clock": {
+    "format": "{:%H:%M} ",
+    "format-alt": "{:%A, %B %d, %Y}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 2,
+      "weeks-pos": "right",
+      "on-scroll": 3,
+      "format": {
+        "months": "<span color='#b4befe'><b>{}</b></span>",
+        "days": "<span color='#b4befe'><b>{}</b></span>",
+        "weeks": "<span color='#cba6f7'><b>W{}</b></span>",
+        "weekdays": "<span color='#cba6f7'><b>{}</b></span>",
+        "today": "<span color='#a6e3a1'><b><u>{}</u></b></span>"
+      }
+    },
+    "actions": {
+      "on-click-right": "mode",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
+  },
+  "group/organisation": {
+    "orientation": "horizontal",
+    "children-class": "group-organisation",
+    "modules": [
+      "clock",
+      "mpris"
+    ]
+  },
+  "sway/window": {
+    "format": "{}",
+    "max-length": 128,
+    "all-outputs": true,
+    "offscreen-css": true,
+    "offscreen-css-text": "(inactive)"
+  },
+  "backlight": {
+    "format": "{percent}% {icon}",
+    "format-icons": [
+      "",
+      ""
+    ],
+    "on-click": "nwg-displays"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity}% ",
+    "format-plugged": "{capacity}% ",
+    "format-alt": "{time} {power}W {icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "network": {
+    "interval": 5,
+    "interface": "wlan0",
+    "format-icons": [
+      ""
+    ],
+    "format-disconnected": "{icon}",
+    "format-wifi": "{essid} {signalStrength}% ↑{bandwidthUpBits} ↓{bandwidthDownBits} {icon}",
+    "tooltip-format": "WiFi → {ifname} → {ipaddr}/{cidr}",
+    "on-click": "networkmanager_dmenu"
+  },
+  "network#vpn": {
+    "interval": 5,
+    "interface": "wg0",
+    "format-icons": [
+      "\uf023"
+    ],
+    "format-disconnected": "{icon}",
+    "format": "VPN ↑{bandwidthUpBits} ↓{bandwidthDownBits} {icon}",
+    "tooltip-format": "VPN → {ifname} → {ipaddr}/{cidr}",
+    "on-click": "networkmanager_dmenu"
+  },
+  "bluetooth": {
+    "format": " {status}",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
+    "on-click": "ghostty -e bluetuith"
+  },
+  "pulseaudio": {
+    "scroll-step": 1,
+    "format": "{volume}% {icon}",
+    "format-bluetooth": "{volume}% {icon}",
+    "format-muted": "",
+    "format-icons": {
+      "headphones": "",
+      "handsfree": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        ""
+      ]
+    },
+    "on-click": "pavucontrol"
+  },
+  "privacy": {
+    "icon-spacing": 4,
+    "icon-size": 18,
+    "transition-duration": 250,
+    "format-icons": {
+      "screenshare": "🕵️",
+      "audio-in": "👂"
+    },
+    "modules": [
+      {
+        "type": "screenshare",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      },
+      {
+        "type": "audio-in",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      }
+    ]
+  },
+  "group/network": {
+    "orientation": "horizontal",
+    "children-class": "group-network",
+    "modules": [
+      "bluetooth",
+      "network",
+      "network#vpn"
+    ],
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "network",
+      "transition-left-to-right": true
+    }
+  },
+  "mpris": {
+    "format": "{player_icon} {title} - {artist}",
+    "format-paused": "{status_icon} <i>{title} - {artist}</i>",
+    "interval": 5,
+    "player-icons": {
+      "default": "🎵"
+    },
+    "status-icons": {
+      "paused": "⏸"
+    },
+    "ignored-players": [
+      "firefox",
+      "chromium",
+      "brave"
+    ]
+  },
+  "custom/logout": {
+    "tooltip": false,
+    "format": "",
+    "on-click": "wlogout"
+  },
+  "custom/swaync": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='#8800ff'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='#8800ff'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='#8800ff'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='#8800ff'><sup></sup> </span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}
