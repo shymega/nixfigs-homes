@@ -84,6 +84,7 @@ in {
         ", PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m output"
 
         # random bindings
+        ",  XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
         ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -108,7 +109,13 @@ in {
 
       bindm = [
         "$mainMod,mouse:272,movewindow"
+        "$mainMod ALT, mouse:272, resizewindow"
         "$mainMod,mouse:273,resizewindow"
+      ];
+
+      bindl = [
+        ", switch:on:Lid Switch, exec, hyprctl dispatch dpms off"
+        ", switch:off:Lid Switch, exec, hyprctl dispatch dpms on"
       ];
 
       monitor = [
