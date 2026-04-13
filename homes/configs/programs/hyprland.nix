@@ -258,8 +258,6 @@ in {
     };
   };
 
-  services.hyprpaper.enable = false;
-
   services.hypridle = {
     enable = true;
     settings = {
@@ -290,7 +288,7 @@ in {
   services.swaync.enable = true;
 
   services.wpaperd = {
-    enable = true;
+    enable = false;
     settings = {
       default = {
         duration = "15m";
@@ -300,5 +298,18 @@ in {
         path = "${inputs.nixfigs-wallpapers}/wallpapers/";
       };
     };
+  };
+
+  services.hyprpaper = {
+      enable = true;
+      settings = {
+        splash = false;
+        wallpaper = [
+          {
+            monitor = "";
+            path = "${inputs.nixfigs-wallpapers}/wallpapers/";
+          }
+        ];
+      };
   };
 }
