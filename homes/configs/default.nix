@@ -228,7 +228,7 @@ in {
         wm-menu
         yubioath-flutter
         zathura
-        zellij
+        unstable.zellij
         zip
         (pkgs.doomEmacs {
           doomDir = inputs.nixfigs-doom-emacs;
@@ -299,7 +299,7 @@ in {
     };
     kanshi = {
       enable = true;
-      systemdTarget = "wlroots-session.target";
+      systemdTarget = "graphical-session.target";
     };
     gnome-keyring = {
       enable = true;
