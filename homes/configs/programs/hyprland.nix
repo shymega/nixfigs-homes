@@ -8,11 +8,14 @@
     #!/usr/bin/env bash
     loginctl lock-session
   '';
-  isMjolnir = let
-    hasosConfig = builtins.hasAttr "osConfig" args;
-  in
+  hasosConfig = builtins.hasAttr "osConfig" args;
+  isMjolnir =
     if hasosConfig
     then args.osConfig.networking.hostName == "MJOLNIR-LINUX"
+    else false;
+  isWork =
+    if hasosConfig
+    then args.osConfig.networking.hostName == "ct-lt-2506-nixos"
     else false;
 in {
   imports = with inputs; [
@@ -214,9 +217,15 @@ in {
           "HYPRCURSOR_SIZE,24"
           "_JAVA_AWT_WM_NONREPARENTING,1"
         ]
-        ++ lib.optionals isMjolnir [
-          "LIBVA_DRIVER_NAME,nvidia"
+        ++ lib.optionals (isMjolnir || isWork) [
+          "GBM_BACKEND,nvidia-drm"
+          "LIBVA_DRIVER_NAME,iHD"
+          "NVD_BACKEND,direct"
+          "PROTON_ENABLE_NGX_UPDATER,1"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+          "__GL_MaxFramesAllowed,1"
+          "__GL_VRR_ALLOWED,0"
+          "__VK_LAYER_NV_optimus,NVIDIA_only"
         ];
 
       cursor = {
