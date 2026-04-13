@@ -342,7 +342,7 @@ in {
   services.swaync.enable = true;
 
   services.wpaperd = {
-    enable = false;
+    enable = true;
     settings = {
       default = {
         duration = "15m";
@@ -355,16 +355,19 @@ in {
   };
 
   services.hyprpaper = {
-      enable = true;
-      settings = {
-        splash = false;
-        wallpaper = [
-          {
-            monitor = "";
-            path = "${inputs.nixfigs-wallpapers}/wallpapers/";
-          }
-        ];
-      };
+    enable = false;
+    package = pkgs.unstable.hyprpaper;
+    settings = {
+      splash = false;
+      wallpaper = [
+        {
+          monitor = "";
+          path = "${inputs.nixfigs-wallpapers}/wallpapers/";
+        }
+      ];
+    };
+  };
+
   programs.waybar = {
     enable = true;
     style = import ./waybar-style.nix;
