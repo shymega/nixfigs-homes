@@ -133,8 +133,8 @@
       url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
-    hyprsplit = {
-      url = "github:shezdy/hyprsplit?ref=v0.54.3";
+    split-monitor-workspaces = {
+      url = "github:zjeffer/split-monitor-workspaces?rev=34c266b732d8a063213098dc88369ac88b95dfa1";
       inputs.hyprland.follows = "hyprland";
     };
     snappy-switcher = {
