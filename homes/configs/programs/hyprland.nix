@@ -250,7 +250,6 @@ in {
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
-        "${pkgs.waybar}/bin/waybar"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
         "${portalPackage}/libexec/xdg-desktop-portal-hyprland"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
