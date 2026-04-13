@@ -324,5 +324,9 @@ in {
           }
         ];
       };
+  programs.waybar = {
+    enable = true;
+    style = import ./waybar-style.nix;
+    settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
   };
 }
