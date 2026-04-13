@@ -188,8 +188,6 @@ in {
         ];
       };
 
-      gestures = {};
-
       misc = {
         allow_session_lock_restore = true;
         anr_missed_pings = 10;
