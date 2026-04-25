@@ -137,6 +137,11 @@
       url = "github:zjeffer/split-monitor-workspaces?rev=34c266b732d8a063213098dc88369ac88b95dfa1";
       inputs.hyprland.follows = "hyprland";
     };
+    hyprspace = {
+      url = "github:KZDKM/Hyprspace";
+      # Hyprspace uses latest Hyprland. We declare this to keep them in sync.
+      inputs.hyprland.follows = "hyprland";
+    };
     snappy-switcher = {
       url = "github:OpalAayan/snappy-switcher";
       inputs.nixpkgs.follows = "nixpkgs";
