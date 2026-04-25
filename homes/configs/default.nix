@@ -125,6 +125,7 @@ in {
         google-chrome
         google-cloud-sdk
         gthumb
+        halloy
         httpie
         hub
         hut
@@ -187,11 +188,13 @@ in {
         restic
         reuse
         rkvm
+        rofi
         rot8
         ruff
         rustup
         sbcl
         scrcpy
+        senpai
         shikane
         speedtest-go
         spring-boot-cli
@@ -209,7 +212,10 @@ in {
         twilight-kde
         units
         unrar
+        unstable.alpaca
         unstable.devenv
+        unstable.isync-patched
+        unstable.zellij
         unzip
         uv
         vdirsyncer
@@ -228,7 +234,6 @@ in {
         wm-menu
         yubioath-flutter
         zathura
-        unstable.zellij
         zip
         (pkgs.doomEmacs {
           doomDir = inputs.nixfigs-doom-emacs;
@@ -236,7 +241,6 @@ in {
           emacs = pkgs.emacs-pgtk;
           experimentalFetchTree = true;
         })
-        unstable.isync-patched
         inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ rustCrates
