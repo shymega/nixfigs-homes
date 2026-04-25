@@ -41,8 +41,6 @@ in {
     xwayland.enable = true;
     plugins = with inputs; [
       split-monitor-workspaces.packages.${system}.split-monitor-workspaces
-      hyprspace.packages.${system}.Hyprspace
-      hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
     ];
     settings = {
       bind = [
