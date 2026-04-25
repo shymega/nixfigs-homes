@@ -42,6 +42,7 @@ in {
     plugins = with inputs; [
       split-monitor-workspaces.packages.${system}.split-monitor-workspaces
       hyprspace.packages.${system}.Hyprspace
+      hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
     ];
     settings = {
       bind = [
@@ -263,6 +264,8 @@ in {
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
         "${snappy-switcher} --daemon"
+        "${pkgs.unstable.iio-hyprland}/bin/iio-hyprland"
+        "${pkgs.unstable.ianny}/bin/ianny"
       ];
 
       debug.disable_scale_checks = true;
@@ -400,4 +403,6 @@ in {
     style = import ./waybar-style.nix;
     settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
   };
+
+  services.avizo.enable = true;
 }
