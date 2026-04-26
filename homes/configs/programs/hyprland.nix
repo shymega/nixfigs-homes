@@ -298,8 +298,8 @@ in {
           '';
         in
           lib.getExe cmd;
-        on_lock_cmd = "piof -x hyprlock || hyprctl dispatch dpms off; ${media-pause}";
-        on_unlock_cmd = "hyprctl dispatch dpms on; ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
+        on_lock_cmd = "hyprctl dispatch dpms off && ${media-pause}";
+        on_unlock_cmd = "hyprctl dispatch dpms on && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
