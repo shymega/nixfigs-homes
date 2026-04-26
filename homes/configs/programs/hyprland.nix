@@ -104,8 +104,6 @@ in {
         "ALT, Tab, exec, ${snappy-switcher} next"
         "ALT SHIFT, Tab, exec, ${snappy-switcher} prev"
         "$mainMod, L, exec, ${lib.getExe lock_cmd}"
-
-        "$mainMod, code:9, exec, killall hyprland-cursor-lock || ${lib.getExe pkgs.hyprland-cursor-lock}"
       ];
 
       "$mainMod" = "SUPER";
