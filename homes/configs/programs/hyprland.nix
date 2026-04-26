@@ -287,7 +287,7 @@ in {
           lib.getExe cmd;
       in {
         lock_cmd = let
-          cmd = pkgs.writeShellScriptBin "lock_wraper" ''
+          cmd = pkgs.writeShellScriptBin "hyprlock_wrapper" ''
             pidof hyprlock >/dev/null
             if [ "$?" -eq 1 ]; then
               ${pkgs.hyprlock}/bin/hyprlock
