@@ -48,7 +48,8 @@
     "format-icons": {
       "urgent": "",
       "focused": "",
-      "default": ""
+      "default": "",
+      "empty": "0",
     }
   },
   "hyprland/workspaces": {
@@ -60,6 +61,7 @@
       "urgent": "",
       "active": "",
       "default": ""
+      "empty": "0",
     },
     "on-scroll-up": "hyprctl dispatch split-cycleworkspaces -1",
     "on-scroll-down": "hyprctl dispatch split-cycleworkspaces +1"
