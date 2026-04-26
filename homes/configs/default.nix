@@ -224,7 +224,6 @@ in {
         wayfarer
         waypipe
         wayvnc
-        weechatWithMyPlugins
         wezterm
         wf-recorder
         wget
