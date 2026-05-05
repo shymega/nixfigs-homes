@@ -29,10 +29,6 @@ in {
       inherit (inputs.snappy-switcher.packages.${system}) default;
     in
       lib.getExe default;
-    portalPackage = let
-      inherit (inputs.hyprland.packages.${system}) xdg-desktop-portal-hyprland;
-    in
-      xdg-desktop-portal-hyprland;
   in {
     enable = true;
     package = null;
@@ -257,10 +253,8 @@ in {
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.sunsetr}/bin/sunsetr"
-        "${pkgs.kanshi}/bin/kanshi"
         "${snappy-switcher} --daemon"
         "${pkgs.unstable.iio-hyprland}/bin/iio-hyprland"
-        "${pkgs.unstable.ianny}/bin/ianny"
       ];
 
       debug.disable_scale_checks = true;
