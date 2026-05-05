@@ -255,7 +255,6 @@ in {
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
-        "${portalPackage}/libexec/xdg-desktop-portal-hyprland"
         "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${pkgs.kanshi}/bin/kanshi"
