@@ -200,7 +200,6 @@ in {
         key_press_enables_dpms = true;
         lockdead_screen_delay = 5000;
         mouse_move_enables_dpms = false;
-        vfr = true;
       };
 
       layerrule = [
@@ -257,7 +256,10 @@ in {
         "${pkgs.unstable.iio-hyprland}/bin/iio-hyprland"
       ];
 
-      debug.disable_scale_checks = true;
+      debug = {
+        disable_scale_checks = true;
+        vfr = true;
+      };
 
       xwayland = {
         force_zero_scaling = false;
