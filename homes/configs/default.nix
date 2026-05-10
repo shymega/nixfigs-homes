@@ -16,7 +16,6 @@
   getHomeDirectory = username: homePrefix + "/${username}";
   homeDirectory = getHomeDirectory username;
   rustCrates = with pkgs; [
-    aichat
     bacon
     bandwhich
     cargo-binutils
@@ -27,11 +26,9 @@
     cargo-dist
     cargo-edit
     cargo-embassy
-    espflash
     cargo-espmonitor
     cargo-expand
     cargo-generate
-    cargo-expand
     cargo-lambda
     cargo-license
     cargo-make
@@ -40,8 +37,9 @@
     cargo-workspaces
     cargo-xbuild
     difftastic
-    dust
     duf
+    dust
+    espflash
     fclones
     fd
     just
@@ -74,7 +72,6 @@ in {
     stateVersion = "25.05";
     packages = with pkgs;
       [
-        (python3.withPackages (p: [p.tkinter]))
         aerc
         age
         agebox
@@ -89,12 +86,10 @@ in {
         bat
         bc
         beancount
-        unstable.beeper
         black
         brightnessctl
         buildpack
         bun
-        claude-code
         cloudflared
         cocogitto
         curl
@@ -116,7 +111,6 @@ in {
         flatpak-xdg-utils
         fuse
         fzf
-        gemini-cli
         gh
         glab
         gnucash
@@ -162,7 +156,6 @@ in {
         nodejs
         notmuch
         offlineimap
-        opencode
         p7zip
         parallel
         pass
@@ -213,8 +206,11 @@ in {
         units
         unrar
         unstable.alpaca
+        unstable.claude-code
         unstable.devenv
+        unstable.gemini-cli
         unstable.isync-patched
+        unstable.opencode
         unstable.zellij
         unzip
         uv
