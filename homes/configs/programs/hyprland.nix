@@ -281,18 +281,7 @@ in {
         in
           lib.getExe cmd;
       in {
-        lock_cmd = let
-          cmd = pkgs.writeShellScriptBin "hyprlock_wrapper" ''
-            pidof hyprlock >/dev/null
-            if [ "$?" -eq 1 ]; then
-              ${pkgs.hyprlock}/bin/hyprlock
-            else
-              pkill -9 hyprlock
-              $0
-            fi
-          '';
-        in
-          lib.getExe cmd;
+        lock_cmd = lib.getExe pkgs.hyprlock;
         on_lock_cmd = "hyprctl dispatch dpms off && ${media-pause}";
         on_unlock_cmd = "hyprctl dispatch dpms on && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
         before_sleep_cmd = "loginctl lock-session";
