@@ -13,11 +13,10 @@
 }: let
   inherit (libx) isPC homePrefix;
   inherit (lib) getExe getExe';
-  getHomeDirectory = username: homePrefix + "/${username}";
-  homeDirectory = getHomeDirectory username;
+  homeDirectory = let
+    getHomeDirectory = username: homePrefix + "/${username}";
+  in getHomeDirectory username;
   rustCrates = with pkgs; [
-    bacon
-    bandwhich
     cargo-binutils
     cargo-bloat
     cargo-bootimage
@@ -29,7 +28,6 @@
     cargo-espmonitor
     cargo-expand
     cargo-generate
-    cargo-lambda
     cargo-license
     cargo-make
     cargo-update
@@ -37,8 +35,6 @@
     cargo-workspaces
     cargo-xbuild
     difftastic
-    duf
-    dust
     espflash
     fclones
     fd
@@ -69,43 +65,31 @@ in {
   home = {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
-    stateVersion = "25.05";
+    stateVersion = "25.11";
     packages = with pkgs;
       [
         aerc
         age
-        agebox
-        aider-chat
         alejandra
         alsa-utils
         android-tools
         asciinema
-        awscli2
-        azure-cli
         b4
         bat
         bc
-        beancount
-        black
         brightnessctl
-        buildpack
-        bun
         cloudflared
         cocogitto
         curl
         dateutils
         dex
-        diesel-cli
         diffoscope
         difftastic
         distrobox
-        dnscontrol
-        dogdns
         dosbox
         elf2uf2-rs
         encfs
         exiftool
-        expect
         eza
         firefox
         flatpak-xdg-utils
@@ -113,11 +97,9 @@ in {
         fzf
         gh
         glab
-        gnucash
         gnumake
         go
         google-chrome
-        google-cloud-sdk
         gthumb
         halloy
         httpie
@@ -127,52 +109,34 @@ in {
         imapsync
         inetutils
         ispell
-        jdk17
         jq
         leafnode
-        ledger
-        ledger2beancount
         libnotify
         lynx
-        lzip
         m4
-        maven
         mkcert
         mpc
         mprisence
         mpv
-        mpvScripts.mpris
         mupdf
         ncmpcpp
         neomutt
         networkmanagerapplet
         nh
-        nix-init
         nix-prefetch
         nixfmt-rfc-style
-        nixpacks
-        nixpkgs-fmt
         nixpkgs-review
         nodejs
         notmuch
-        offlineimap
         p7zip
-        parallel
         pass
-        pavucontrol
         pdftk
         pizauth
         playerctl
-        poetry
-        poppler-utils
-        powershell
         pre-commit
         public-inbox
-        pw-volume
-        pwalarmd
         pwvucontrol
         python3Packages.pip
-        python3Packages.pipx
         python3Packages.virtualenv
         python3Packages.virtualenvwrapper
         q
@@ -193,7 +157,6 @@ in {
         spring-boot-cli
         statix
         step-cli
-        stow
         swaks
         taskwarrior-tui
         tea
@@ -215,7 +178,6 @@ in {
         unzip
         uv
         vdirsyncer
-        vlc
         w3m
         wayfarer
         waypipe
@@ -227,7 +189,6 @@ in {
         wl-mirror
         wlr-randr
         wm-menu
-        yubioath-flutter
         zathura
         zip
         (pkgs.doomEmacs {
@@ -236,7 +197,7 @@ in {
           emacs = pkgs.emacs-pgtk;
           experimentalFetchTree = true;
         })
-        inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.agenix.packages.${hostPlatform}.default
       ]
       ++ rustCrates
       ++ (
@@ -245,22 +206,16 @@ in {
             with pkgs; [
               android-studio
               android-studio-for-platform
-              gcc
-              protontricks
-              protonup-qt
-              steamcmd
               texlive.combined.scheme-full
               virt-manager
               virtiofsd
-              wineWowPackages.stable
-              winetricks
             ]
           )
       )
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
       ++ (with pkgs.unstable.vimPlugins; [astrocore])
       ++ rustCrates
-      ++ [inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}.default];
+      ++ [inputs.snappy-switcher.packages.${hostPlatform}.default];
   };
 
   services = {
