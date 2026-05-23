@@ -15,7 +15,8 @@
   inherit (lib) getExe getExe';
   homeDirectory = let
     getHomeDirectory = username: homePrefix + "/${username}";
-  in getHomeDirectory username;
+  in
+    getHomeDirectory username;
   rustCrates = with pkgs; [
     cargo-binutils
     cargo-bloat
