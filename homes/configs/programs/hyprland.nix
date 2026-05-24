@@ -210,7 +210,7 @@ in {
       env =
         [
           "GDK_BACKEND,wayland"
-          "GDK_SCALE,1"
+          "GDK_SCALE,2"
           "MOZ_ENABLE_WAYLAND,1"
           "QT_AUTO_SCREEN_SCALE_FACTOR,1"
           "QT_QPA_PLATFORM,wayland;xcb"
