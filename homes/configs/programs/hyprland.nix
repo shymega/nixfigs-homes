@@ -14,6 +14,10 @@
     if hasosConfig
     then args.osConfig.networking.hostName == "MJOLNIR-LINUX"
     else false;
+  isMorpheus =
+    if hasosConfig
+    then args.osConfig.networking.hostName == "MORPHEUS-LINUX"
+    else false;
   isWork =
     if hasosConfig
     then args.osConfig.networking.hostName == "ct-lt-2506-nixos"
@@ -210,7 +214,11 @@ in {
       env =
         [
           "GDK_BACKEND,wayland"
-          "GDK_SCALE,2"
+          "GDK_SCALE,${
+            if isMorpheus
+            then 1
+            else 2
+          }"
           "MOZ_ENABLE_WAYLAND,1"
           "QT_AUTO_SCREEN_SCALE_FACTOR,1"
           "QT_QPA_PLATFORM,wayland;xcb"
