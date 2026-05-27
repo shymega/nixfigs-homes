@@ -216,8 +216,8 @@ in {
           "GDK_BACKEND,wayland"
           "GDK_SCALE,${
             if isMorpheus
-            then 1
-            else 2
+            then "1"
+            else "2"
           }"
           "MOZ_ENABLE_WAYLAND,1"
           "QT_AUTO_SCREEN_SCALE_FACTOR,1"
