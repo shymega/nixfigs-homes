@@ -18,6 +18,10 @@
     if hasosConfig
     then args.osConfig.networking.hostName == "MORPHEUS-LINUX"
     else false;
+  isDeusEx =
+    if hasosConfig
+    then args.osConfig.networking.hostName == "DEUSEX-LINUX"
+    else false;
   isWork =
     if hasosConfig
     then args.osConfig.networking.hostName == "ct-lt-2506-nixos"
@@ -215,7 +219,7 @@ in {
         [
           "GDK_BACKEND,wayland"
           "GDK_SCALE,${
-            if isMorpheus
+            if (isMorpheus || isDeusEx || isWork)
             then "1"
             else "2"
           }"
