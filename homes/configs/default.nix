@@ -12,7 +12,7 @@
   ...
 }: let
   inherit (libx) isPC homePrefix;
-  inherit (lib) getExe getExe';
+  inherit (lib) getExe';
   homeDirectory = let
     getHomeDirectory = username: homePrefix + "/${username}";
   in
@@ -57,7 +57,6 @@ in {
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
     onepassword-shell-plugins.hmModules.default
-    shypkgs-public.hmModules.${hostPlatform}.dwl
     nixfigs-secrets.user
     shyemacs-cfg.homeModules.emacs
     stylix.homeModules.stylix
@@ -125,7 +124,7 @@ in {
         networkmanagerapplet
         nh
         nix-prefetch
-        nixfmt-rfc-style
+        nixfmt
         nixpkgs-review
         nodejs
         notmuch
@@ -324,14 +323,6 @@ in {
         obs-backgroundremoval
         obs-pipewire-audio-capture
       ];
-    };
-    dwl = {
-      enable = true;
-      cmd = {
-        terminal = "${getExe pkgs.alacritty}";
-        editor = "${getExe' pkgs.emacs30-pgtk "emacsclient"} -cq";
-        menu = "${getExe' pkgs.rofi "rofi"} -show drun";
-      };
     };
     yt-dlp.enable = true;
     htop.enable = true;
@@ -572,6 +563,7 @@ in {
   };
   stylix = {
     enable = true;
+    enableReleaseChecks = false;
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
     image = inputs.wallpaper;
