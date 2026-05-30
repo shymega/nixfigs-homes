@@ -66,7 +66,7 @@ in {
   home = {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
-    stateVersion = "25.11";
+    stateVersion = "26.05";
     packages = with pkgs;
       [
         aerc
