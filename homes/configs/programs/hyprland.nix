@@ -262,7 +262,7 @@ in {
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "${pkgs.systemd}/bin/systemctl --user import-environment --all"
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
-        "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources"
+        "${pkgs.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${snappy-switcher} --daemon"
         "${pkgs.unstable.iio-hyprland}/bin/iio-hyprland"
