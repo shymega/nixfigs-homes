@@ -43,6 +43,7 @@ in {
     portalPackage = null;
     systemd.enable = true;
     xwayland.enable = true;
+    configType = "hyprlang";
     # plugins = with inputs; [
     #  split-monitor-workspaces.packages.${system}.split-monitor-workspaces
     # ];
