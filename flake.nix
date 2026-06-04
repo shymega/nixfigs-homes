@@ -92,7 +92,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     stylix = {
-      url = "github:danth/stylix/release-25.11";
+      url = "github:danth/stylix/release-26.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
@@ -130,11 +130,11 @@
       url = "github:hyprwm/Hyprland?ref=v0.55.2";
     };
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
+      url = "github:hyprwm/hyprland-plugins?ref=v0.55.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     split-monitor-workspaces = {
-      url = "github:zjeffer/split-monitor-workspaces?rev=34c266b732d8a063213098dc88369ac88b95dfa1";
+      url = "github:Duckonaut/split-monitor-workspaces?rev=3aeb50c7fba3141590529b3f1a19dd80d1e77925";
       inputs.hyprland.follows = "hyprland";
     };
     hyprspace = {
