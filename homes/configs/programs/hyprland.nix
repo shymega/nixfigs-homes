@@ -285,30 +285,21 @@ in {
   services.hypridle = {
     enable = true;
     settings = {
-      general = let
-        media-pause = let
-          cmd = pkgs.writeShellScriptBin "media-pause-locker" ''
-            ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 1
-            ${pkgs.playerctl}/bin/playerctl -a pause
-          '';
-        in
-          lib.getExe cmd;
-      in {
-        lock_cmd = lib.getExe pkgs.hyprlock;
-        on_lock_cmd = "hyprctl dispatch dpms off && ${media-pause}";
-        on_unlock_cmd = "hyprctl dispatch dpms on && ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ 0";
-        before_sleep_cmd = "loginctl lock-session";
+      general = rec {
+	lock_cmd = "pidof hyprlock || hyprlock";
+        before_sleep_cmd = lock_cmd;
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
       listener = [
-        {
-          timeout = 300;
-          on-timeout = lib.getExe lock_cmd;
-        }
-        {
-          timeout = 300;
-          on-timeout = "loginctl lock-session";
-        }
+      	{
+	  timeout = 300;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
+	}
+	{
+	  timeout = 302;
+	  on-timeout = "loginctl lock-session";
+	}
       ];
     };
   };
