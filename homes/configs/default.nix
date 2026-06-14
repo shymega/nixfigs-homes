@@ -83,7 +83,6 @@ in {
         curl
         dateutils
         dex
-        diffoscope
         difftastic
         distrobox
         dosbox
@@ -213,7 +212,6 @@ in {
           )
       )
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
-      ++ (with pkgs.unstable.vimPlugins; [astrocore])
       ++ rustCrates
       ++ [inputs.snappy-switcher.packages.${hostPlatform}.default];
   };
@@ -349,7 +347,7 @@ in {
     };
     atuin = {
       enable = true;
-      package = pkgs.unstable.atuin;
+      package = pkgs.atuin;
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
@@ -405,7 +403,7 @@ in {
     };
     vscode = {
       enable = true;
-      package = pkgs.unstable.vscode.fhs;
+      package = pkgs.vscode.fhs;
     };
     direnv = {
       enable = true;
@@ -504,7 +502,7 @@ in {
           Requires = ["atuin-daemon.socket"];
         };
         Service = {
-          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} daemon";
+          ExecStart = "${getExe' pkgs.atuin "atuin"} daemon";
           Environment = ["ATUIN_LOG=info"];
           Restart = "on-failure";
           RestartSteps = 5;
@@ -539,7 +537,7 @@ in {
           };
         Service = {
           Type = "oneshot";
-          ExecStart = "${getExe' pkgs.unstable.atuin "atuin"} sync";
+          ExecStart = "${getExe' pkgs.atuin "atuin"} sync";
         };
       };
       task-sync = {
