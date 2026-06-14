@@ -383,6 +383,7 @@ in {
 
   programs.waybar = {
     enable = true;
+    package = pkgs.waybar-patched;
     systemd.enable = config.programs.waybar.enable;
     style = import ./waybar-style.nix;
     settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
