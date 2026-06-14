@@ -266,7 +266,7 @@ in {
         "${pkgs.xrdb}/bin/xrdb -merge $HOME/.Xresources"
         "${pkgs.sunsetr}/bin/sunsetr"
         "${snappy-switcher} --daemon"
-        "${pkgs.unstable.iio-hyprland}/bin/iio-hyprland"
+        "${pkgs.iio-hyprland}/bin/iio-hyprland"
       ];
 
       debug = {
@@ -363,7 +363,7 @@ in {
 
   services.hyprpaper = {
     enable = false;
-    package = pkgs.unstable.hyprpaper;
+    package = pkgs.hyprpaper;
     settings = {
       splash = false;
       wallpaper = [
