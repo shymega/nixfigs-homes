@@ -285,19 +285,16 @@ in {
   services.hypridle = {
     enable = true;
     settings = {
-      general = rec {
+      general = {
         lock_cmd = "pidof hyprlock || hyprlock";
-        before_sleep_cmd = lock_cmd;
+        on_lock_cmd = "hyprctl dispatch dpms off";
+        on_unlock_cmd = "hyprctl dispatch dpms on";
+        before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
       listener = [
         {
           timeout = 300;
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
-        }
-        {
-          timeout = 302;
           on-timeout = "loginctl lock-session";
         }
       ];
