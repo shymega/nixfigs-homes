@@ -257,7 +257,6 @@ in {
       enable = true;
       components = ["secrets"];
     };
-    dunst.enable = false;
     mpd-discord-rpc.enable = true;
     mpris-proxy.enable = true;
     mpdris2.enable = true;
@@ -276,22 +275,6 @@ in {
             name "PipeWire Output"
         }
       '';
-    };
-    gammastep = {
-      enable = true;
-      temperature = {
-        day = 6500;
-        night = 3400;
-      };
-      provider = "geoclue2";
-    };
-    redshift = {
-      enable = false;
-      temperature = {
-        day = 6500;
-        night = 3400;
-      };
-      provider = "geoclue2";
     };
   };
 
@@ -562,7 +545,6 @@ in {
   };
   stylix = {
     enable = true;
-    enableReleaseChecks = false;
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
     image = inputs.wallpaper;
