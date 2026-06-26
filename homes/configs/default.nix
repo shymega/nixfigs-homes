@@ -296,7 +296,7 @@ in {
         wrangler
       ];
     };
-    zsh.enable = true;
+    zsh.enable = false;
     bash.enable = true;
     obs-studio = lib.optionalAttrs isPC {
       enable = true;
