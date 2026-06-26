@@ -56,7 +56,7 @@ in {
     ./programs/hyprland.nix
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
-    onepassword-shell-plugins.hmModules.default
+    _1password-shell-plugins.hmModules.default
     nixfigs-secrets.user
     shyemacs-cfg.homeModules.emacs
     stylix.homeModules.stylix
@@ -303,7 +303,7 @@ in {
 
   programs = {
     _1password-shell-plugins = {
-      enable = false;
+      enable = true;
       plugins = with pkgs; [
         awscli2
         cachix
@@ -313,6 +313,7 @@ in {
         wrangler
       ];
     };
+    zsh.enable = true;
     bash.enable = true;
     obs-studio = lib.optionalAttrs isPC {
       enable = true;
