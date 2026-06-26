@@ -111,7 +111,7 @@
       url = "github:shymega/nixfigs-doom-emacs";
       flake = false;
     };
-    onepassword-shell-plugins.url = "github:1Password/shell-plugins";
+    _1password-shell-plugins.url = "github:1Password/shell-plugins";
     flake-utils.url = "github:numtide/flake-utils";
     shypkgs-private.url = "github:shymega/shypkgs-private";
     shypkgs-public.url = "github:shymega/shypkgs-public";
