@@ -120,7 +120,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
-    
+
       inputs.home-manager.follows = "home-manager";
     };
     home-manager = {
@@ -196,7 +196,7 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland"; # to make sure that the plugin is built for the correct version of hyprland
-    
+
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri-screen-time = {
@@ -211,7 +211,7 @@
     snappy-switcher = {
       url = "github:OpalAayan/snappy-switcher";
       inputs.nixpkgs.follows = "nixpkgs";
-    
+
       inputs.flake-utils.follows = "flake-utils";
     };
     gitalias = {
