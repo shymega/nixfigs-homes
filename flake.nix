@@ -63,11 +63,50 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nixpkgs-shymega.url = "github:shymega/nixpkgs?ref=shymega/staging";
-    nixfigs-helpers.url = "github:shymega/nixfigs-helpers";
-    nixfigs-secrets.url = "github:shymega/nixfigs-secrets";
-    nixfigs-common.url = "github:shymega/nixfigs-common";
-    nixfigs-pkgs.url = "github:shymega/nixfigs-pkgs";
-    nixfigs-roles.url = "github:shymega/nixfigs-roles";
+    nixfigs-helpers = {
+      url = "github:shymega/nixfigs-helpers";
+      inputs.agenix.follows = "agenix";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixfigs-secrets = {
+      url = "github:shymega/nixfigs-secrets";
+      inputs.agenix.follows = "agenix";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixfigs-common = {
+      url = "github:shymega/nixfigs-common";
+      inputs.agenix.follows = "agenix";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.flake-registry.follows = "flake-registry";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.home-manager.follows = "home-manager";
+      inputs.hyprland-plugins.follows = "hyprland-plugins";
+      inputs.nix-index-database.follows = "nix-index-database";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixfigs-pkgs.follows = "nixfigs-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-master.follows = "nixpkgs-master";
+      inputs.nixpkgs-shymega.follows = "nixpkgs-shymega";
+      inputs.nixpkgs-unstable.follows = "nixpkgs-unstable";
+    };
+    nixfigs-pkgs = {
+      url = "github:shymega/nixfigs-pkgs";
+      inputs.nix-doom-emacs-unstraightened.follows = "nix-doom-emacs-unstraightened";
+      inputs.nix-openclaw.follows = "nix-openclaw";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-shymega.follows = "nixpkgs-shymega";
+      inputs.nixpkgs-unstable.follows = "nixpkgs-unstable";
+      inputs.shypkgs-public.follows = "shypkgs-public";
+    };
+    nixfigs-roles = {
+      url = "github:shymega/nixfigs-roles";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-registry = {
       url = "github:NixOS/flake-registry";
       flake = false;
@@ -81,6 +120,8 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
+    
+      inputs.home-manager.follows = "home-manager";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -111,10 +152,22 @@
       url = "github:shymega/nixfigs-doom-emacs";
       flake = false;
     };
-    _1password-shell-plugins.url = "github:1Password/shell-plugins";
+    _1password-shell-plugins = {
+      url = "github:1Password/shell-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils.url = "github:numtide/flake-utils";
-    shypkgs-private.url = "github:shymega/shypkgs-private";
-    shypkgs-public.url = "github:shymega/shypkgs-public";
+    shypkgs-private = {
+      url = "github:shymega/shypkgs-private";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    shypkgs-public = {
+      url = "github:shymega/shypkgs-public";
+      inputs.nixfigs-helpers.follows = "nixfigs-helpers";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-master.follows = "nixpkgs-master";
+    };
     nix-index-database = {
       url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -143,12 +196,23 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland"; # to make sure that the plugin is built for the correct version of hyprland
+    
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri-screen-time.url = "github:probeldev/niri-screen-time";
-    iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
+    niri-screen-time = {
+      url = "github:probeldev/niri-screen-time";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    iio-hyprland = {
+      url = "github:JeanSchoeller/iio-hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     snappy-switcher = {
       url = "github:OpalAayan/snappy-switcher";
       inputs.nixpkgs.follows = "nixpkgs";
+    
+      inputs.flake-utils.follows = "flake-utils";
     };
     gitalias = {
       url = "github:GitAlias/gitalias";
@@ -162,6 +226,11 @@
       url = "https://images-assets.nasa.gov/image/art002e021283/art002e021283~large.jpg";
       flake = false;
     };
-    nix-openclaw.url = "github:openclaw/nix-openclaw";
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.home-manager.follows = "home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }
