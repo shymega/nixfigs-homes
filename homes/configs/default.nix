@@ -167,13 +167,11 @@ in {
         twilight-kde
         units
         unrar
-        unstable.alpaca
         unstable.claude-code
         unstable.devenv
         unstable.gemini-cli
         unstable.isync-patched
         unstable.opencode
-        unstable.zellij
         unzip
         uv
         vdirsyncer
@@ -189,6 +187,7 @@ in {
         wlr-randr
         wm-menu
         zathura
+        zellij
         zip
         (pkgs.doomEmacs {
           doomDir = inputs.nixfigs-doom-emacs;
