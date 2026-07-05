@@ -497,22 +497,6 @@ in {
           WantedBy = ["default.target"];
         };
       };
-      polkit-gnome-authentication-agent-1 = {
-        Unit = {
-          Description = "polkit-gnome-authentication-agent-1";
-          After = ["default.target"];
-          BindsTo = ["default.target"];
-          PartOf = ["default.target"];
-        };
-        Install.WantedBy = ["default.target"];
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
-        };
-      };
       atuin-sync = {
         Unit =
           atuinCommonConfig
