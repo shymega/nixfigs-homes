@@ -287,8 +287,8 @@ in {
     settings = {
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
-        on_lock_cmd = "hyprctl dispatch dpms off";
-        on_unlock_cmd = "hyprctl dispatch dpms on";
+        on_lock_cmd = "swaync-client -dn; hyprctl dispatch dpms off";
+        on_unlock_cmd = "swaync-client -df; hyprctl dispatch dpms on";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
