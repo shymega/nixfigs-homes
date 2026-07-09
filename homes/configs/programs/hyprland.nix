@@ -287,12 +287,22 @@ in {
     settings = {
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
-        on_lock_cmd = "swaync-client -dn; hyprctl dispatch dpms off";
-        on_unlock_cmd = "swaync-client -df; hyprctl dispatch dpms on";
+        on_lock_cmd = "swaync-client -dn && hyprctl dispatch dpms off";
+        on_unlock_cmd = "swaync-client -df && hyprctl dispatch dpms on";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
       listener = [
+        {
+          timeout = 150;
+          on-timeout = "brightnessctl -s set 10";
+          on-resume = "brightnessctl -r";
+        }
+        {
+          timeout = 300;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
+        }
         {
           timeout = 300;
           on-timeout = "loginctl lock-session";
