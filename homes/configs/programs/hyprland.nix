@@ -5,10 +5,6 @@
   inputs,
   ...
 } @ args: let
-  lock_cmd = pkgs.writeShellScriptBin "lock-cmd" ''
-    #!/usr/bin/env bash
-    loginctl lock-session
-  '';
   hasosConfig = builtins.hasAttr "osConfig" args;
   isMjolnir =
     if hasosConfig
@@ -32,265 +28,290 @@ in {
   ];
 
   wayland.windowManager.hyprland = let
-    inherit (pkgs.stdenv.hostPlatform) system;
     snappy-switcher = let
-      inherit (inputs.snappy-switcher.packages.${system}) default;
+      inherit (inputs.snappy-switcher.packages.${pkgs.stdenv.hostPlatform.system}) default;
     in
       lib.getExe default;
+
+    lua = lib.generators.mkLuaInline;
+    dsp = {
+      exec = cmd: lua ''hl.dsp.exec_cmd("${cmd}")'';
+      close = lua "hl.dsp.window.close()";
+      exit = lua "hl.dsp.exit()";
+      float = lua ''hl.dsp.window.float({ action = "toggle" })'';
+      fullscreen = lua "hl.dsp.window.fullscreen()";
+      pseudo = lua "hl.dsp.window.pseudo()";
+      layout = msg: lua ''hl.dsp.layout("${msg}")'';
+      focus = dir: lua ''hl.dsp.focus({ direction = "${dir}" })'';
+      swap = dir: lua ''hl.dsp.window.swap({ direction = "${dir}" })'';
+      toggleSpecial = name: lua ''hl.dsp.workspace.toggle_special("${name}")'';
+      moveToSpecial = name: lua ''hl.dsp.window.move({ workspace = "special:${name}" })'';
+      focusWorkspace = ws: lua ''hl.dsp.focus({ workspace = "${toString ws}" })'';
+      moveToWorkspace = ws: lua ''hl.dsp.window.move({ workspace = "${toString ws}" })'';
+      drag = lua "hl.dsp.window.drag()";
+      resize = lua "hl.dsp.window.resize()";
+      sendshortcut = mod: key: lua ''hl.dsp.send_shortcut({ mods = "${mod}", key = "${key}" })'';
+      env = k: v: lua ''hl.env("${k}", "${v}")'';
+    };
+
+    bind = keys: dispatcher: {
+      _args = [
+        keys
+        dispatcher
+      ];
+    };
+    bindOpts = keys: dispatcher: opts: {
+      _args = [
+        keys
+        dispatcher
+        opts
+      ];
+    };
+
+    workspaceBinds = lib.concatMap (
+      i: let
+        key = toString (lib.mod i 10);
+      in [
+        (bind "SUPER + ${key}" (dsp.focusWorkspace i))
+        (bind "SUPER + SHIFT + ${key}" (dsp.moveToWorkspace i))
+      ]
+    ) (lib.range 1 10);
   in {
     enable = true;
     package = null;
     portalPackage = null;
     systemd.enable = true;
     xwayland.enable = true;
-    configType = "hyprlang";
-    # plugins = with inputs; [
+    configType = "lua";
+    # plugins = let
+    #  inherit (pkgs.stdenv.hostPlatform) system;
+    # in with inputs; [
     #  split-monitor-workspaces.packages.${system}.split-monitor-workspaces
     # ];
     settings = {
-      bind = [
-        "$mainMod, Return, exec, alacritty"
+      bind = let
+        lock_cmd = lib.getExe (pkgs.writeShellScriptBin "lock-cmd" ''
+          #!/usr/bin/env bash
+          loginctl lock-session
+        '');
+      in
+        [
+          (bind "SUPER + RETURN" (dsp.exec "alacritty"))
 
-        "$mainMod, Q, killactive,"
-        "$mainMod, M, exit,"
-        "$mainMod, V, togglefloating,"
-        "$mainMod, P, exec, wm-menu"
+          (bind "SUPER + Q" dsp.close)
+          (bind "SUPER + SHIFT + Q" dsp.exit)
+          (bind "SUPER + L" (dsp.exec "${lock_cmd}"))
+          (bind "SUPER + V" dsp.float)
+          (bind "SUPER + P" (dsp.exec "wm-menu"))
 
-        # Move focus with mainMod + arrow keys
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
+          # Window management
+          (bind "SUPER + Q" dsp.close)
+          (bind "SUPER + SHIFT + Q" dsp.exit)
+          (bind "SUPER + CTRL + Q" (dsp.exec "hyprlock"))
+          (bind "SUPER + T" dsp.float)
+          (bind "SUPER + F" dsp.fullscreen)
+          (bind "SUPER + P" dsp.pseudo)
+          (bind "SUPER + J" (dsp.layout "togglesplit"))
 
-        # Switch workspaces with mainMod + [0-9]
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
+          # Focus
+          (bind "SUPER + left" (dsp.focus "left"))
+          (bind "SUPER + right" (dsp.focus "right"))
+          (bind "SUPER + up" (dsp.focus "up"))
+          (bind "SUPER + down" (dsp.focus "down"))
 
-        # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-        "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-        "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-        "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-        "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-        "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-        "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-        "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-        "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-        "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+          # Swap windows
+          (bind "SUPER + SHIFT + left" (dsp.swap "left"))
+          (bind "SUPER + SHIFT + right" (dsp.swap "right"))
+          (bind "SUPER + SHIFT + up" (dsp.swap "up"))
+          (bind "SUPER + SHIFT + down" (dsp.swap "down"))
 
-        # full screen
-        "$mainMod, F, fullscreen"
+          (bind "XF86AudioPlay" (dsp.exec "${pkgs.playerctl}/bin/playerctl -a play-pause"))
 
-        # Hyprshot
-        # Screenshot a window
-        "$mainMod, PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m window"
-        # Screenshot a monitor
-        ", PRINT, exec, ${pkgs.hyprshot}/bin/hyprshot -m output"
+          (bind "ALT + TAB" (dsp.exec "${snappy-switcher} next"))
 
-        # random bindings
-        ", XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl -a play-pause"
-        ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+          (bind "ALT + SHIFT + Tab" (dsp.exec "${snappy-switcher} prev"))
 
-        "$mainMod, SPACE, exec, ${pkgs.cliphist}/bin/cliphist list"
-        "$mainMod, X, exec, ${pkgs.alacritty}/bin/alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"
+          # Volume keys
+          (bindOpts "XF86AudioRaiseVolume" (dsp.exec "wpctl set-volume @ 5%+") {
+            locked = true;
+            repeating = true;
+          })
+          (bindOpts "XF86AudioLowerVolume" (dsp.exec "wpctl set-volume @ 5%-") {
+            locked = true;
+            repeating = true;
+          })
+          (bindOpts "XF86AudioMute" (dsp.exec "wpctl set-mute @ toggle") {locked = true;})
+          (bindOpts "XF86AudioMicMute" (dsp.exec "wpctl set-mute u/DEFAULT_AUDIO_SOURCE@ toggle") {locked = true;})
 
-        "ALT, Tab, exec, ${snappy-switcher} next"
-        "ALT SHIFT, Tab, exec, ${snappy-switcher} prev"
-        "$mainMod, L, exec, ${lib.getExe lock_cmd}"
-      ];
+          # Mouse move/resize
+          (bindOpts "SUPER + mouse:272" dsp.drag {mouse = true;})
+          (bindOpts "SUPER + mouse:273" dsp.resize {mouse = true;})
 
-      "$mainMod" = "SUPER";
-
-      binds = {
-        drag_threshold = 10;
-      };
-
-      bindm = [
-        "$mainMod,mouse:272,movewindow"
-        "$mainMod ALT, mouse:272, resizewindow"
-        "$mainMod,mouse:273,resizewindow"
-      ];
-
-      bindl = [
-        ", switch:on:Lid Switch, exec, hyprctl dispatch dpms off"
-        ", switch:off:Lid Switch, exec, hyprctl dispatch dpms on"
-      ];
+          (bindOpts "switch:on:Lid Switch" (lua ''hl.dsp.dpms({ action = "off" })'') {locked = true;})
+          (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {locked = true;})
+        ]
+        ++ workspaceBinds;
 
       monitor = [
-        "WAYLAND-1,disabled"
-        ",preferred,auto,1"
+        {
+          output = "WAYLAND-1";
+          disabled = true;
+        }
       ];
 
-      input = {
-        follow_mouse = true;
-        touchpad = {
-          natural_scroll = false;
+      config = {
+        binds.drag_threshold = 10;
+        general = {
+          gaps_in = 2;
+          gaps_out = 2;
+          border_size = 2;
+          layout = "master";
         };
-        touchdevice = {
-          enabled = false;
+        decoration = {
+          rounding = 7;
+          rounding_power = 4;
+          active_opacity = 1;
+          blur = {
+            enabled = true;
+            size = 8;
+            passes = 3;
+            noise = 0.01;
+            contrast = 0.9;
+            brightness = 0.8;
+            popups = true;
+          };
+          shadow.enabled = true;
         };
-        sensitivity = 0.5;
-      };
-
-      general = {
-        gaps_in = 2;
-        gaps_out = 2;
-        border_size = 2;
-        layout = "master";
-      };
-
-      ecosystem = {
-        no_update_news = true;
-        no_donation_nag = true;
-      };
-
-      decoration = {
-        rounding = 7;
-        rounding_power = 4;
-        active_opacity = 1;
-        blur = {
-          enabled = false;
-          size = 8;
-          passes = 3;
-          noise = 0.01;
-          contrast = 0.9;
-          brightness = 0.8;
-          popups = true;
+        input = {
+          follow_mouse = true;
+          touchpad.natural_scroll = false;
+          touchdevice.enabled = false;
+          sensitivity = 0.5;
+          kb_layout = "us";
         };
-        shadow.enabled = false;
+        ecosystem = {
+          no_update_news = true;
+          no_donation_nag = true;
+        };
+
+        animations.enabled = true;
+        misc = {
+          allow_session_lock_restore = true;
+          anr_missed_pings = 10;
+          disable_autoreload = false;
+          disable_hyprland_guiutils_check = true;
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
+          focus_on_activate = false;
+          key_press_enables_dpms = true;
+          lockdead_screen_delay = 5000;
+          mouse_move_enables_dpms = false;
+        };
+        cursor = {
+          no_hardware_cursors = true;
+        };
+        debug = {
+          disable_scale_checks = true;
+          vfr = true;
+        };
+        xwayland = {
+          force_zero_scaling = true;
+          enabled = true;
+          use_nearest_neighbor = false;
+        };
       };
 
-      animations = {
-        enabled = true;
-
-        bezier = [
-          "wind,0.05,0.9,0.1,1.05" # Wind-like curve
-          "winIn,0.1,1.1,0.1,1.1" # Smooth in
-          "winOut,0.3,-0.3,0,1" # Smooth out with a bounce
-          "liner,1,1,1,1" # Linear curve
-          "overshot,0.05,0.9,0.1,1.05" # Overshooting effect
-          "smoothOut,0.5,0,0.99,0.99" # Smooth out curve
-          "smoothIn,0.5,-0.5,0.68,1.5" # Smooth in curve
-        ];
-        animation = [
-          "windows,1,6,wind,slide" # Window animations using wind curve
-          "windowsIn,1,5,winIn,slide" # Windows slide in with winIn curve
-          "windowsOut,1,3,smoothOut,slide" # Windows slide out with smoothOut curve
-          "windowsMove,1,5,wind,slide" # Window movement with wind curve
-          "border,1,1,liner" # Border animation using linear curve
-          "borderangle,1,180,liner,loop" # Rotating border animations
-          "fade,1,3,smoothOut" # Fade animation with smoothOut curve
-          "workspaces,1,5,overshot" # Workspace animation with overshooting curve
-          "workspacesIn,1,5,winIn,slide" # Slide in
-          "workspacesOut,1,5,winOut,slide" # Slide out
-        ];
-      };
-
-      misc = {
-        allow_session_lock_restore = true;
-        anr_missed_pings = 10;
-        disable_autoreload = false;
-        disable_hyprland_guiutils_check = true;
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        focus_on_activate = false;
-        key_press_enables_dpms = true;
-        lockdead_screen_delay = 5000;
-        mouse_move_enables_dpms = false;
-      };
-
-      layerrule = [
-        "blur on, ignore_alpha 0, match:namespace notifications"
-        "no_anim on, match:namespace selection"
+      layer_rule = [
+        {
+          name = "blur-notifications";
+          ignore_alpha = 0;
+          blur = true;
+          match.namespace = "notifications";
+        }
       ];
 
-      env =
-        [
-          "GDK_BACKEND,wayland"
-          "GDK_SCALE,${
-            if (isMorpheus || isDeusEx || isWork)
-            then "1"
-            else "2"
-          }"
-          "MOZ_ENABLE_WAYLAND,1"
-          "QT_AUTO_SCREEN_SCALE_FACTOR,1"
-          "QT_QPA_PLATFORM,wayland;xcb"
-          "QT_ENABLE_HIGHDPI_SCALING,1"
-          "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-          "SDL_VIDEODRIVER,wayland"
-          "XDG_SESSION_TYPE,wayland"
-          "XCURSOR_SIZE,24"
-          "HYPRCURSOR_SIZE,24"
-          "_JAVA_AWT_WM_NONREPARENTING,1"
-        ]
-        ++ lib.optionals (isMjolnir || isWork) [
-          "GBM_BACKEND,nvidia-drm"
-          "LIBVA_DRIVER_NAME,iHD"
-          "NVD_BACKEND,direct"
-          "PROTON_ENABLE_NGX_UPDATER,1"
-          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-          "__GL_MaxFramesAllowed,1"
-          "__GL_VRR_ALLOWED,0"
-          "__VK_LAYER_NV_optimus,NVIDIA_only"
+      env = let
+        toEnv = e: let
+          p = lib.splitString "," e;
+        in {
+          _args = [(lib.head p) (lib.concatStringsSep "," (lib.tail p))];
+        };
+      in
+        map toEnv
+        ([
+            "GDK_BACKEND,wayland"
+            "GDK_SCALE,${
+              if (isMorpheus || isDeusEx || isWork)
+              then "1"
+              else "2"
+            }"
+            "MOZ_ENABLE_WAYLAND,1"
+            "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+            "QT_QPA_PLATFORM,wayland;xcb"
+            "QT_ENABLE_HIGHDPI_SCALING,1"
+            "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+            "SDL_VIDEODRIVER,wayland"
+            "XDG_SESSION_TYPE,wayland"
+            "XCURSOR_SIZE,24"
+            "HYPRCURSOR_SIZE,24"
+            "_JAVA_AWT_WM_NONREPARENTING,1"
+          ]
+          ++ lib.optionals (isMjolnir || isWork) [
+            "GBM_BACKEND,nvidia-drm"
+            "LIBVA_DRIVER_NAME,iHD"
+            "NVD_BACKEND,direct"
+            "PROTON_ENABLE_NGX_UPDATER,1"
+            "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+            "__GL_MaxFramesAllowed,1"
+            "__GL_VRR_ALLOWED,0"
+            "__VK_LAYER_NV_optimus,NVIDIA_only"
+          ]);
+
+      window_rule = [
+        {
+          name = "fix-mpv-flickerng";
+          match.class = "mpv";
+          content = "none";
+        }
+      ];
+
+      on = {
+        _args = let
+          exec-once = pkgs.writeShellScriptBin "autostart" ''
+            ${pkgs.bat}/bin/bat cache --build &
+            ${pkgs.clipse}/bin/clipse -listen &
+            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+            ${pkgs.systemd}/bin/systemctl --user import-environment --all &
+            ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular &
+            ${pkgs.xrdb}/bin/xrdb -merge $HOME/.Xresources &
+            ${pkgs.sunsetr}/bin/sunsetr &
+            ${snappy-switcher} --daemon &
+            ${pkgs.iio-hyprland}/bin/iio-hyprland &
+
+            wait $(jobs -p)
+          '';
+        in [
+          "hyprland.start"
+          (lua ''
+            function()
+              hl.exec_cmd("${lib.getExe exec-once}")
+            end'')
         ];
-
-      cursor = {
-        no_hardware_cursors = true;
-      };
-
-      windowrule = [
-        "tag +games, match:class ^(gamescope)$"
-        "tag +games, match:class ^(steam_app_d+)$"
-        "no_blur on, fullscreen on, match:tag games*"
-        "match:class mpv, content none"
-      ];
-
-      exec-once = [
-        "${pkgs.bat}/bin/bat cache --build"
-        "${pkgs.clipse}/bin/clipse -listen"
-        "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "${pkgs.systemd}/bin/systemctl --user import-environment --all"
-        "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular"
-        "${pkgs.xrdb}/bin/xrdb -merge $HOME/.Xresources"
-        "${pkgs.sunsetr}/bin/sunsetr"
-        "${snappy-switcher} --daemon"
-        "${pkgs.iio-hyprland}/bin/iio-hyprland"
-      ];
-
-      debug = {
-        disable_scale_checks = true;
-        vfr = true;
-      };
-
-      xwayland = {
-        force_zero_scaling = true;
-        enabled = true;
-        use_nearest_neighbor = false;
       };
     };
   };
 
   services.hypridle = {
-    enable = true;
-    settings = {
+    enable = config.wayland.windowManager.hyprland.enable;
+    settings = let
+      mkDpms = x: "hl.dsp.dpms({ action = \"${x}\"})";
+    in {
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
-        on_lock_cmd = "swaync-client -dn && hyprctl dispatch dpms off";
-        on_unlock_cmd = "swaync-client -df && hyprctl dispatch dpms on";
+        on_lock_cmd = "swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
+        on_unlock_cmd = "swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
         before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
+        after_sleep_cmd = "hyprctl dispatch '${mkDpms "on"}'";
       };
       listener = [
         {
@@ -300,8 +321,9 @@ in {
         }
         {
           timeout = 300;
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
+          on-timeout = "hyprctl dispatch '${mkDpms "off"}'";
+
+          on-resume = "hyprctl dispatch ${mkDpms "on"} && brightnessctl -r";
         }
         {
           timeout = 300;
@@ -312,7 +334,7 @@ in {
   };
 
   programs.hyprlock = {
-    enable = true;
+    enable = config.services.hypridle.enable;
     settings = {
       general = {
         hide_cursor = true;
@@ -372,7 +394,7 @@ in {
   };
 
   services.hyprpaper = {
-    enable = false;
+    enable = !config.services.wpaperd.enable;
     package = pkgs.hyprpaper;
     settings = {
       splash = false;
@@ -385,8 +407,8 @@ in {
     };
   };
 
-  programs.hyprshot.enable = true;
-  services.hyprpolkitagent.enable = true;
+  programs.hyprshot.enable = config.wayland.windowManager.hyprland.enable;
+  services.hyprpolkitagent.enable = config.wayland.windowManager.hyprland.enable;
 
   programs.waybar = {
     enable = true;
