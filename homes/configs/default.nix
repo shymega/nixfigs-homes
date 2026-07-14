@@ -74,6 +74,7 @@ in {
         alsa-utils
         android-tools
         asciinema
+        atuin-desktop
         b4
         bat
         bc
@@ -82,6 +83,7 @@ in {
         cocogitto
         curl
         dateutils
+        devenv
         dex
         difftastic
         distrobox
@@ -133,6 +135,7 @@ in {
         pizauth
         playerctl
         pre-commit
+        prek
         public-inbox
         pwvucontrol
         python3Packages.pip
@@ -167,8 +170,8 @@ in {
         twilight-kde
         units
         unrar
+        unstable.beeper
         unstable.claude-code
-        unstable.devenv
         unstable.gemini-cli
         unstable.isync-patched
         unstable.opencode
@@ -330,7 +333,7 @@ in {
     };
     atuin = {
       enable = true;
-      package = pkgs.atuin;
+      package = pkgs.unstable.atuin;
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
