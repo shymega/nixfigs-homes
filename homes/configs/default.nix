@@ -362,6 +362,7 @@ in {
     neovim = {
       enable = true;
       viAlias = true;
+      sideloadInitLua = true;
     };
     git = {
       enable = true;
