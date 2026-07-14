@@ -193,7 +193,6 @@ in {
           no_update_news = true;
           no_donation_nag = true;
         };
-
         animations.enabled = true;
         misc = {
           allow_session_lock_restore = true;
