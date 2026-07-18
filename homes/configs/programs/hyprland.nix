@@ -72,6 +72,23 @@ in {
       ];
     };
 
+    # Drives both `general.layout` and the layout-specific binds below.
+    layout = "master";
+
+    layoutBinds =
+      if layout == "master"
+      then [
+        (bind "SUPER + J" (dsp.layout "swapwithmaster"))
+        (bind "SUPER + M" (dsp.layout "focusmaster"))
+        (bind "SUPER + I" (dsp.layout "addmaster"))
+        (bind "SUPER + D" (dsp.layout "removemaster"))
+        (bind "SUPER + O" (dsp.layout "orientationnext"))
+      ]
+      else [
+        (bind "SUPER + J" (dsp.layout "togglesplit"))
+        (bind "SUPER + SHIFT + P" dsp.pseudo)
+      ];
+
     workspaceBinds = lib.concatMap (
       i: let
         key = toString (lib.mod i 10);
@@ -110,8 +127,6 @@ in {
           (bind "SUPER + CTRL + Q" (dsp.exec "hyprlock"))
           (bind "SUPER + V" dsp.float)
           (bind "SUPER + F" dsp.fullscreen)
-          (bind "SUPER + SHIFT + P" dsp.pseudo)
-          (bind "SUPER + J" (dsp.layout "togglesplit"))
 
           # Focus
           (bind "SUPER + left" (dsp.focus "left"))
@@ -171,6 +186,7 @@ in {
           (bindOpts "switch:on:Lid Switch" (lua ''hl.dsp.dpms({ action = "off" })'') {locked = true;})
           (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {locked = true;})
         ]
+        ++ layoutBinds
         ++ workspaceBinds;
 
       monitor = [
@@ -186,7 +202,7 @@ in {
           gaps_in = 2;
           gaps_out = 2;
           border_size = 2;
-          layout = "master";
+          inherit layout;
         };
         decoration = {
           rounding = 7;
