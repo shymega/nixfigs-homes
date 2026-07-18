@@ -238,7 +238,6 @@ in {
         };
         debug = {
           disable_scale_checks = true;
-          vfr = true;
         };
         xwayland = {
           force_zero_scaling = true;
