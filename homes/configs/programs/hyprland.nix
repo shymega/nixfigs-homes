@@ -33,6 +33,10 @@ in {
     in
       lib.getExe default;
 
+    hyprshot = lib.getExe pkgs.hyprshot;
+    brightnessctl = lib.getExe pkgs.brightnessctl;
+    swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
+
     lua = lib.generators.mkLuaInline;
     dsp = {
       exec = cmd: lua ''hl.dsp.exec_cmd("${cmd}")'';
@@ -121,6 +125,17 @@ in {
           (bind "SUPER + SHIFT + up" (dsp.swap "up"))
           (bind "SUPER + SHIFT + down" (dsp.swap "down"))
 
+          # Screenshots
+          (bind "Print" (dsp.exec "${hyprshot} -m region --clipboard-only"))
+          (bind "SHIFT + Print" (dsp.exec "${hyprshot} -m window --clipboard-only"))
+          (bind "CTRL + Print" (dsp.exec "${hyprshot} -m output --clipboard-only"))
+          (bind "SUPER + SHIFT + S" (dsp.exec "${hyprshot} -m region"))
+
+          # Clipboard history / notifications
+          (bind "SUPER + C" (dsp.exec "alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"))
+          (bind "SUPER + N" (dsp.exec "${swaync-client} -t -sw"))
+          (bind "SUPER + SHIFT + N" (dsp.exec "${swaync-client} -d -sw"))
+
           (bind "XF86AudioPlay" (dsp.exec "${pkgs.playerctl}/bin/playerctl -a play-pause"))
 
           (bind "ALT + TAB" (dsp.exec "${snappy-switcher} next"))
@@ -138,6 +153,16 @@ in {
           })
           (bindOpts "XF86AudioMute" (dsp.exec "wpctl set-mute @ toggle") {locked = true;})
           (bindOpts "XF86AudioMicMute" (dsp.exec "wpctl set-mute u/DEFAULT_AUDIO_SOURCE@ toggle") {locked = true;})
+
+          # Backlight keys
+          (bindOpts "XF86MonBrightnessUp" (dsp.exec "${brightnessctl} -e4 -n2 set 5%+") {
+            locked = true;
+            repeating = true;
+          })
+          (bindOpts "XF86MonBrightnessDown" (dsp.exec "${brightnessctl} -e4 -n2 set 5%-") {
+            locked = true;
+            repeating = true;
+          })
 
           # Mouse move/resize
           (bindOpts "SUPER + mouse:272" dsp.drag {mouse = true;})
@@ -267,6 +292,12 @@ in {
           name = "fix-mpv-flickerng";
           match.class = "mpv";
           content = "none";
+        }
+        {
+          name = "float-clipse";
+          match.class = "clipse";
+          float = true;
+          size = "622 652";
         }
       ];
 
