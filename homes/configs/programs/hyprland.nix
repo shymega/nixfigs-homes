@@ -6,22 +6,12 @@
   ...
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
-  isMjolnir =
-    if hasosConfig
-    then args.osConfig.networking.hostName == "MJOLNIR-LINUX"
-    else false;
-  isMorpheus =
-    if hasosConfig
-    then args.osConfig.networking.hostName == "MORPHEUS-LINUX"
-    else false;
-  isDeusEx =
-    if hasosConfig
-    then args.osConfig.networking.hostName == "DEUSEX-LINUX"
-    else false;
-  isWork =
-    if hasosConfig
-    then args.osConfig.networking.hostName == "ct-lt-2506-nixos"
-    else false;
+  hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
+
+  isMjolnir = hostIs "MJOLNIR-LINUX";
+  isMorpheus = hostIs "MORPHEUS-LINUX";
+  isDeusEx = hostIs "DEUSEX-LINUX";
+  isWork = hostIs "ct-lt-2506-nixos";
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
