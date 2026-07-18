@@ -97,20 +97,16 @@ in {
       in
         [
           (bind "SUPER + RETURN" (dsp.exec "alacritty"))
-
-          (bind "SUPER + Q" dsp.close)
-          (bind "SUPER + SHIFT + Q" dsp.exit)
-          (bind "SUPER + L" (dsp.exec "${lock_cmd}"))
-          (bind "SUPER + V" dsp.float)
           (bind "SUPER + P" (dsp.exec "wm-menu"))
+          (bind "SUPER + L" (dsp.exec "${lock_cmd}"))
 
           # Window management
           (bind "SUPER + Q" dsp.close)
           (bind "SUPER + SHIFT + Q" dsp.exit)
           (bind "SUPER + CTRL + Q" (dsp.exec "hyprlock"))
-          (bind "SUPER + T" dsp.float)
+          (bind "SUPER + V" dsp.float)
           (bind "SUPER + F" dsp.fullscreen)
-          (bind "SUPER + P" dsp.pseudo)
+          (bind "SUPER + SHIFT + P" dsp.pseudo)
           (bind "SUPER + J" (dsp.layout "togglesplit"))
 
           # Focus
