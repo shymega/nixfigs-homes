@@ -210,7 +210,7 @@ in {
           shadow.enabled = true;
         };
         input = {
-          follow_mouse = true;
+          follow_mouse = 1;
           touchpad.natural_scroll = false;
           touchdevice.enabled = false;
           sensitivity = 0.5;
