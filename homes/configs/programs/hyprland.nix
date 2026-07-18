@@ -391,6 +391,31 @@ in {
         }
       ];
 
+      label = [
+        {
+          monitor = "";
+          text = "$TIME";
+          font_size = 64;
+          font_family = "sans-serif";
+          color = "rgb(202, 211, 245)";
+          position = "0, 160";
+          halign = "center";
+          valign = "center";
+          shadow_passes = 2;
+        }
+        {
+          monitor = "";
+          text = "cmd[update:3600000] date +'%A, %d %B'";
+          font_size = 20;
+          font_family = "sans-serif";
+          color = "rgb(202, 211, 245)";
+          position = "0, 90";
+          halign = "center";
+          valign = "center";
+          shadow_passes = 2;
+        }
+      ];
+
       input-field = [
         {
           size = "200, 50";
