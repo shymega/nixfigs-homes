@@ -336,6 +336,9 @@ in {
       mkDpms = x: "hl.dsp.dpms({ action = \"${x}\"})";
     in {
       general = {
+        # Let media players (Firefox, mpv, Steam) hold off the idle timers.
+        ignore_dbus_inhibit = false;
+        ignore_systemd_inhibit = false;
         lock_cmd = "pidof hyprlock || hyprlock";
         on_lock_cmd = "swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
         on_unlock_cmd = "swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
