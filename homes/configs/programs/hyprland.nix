@@ -315,14 +315,13 @@ in {
           on-resume = "brightnessctl -r";
         }
         {
-          timeout = 300;
-          on-timeout = "hyprctl dispatch '${mkDpms "off"}'";
-
-          on-resume = "hyprctl dispatch ${mkDpms "on"} && brightnessctl -r";
+          timeout = 290;
+          on-timeout = "loginctl lock-session";
         }
         {
-          timeout = 300;
-          on-timeout = "loginctl lock-session";
+          timeout = 310;
+          on-timeout = "hyprctl dispatch '${mkDpms "off"}'";
+          on-resume = "hyprctl dispatch '${mkDpms "on"}' && brightnessctl -r";
         }
       ];
     };
