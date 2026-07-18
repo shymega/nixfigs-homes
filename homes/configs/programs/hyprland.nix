@@ -312,8 +312,6 @@ in {
           exec-once = pkgs.writeShellScriptBin "autostart" ''
             ${pkgs.bat}/bin/bat cache --build &
             ${pkgs.clipse}/bin/clipse -listen &
-            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
-            ${pkgs.systemd}/bin/systemctl --user import-environment --all &
             ${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard regular &
             ${pkgs.xrdb}/bin/xrdb -merge $HOME/.Xresources &
             ${pkgs.sunsetr}/bin/sunsetr &
