@@ -300,8 +300,8 @@ in {
     };
     zsh.enable = false;
     bash.enable = true;
-    obs-studio = lib.optionalAttrs isPC {
-      enable = true;
+    obs-studio = {
+      enable = false;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
         obs-backgroundremoval
