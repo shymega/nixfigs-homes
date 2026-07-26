@@ -232,8 +232,5 @@
       inputs.home-manager.follows = "home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hypr-dotw2k = {
-      url = "github:shymega/hypr-dotw2k";
-    };
   };
 }
