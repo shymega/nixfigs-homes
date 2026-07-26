@@ -170,9 +170,9 @@ in {
         twilight-kde
         units
         unrar
+        unstable.antigravity-cli
         unstable.beeper
         unstable.claude-code
-        unstable.gemini-cli
         unstable.isync-patched
         unstable.opencode
         unzip
