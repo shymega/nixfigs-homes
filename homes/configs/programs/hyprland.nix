@@ -15,9 +15,7 @@
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
-    inputs.hypr-dotw2k.homeManagerModules.default
   ];
-  programs.hypr-dotw2k.enable = true;
 
   wayland.windowManager.hyprland = let
     snappy-switcher = let
