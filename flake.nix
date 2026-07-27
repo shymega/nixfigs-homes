@@ -185,7 +185,7 @@
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces?ref=v0.55.4";
+      url = "github:Duckonaut/split-monitor-workspaces?ref=v0.56.1";
       inputs.hyprland.follows = "hyprland";
     };
     hyprspace = {
