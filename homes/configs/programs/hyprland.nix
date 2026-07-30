@@ -48,6 +48,16 @@ in {
       env = k: v: lua ''hl.env("${k}", "${v}")'';
     };
 
+    # Toggle between the `split-monitor-workspaces` plugin (per-monitor
+    # workspaces) and Hyprland's stock, shared-workspace management.
+    useSplitMonitorWorkspaces = true;
+
+    # The `split-monitor-workspaces` Lua library exposes `smw.workspace` /
+    # `smw.move_to_workspace` as closures compatible with `hl.bind`, so call
+    # into it directly instead of shelling out to `hyprctl dispatch`.
+    splitWorkspace = ws: lua ''smw.workspace("${toString ws}")'';
+    splitMoveToWorkspace = ws: lua ''smw.move_to_workspace("${toString ws}")'';
+
     bind = keys: dispatcher: {
       _args = [
         keys
@@ -79,13 +89,24 @@ in {
         (bind "SUPER + SHIFT + P" dsp.pseudo)
       ];
 
+    toWorkspaceKey = n:
+      if n == 10
+      then "0"
+      else toString n;
+
     workspaceBinds = lib.concatMap (
       i: let
-        key = toString (lib.mod i 10);
-      in [
-        (bind "SUPER + ${key}" (dsp.focusWorkspace i))
-        (bind "SUPER + SHIFT + ${key}" (dsp.moveToWorkspace i))
-      ]
+        key = toWorkspaceKey i;
+      in
+        if useSplitMonitorWorkspaces
+        then [
+          (bind "SUPER + ${key}" (splitWorkspace i))
+          (bind "SUPER + SHIFT + ${key}" (splitMoveToWorkspace i))
+        ]
+        else [
+          (bind "SUPER + ${key}" (dsp.focusWorkspace i))
+          (bind "SUPER + SHIFT + ${key}" (dsp.moveToWorkspace i))
+        ]
     ) (lib.range 1 10);
   in {
     enable = true;
@@ -94,12 +115,27 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     configType = "lua";
-    # plugins = let
-    #  inherit (pkgs.stdenv.hostPlatform) system;
-    # in with inputs; [
-    #  split-monitor-workspaces.packages.${system}.split-monitor-workspaces
-    # ];
+    plugins = [];
+    extraConfig = lib.optionalString useSplitMonitorWorkspaces ''
+      smw.setup({
+        workspace_count = 10,
+        keep_focused = true,
+        enable_notifications = false,
+        -- Don't pre-create empty workspaces: keeps the waybar workspaces
+        -- module showing only workspaces that actually have windows (plus
+        -- the currently focused one).
+        enable_persistent_workspaces = false,
+        enable_wrapping = true,
+      })
+    '';
     settings = {
+      smw = lib.optionalAttrs useSplitMonitorWorkspaces {
+        _var = lua ''
+          (function()
+            package.path = package.path .. ";${inputs.split-monitor-workspaces}/lua/?.lua"
+            return require("split-monitor-workspaces")
+          end)()'';
+      };
       bind = let
         lock_cmd = lib.getExe (pkgs.writeShellScriptBin "lock-cmd" ''
           #!/usr/bin/env bash
@@ -129,6 +165,13 @@ in {
           (bind "SUPER + SHIFT + right" (dsp.swap "right"))
           (bind "SUPER + SHIFT + up" (dsp.swap "up"))
           (bind "SUPER + SHIFT + down" (dsp.swap "down"))
+
+          # Move active window to another monitor in the given direction.
+          # `silent` keeps focus on the source monitor.
+          (bind "SUPER + CTRL + left" (lua ''hyprctl dispatch movewindow mon:l silent''))
+          (bind "SUPER + CTRL + right" (lua ''hyprctl dispatch movewindow mon:r silent''))
+          (bind "SUPER + CTRL + up" (lua ''hyprctl dispatch movewindow mon:u silent''))
+          (bind "SUPER + CTRL + down" (lua ''hyprctl dispatch movewindow mon:d silent''))
 
           # Screenshots
           (bind "Print" (dsp.exec "${hyprshot} -m region --clipboard-only"))
@@ -178,6 +221,14 @@ in {
         ]
         ++ layoutBinds
         ++ workspaceBinds;
+
+      mod = {
+        _var = "SUPER";
+      };
+
+      shiftMod = {
+        _var = "SUPER + SHIFT";
+      };
 
       monitor = [
         {
