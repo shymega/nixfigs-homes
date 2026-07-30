@@ -1617,16 +1617,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1784102347,
-        "narHash": "sha256-piRpwar7VZI3YviYo0a/UMFz9+rLesfv3nRLGKxjVGg=",
+        "lastModified": 1778669258,
+        "narHash": "sha256-WMUJ7tyw/9QbKUyRzLndEQSqX05fQLmFlRdMAmPD7tI=",
         "owner": "hyprwm",
         "repo": "hyprland-plugins",
-        "rev": "7644cecdb947060682891a0db2a0cdc5c0b9e704",
+        "rev": "90e66baf99c9025b1d5e9c9e58dd3c80d0911ea2",
         "type": "github"
       },
       "original": {
         "owner": "hyprwm",
-        "ref": "v0.56.0",
+        "ref": "v0.55.0",
         "repo": "hyprland-plugins",
         "type": "github"
       }
@@ -3550,16 +3550,16 @@
         "nix-filter": "nix-filter"
       },
       "locked": {
-        "lastModified": 1785172485,
-        "narHash": "sha256-uwkgqUhX3+t0KjzlC8IkvGYEk65SfI4syHBmI8yYXAI=",
+        "lastModified": 1782230079,
+        "narHash": "sha256-AIg6hxip9hP6XWIqpjQOIripCdJQvtKSEubV+qL8mF8=",
         "owner": "Duckonaut",
         "repo": "split-monitor-workspaces",
-        "rev": "b28df0d0df6bc8b07389552c38f645bbba13008b",
+        "rev": "d6b45cdb9b30c388bc4ded4adad78a14e523d591",
         "type": "github"
       },
       "original": {
         "owner": "Duckonaut",
-        "ref": "v0.56.1",
+        "ref": "v0.55.4",
         "repo": "split-monitor-workspaces",
         "type": "github"
       }
