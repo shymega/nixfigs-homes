@@ -144,41 +144,40 @@ in {
         '');
       in
         [
-          (bind "SUPER + RETURN" (dsp.exec "alacritty"))
-          (bind "SUPER + P" (dsp.exec "wm-menu"))
+          (bind "SUPER + RETURN" (dsp.exec "${lib.getExe pkgs.alacritty}"))
+          (bind "SUPER + P" (dsp.exec "${lib.getExe pkgs.wm-menu}"))
           (bind "SUPER + L" (dsp.exec "${lock_cmd}"))
 
           # Window management
           (bind "SUPER + Q" dsp.close)
           (bind "SUPER + SHIFT + Q" dsp.exit)
-          (bind "SUPER + CTRL + Q" (dsp.exec "hyprlock"))
           (bind "SUPER + V" dsp.float)
           (bind "SUPER + F" dsp.fullscreen)
 
           # Focus
+          (bind "SUPER + down" (dsp.focus "down"))
           (bind "SUPER + left" (dsp.focus "left"))
           (bind "SUPER + right" (dsp.focus "right"))
           (bind "SUPER + up" (dsp.focus "up"))
-          (bind "SUPER + down" (dsp.focus "down"))
 
           # Swap windows
-          (bind "SUPER + SHIFT + left" (dsp.swap "left"))
-          (bind "SUPER + SHIFT + right" (dsp.swap "right"))
-          (bind "SUPER + SHIFT + up" (dsp.swap "up"))
-          (bind "SUPER + SHIFT + down" (dsp.swap "down"))
+          (bind "SUPER + CTRL + down" (dsp.swap "down"))
+          (bind "SUPER + CTRL + left" (dsp.swap "left"))
+          (bind "SUPER + CTRL + right" (dsp.swap "right"))
+          (bind "SUPER + CTRL + up" (dsp.swap "up"))
 
           # Move active window to another monitor in the given direction.
           # `silent` keeps focus on the source monitor.
-          (bind "SUPER + CTRL + down" (dsp.moveToDirection "down"))
-          (bind "SUPER + CTRL + left" (dsp.moveToDirection "left"))
-          (bind "SUPER + CTRL + right" (dsp.moveToDirection "right"))
-          (bind "SUPER + CTRL + up" (dsp.moveToDirection "up"))
+          (bind "SUPER + SHIFT + down" (dsp.moveToDirection "down"))
+          (bind "SUPER + SHIFT + left" (dsp.moveToDirection "left"))
+          (bind "SUPER + SHIFT + right" (dsp.moveToDirection "right"))
+          (bind "SUPER + SHIFT + up" (dsp.moveToDirection "up"))
 
           # Screenshots
           (bind "Print" (dsp.exec "${hyprshot} -m region --clipboard-only"))
           (bind "SHIFT + Print" (dsp.exec "${hyprshot} -m window --clipboard-only"))
           (bind "CTRL + Print" (dsp.exec "${hyprshot} -m output --clipboard-only"))
-          (bind "SUPER + SHIFT + S" (dsp.exec "${hyprshot} -m region"))
+          (bind "SUPER + SHIFT + Print" (dsp.exec "${hyprshot} -m region"))
 
           # Clipboard history / notifications
           (bind "SUPER + C" (dsp.exec "alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"))
