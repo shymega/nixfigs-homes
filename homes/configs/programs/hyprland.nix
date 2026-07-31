@@ -42,6 +42,7 @@ in {
       moveToSpecial = name: lua ''hl.dsp.window.move({ workspace = "special:${name}" })'';
       focusWorkspace = ws: lua ''hl.dsp.focus({ workspace = "${toString ws}" })'';
       moveToWorkspace = ws: lua ''hl.dsp.window.move({ workspace = "${toString ws}" })'';
+      moveToDirection = dir: lua ''hl.dsp.window.move({ direction = "${dir}" })'';
       drag = lua "hl.dsp.window.drag()";
       resize = lua "hl.dsp.window.resize()";
       sendshortcut = mod: key: lua ''hl.dsp.send_shortcut({ mods = "${mod}", key = "${key}" })'';
@@ -168,10 +169,10 @@ in {
 
           # Move active window to another monitor in the given direction.
           # `silent` keeps focus on the source monitor.
-          (bind "SUPER + CTRL + left" (lua ''hyprctl dispatch movewindow mon:l silent''))
-          (bind "SUPER + CTRL + right" (lua ''hyprctl dispatch movewindow mon:r silent''))
-          (bind "SUPER + CTRL + up" (lua ''hyprctl dispatch movewindow mon:u silent''))
-          (bind "SUPER + CTRL + down" (lua ''hyprctl dispatch movewindow mon:d silent''))
+          (bind "SUPER + CTRL + down" (dsp.moveToDirection "down"))
+          (bind "SUPER + CTRL + left" (dsp.moveToDirection "left"))
+          (bind "SUPER + CTRL + right" (dsp.moveToDirection "right"))
+          (bind "SUPER + CTRL + up" (dsp.moveToDirection "up"))
 
           # Screenshots
           (bind "Print" (dsp.exec "${hyprshot} -m region --clipboard-only"))
