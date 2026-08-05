@@ -3503,16 +3503,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785955630,
-        "narHash": "sha256-qr57FA5xV5VVivP5jaNMu8jMf45TS+y760zCJ/4CzDg=",
+        "lastModified": 1782600134,
+        "narHash": "sha256-50RJgeuRNdWlOBczAI3x2ULlfiXH0f34gBn4P7RKDb0=",
         "owner": "OpalAayan",
         "repo": "snappy-switcher",
-        "rev": "06eb4c5c137fb00f7da8df957c8cbb78acb9eb39",
+        "rev": "0957cd612fadf80fa95034515cb6fa2c163e497e",
         "type": "github"
       },
       "original": {
         "owner": "OpalAayan",
         "repo": "snappy-switcher",
+        "rev": "0957cd612fadf80fa95034515cb6fa2c163e497e",
         "type": "github"
       }
     },
