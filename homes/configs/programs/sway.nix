@@ -46,7 +46,6 @@ in {
         workspaceBindings
         // {
           "${modifier}+Return" = "exec ${terminal}";
-          "${modifier}+Shift+Return" = "exec emacsclient -cq";
           "${modifier}+q" = "kill";
           "${modifier}+l" = "exec loginctl lock-session";
           "${modifier}+p" = "exec ${menu}";
