@@ -6,6 +6,10 @@
 } @ args: let
   windowManager = args.osConfig.config.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
   swaylock = lib.getExe pkgs.swaylock;
+  lockScripts = import ./session-lock.nix {inherit pkgs;};
+  lockPrep = lib.getExe lockScripts.lockPrep;
+  unlockResume = lib.getExe lockScripts.unlockResume;
+  swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
 in {
   wayland.windowManager.sway = let
     modifier = "Mod4";
@@ -144,10 +148,10 @@ in {
       }
     ];
     events = {
-      "before-sleep" = "${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
-      lock = "${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
-      "after-resume" = "swaymsg \"output * power on\"";
-      unlock = "swaymsg \"output * power on\"";
+      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
+      lock = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
+      "after-resume" = "${unlockResume} && ${swaync-client} -df && swaymsg \"output * power on\"";
+      unlock = "${unlockResume} && ${swaync-client} -df && swaymsg \"output * power on\"";
     };
   };
 
