@@ -13,6 +13,10 @@
   isMorpheus = hostIs "MORPHEUS-LINUX";
   isDeusEx = hostIs "DEUSEX-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
+
+  lockScripts = import ./session-lock.nix {inherit pkgs;};
+  lockPrep = lib.getExe lockScripts.lockPrep;
+  unlockResume = lib.getExe lockScripts.unlockResume;
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
@@ -392,8 +396,8 @@ in {
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
         lock_cmd = "pidof hyprlock || hyprlock";
-        on_lock_cmd = "swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
-        on_unlock_cmd = "swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
+        on_lock_cmd = "${lockPrep} && swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
+        on_unlock_cmd = "${unlockResume} && swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
         before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch '${mkDpms "on"}'";
       };
