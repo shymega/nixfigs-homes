@@ -81,15 +81,15 @@ in {
 
           "${modifier}+r" = "mode resize";
 
-          "${modifier}+Escape" = "exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ 0";
+          "${modifier}+Escape" = "exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0";
 
           "${modifier}+Alt+t" = "mode passthrough";
           "${modifier}+Shift+p" = "mode present";
 
-          "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +5%";
-          "XF86AudioLowerVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ -5%";
-          "XF86AudioMute" = "exec pactl set-sink-mute @DEFAULT_SINK@ toggle";
-          "XF86AudioMicMute" = "exec pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+          "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+          "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+          "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
           "XF86AudioNext" = "exec playerctl next";
           "XF86AudioPrev" = "exec playerctl previous";
         }
@@ -126,7 +126,7 @@ in {
     };
     extraConfig = ''
       bindsym --locked XF86AudioPlay exec playerctl play-pause
-      bindsym --release Mod4+Escape exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ 1
+      bindsym --release Mod4+Escape exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1
     '';
   };
 
