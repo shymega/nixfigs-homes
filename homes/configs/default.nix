@@ -54,6 +54,7 @@ in {
   imports = with inputs; [
     ./network-targets.nix
     ./programs/hyprland.nix
+    ./programs/sway.nix
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
     _1password-shell-plugins.hmModules.default
