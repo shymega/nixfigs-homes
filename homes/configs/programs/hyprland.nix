@@ -6,7 +6,8 @@
   ...
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
-  hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
+  windowManager = args.osConfig.config.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
+  hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.config.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
   isMorpheus = hostIs "MORPHEUS-LINUX";
@@ -110,7 +111,7 @@ in {
         ]
     ) (lib.range 1 10);
   in {
-    enable = true;
+    enable = windowManager == "hyprland";
     package = null;
     portalPackage = null;
     systemd.enable = true;
