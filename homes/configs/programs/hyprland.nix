@@ -70,10 +70,17 @@ in {
     # so switching to/from hy3 never needs a NixOS/home-manager rebuild.
     hy3Package = inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
 
+    # `hl.plugin.hy3` is only populated once the hy3 plugin finishes loading
+    # (asynchronously, after the config script's first pass), so these must
+    # be deferred closures rather than plain expressions: `hl.bind` evaluates
+    # its dispatcher argument eagerly while building the bind table, and
+    # indexing `hl.plugin.hy3` at that point (before the plugin has
+    # registered) is what throws "attempting to index a nil value (field
+    # 'hy3')".
     hy3 = {
-      makeTabGroup = lua ''hl.plugin.hy3.make_group("tab", { toggle = true })'';
-      toggleTabbed = lua ''hl.plugin.hy3.change_group("toggletab")'';
-      focusTab = dir: lua ''hl.plugin.hy3.focus_tab({ direction = "${dir}", wrap = true })'';
+      makeTabGroup = lua ''function() hl.plugin.hy3.make_group("tab", { toggle = true }) end'';
+      toggleTabbed = lua ''function() hl.plugin.hy3.change_group("toggletab") end'';
+      focusTab = dir: lua ''function() hl.plugin.hy3.focus_tab({ direction = "${dir}", wrap = true }) end'';
     };
 
     # Toggles `general:layout` between hy3 and the statically-configured
