@@ -5,7 +5,6 @@
   ...
 } @ args: let
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
-  swaylock = lib.getExe pkgs.swaylock;
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
@@ -133,7 +132,9 @@ in {
     '';
   };
 
-  services.swayidle = {
+  services.swayidle = let
+    swaylock = lib.getExe pkgs.swaylock;
+  in  {
     enable = config.wayland.windowManager.sway.enable;
     systemdTargets = ["sway-session.target"];
     timeouts = [
