@@ -188,26 +188,10 @@
       url = "github:Duckonaut/split-monitor-workspaces?ref=v0.55.4";
       inputs.hyprland.follows = "hyprland";
     };
-    hyprspace = {
-      url = "github:KZDKM/Hyprspace";
-      # Hyprspace uses latest Hyprland. We declare this to keep them in sync.
-      inputs.hyprland.follows = "hyprland";
-    };
     hy3 = {
       url = "github:outfoxxed/hy3?ref=hl0.55.0";
       # hy3 tracks Hyprland's main branch; follow to keep the plugin build in sync.
       inputs.hyprland.follows = "hyprland";
-    };
-    hypr-dynamic-cursors = {
-      url = "github:VirtCode/hypr-dynamic-cursors";
-      inputs.hyprland.follows = "hyprland"; # to make sure that the plugin is built for the correct version of hyprland
-
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    niri-screen-time = {
-      url = "github:probeldev/niri-screen-time";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     iio-hyprland = {
       url = "github:JeanSchoeller/iio-hyprland";
