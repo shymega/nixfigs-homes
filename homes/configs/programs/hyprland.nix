@@ -90,12 +90,6 @@ in {
       fi
     '');
 
-    bind = keys: dispatcher: {
-      _args = [
-        keys
-        dispatcher
-      ];
-    };
     bindOpts = keys: dispatcher: opts: {
       _args = [
         keys
@@ -103,6 +97,24 @@ in {
         opts
       ];
     };
+
+    # Renders every registered bind's `description` (see `bindOpts` calls
+    # below) as a searchable rofi cheatsheet, sourced live from
+    # `hyprctl binds -j` so it never drifts from what's actually bound.
+    hyprBindsHelpScript = lib.getExe (pkgs.writeShellScriptBin "hypr-binds-help" ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      hyprctl binds -j |
+        ${lib.getExe pkgs.jq} -r 'def getbit($position; $n):
+          fmod($n/($position|exp2)|floor;2) | fabs;
+
+        def mod($position; $name):
+            if getbit($position; .modmask) == 1 then $name + " + " else "" end;
+
+        .[] | .description + "|" + mod(6; "SUPER") + mod(2; "Ctrl") + mod(3; "Alt") + mod(0; "Shift") + .key
+        ' | ${lib.getExe' pkgs.util-linux "column"} -t -s "|" |
+        rofi -dmenu -i -sync -p "Bind" -format e -case-smart -l 40 -theme-str "listview {columns: 4;}"
+    '');
 
     # Drives the non-hy3 layout-specific binds below, and is the layout the
     # runtime toggle (`hy3ToggleScript`) falls back to when switching away
@@ -116,15 +128,15 @@ in {
     layoutBinds =
       if layout == "master"
       then [
-        (bind "SUPER + J" (dsp.layout "swapwithmaster"))
-        (bind "SUPER + M" (dsp.layout "focusmaster"))
-        (bind "SUPER + I" (dsp.layout "addmaster"))
-        (bind "SUPER + D" (dsp.layout "removemaster"))
-        (bind "SUPER + O" (dsp.layout "orientationnext"))
+        (bindOpts "SUPER + J" (dsp.layout "swapwithmaster") {description = "master: swap the focused window with the master";})
+        (bindOpts "SUPER + M" (dsp.layout "focusmaster") {description = "master: focus the master window";})
+        (bindOpts "SUPER + I" (dsp.layout "addmaster") {description = "master: add the focused window to the master area";})
+        (bindOpts "SUPER + D" (dsp.layout "removemaster") {description = "master: remove the focused window from the master area";})
+        (bindOpts "SUPER + O" (dsp.layout "orientationnext") {description = "master: cycle the master area orientation";})
       ]
       else [
-        (bind "SUPER + J" (dsp.layout "togglesplit"))
-        (bind "SUPER + SHIFT + P" dsp.pseudo)
+        (bindOpts "SUPER + J" (dsp.layout "togglesplit") {description = "dwindle: toggle the split orientation";})
+        (bindOpts "SUPER + SHIFT + P" dsp.pseudo {description = "dwindle: toggle pseudotiling for the focused window";})
       ];
 
     # hy3-exclusive dispatchers (tab groups). These are always bound: they
@@ -166,12 +178,12 @@ in {
       in
         if useSplitMonitorWorkspaces
         then [
-          (bind "SUPER + ${key}" (splitWorkspace i))
-          (bind "SUPER + SHIFT + ${key}" (splitMoveToWorkspace i))
+          (bindOpts "SUPER + ${key}" (splitWorkspace i) {description = "Focus workspace ${toString i} on the active monitor";})
+          (bindOpts "SUPER + SHIFT + ${key}" (splitMoveToWorkspace i) {description = "Move the focused window to workspace ${toString i} on the active monitor";})
         ]
         else [
-          (bind "SUPER + ${key}" (dsp.focusWorkspace i))
-          (bind "SUPER + SHIFT + ${key}" (dsp.moveToWorkspace i))
+          (bindOpts "SUPER + ${key}" (dsp.focusWorkspace i) {description = "Focus workspace ${toString i}";})
+          (bindOpts "SUPER + SHIFT + ${key}" (dsp.moveToWorkspace i) {description = "Move the focused window to workspace ${toString i}";})
         ]
     ) (lib.range 1 10);
   in {
@@ -209,80 +221,103 @@ in {
         '');
       in
         [
-          (bind "SUPER + RETURN" (dsp.exec "${lib.getExe pkgs.alacritty}"))
-          (bind "SUPER + P" (dsp.exec "${lib.getExe pkgs.wm-menu}"))
-          (bind "SUPER + L" (dsp.exec "${lock_cmd}"))
+          (bindOpts "SUPER + RETURN" (dsp.exec "${lib.getExe pkgs.alacritty}") {description = "Open a terminal (Alacritty)";})
+          (bindOpts "SUPER + P" (dsp.exec "${lib.getExe pkgs.wm-menu}") {description = "Open the application launcher";})
+          (bindOpts "SUPER + L" (dsp.exec "${lock_cmd}") {description = "Lock the session";})
+          (bindOpts "SUPER + H" (dsp.exec hyprBindsHelpScript) {description = "Show all keybindings (rofi cheatsheet)";})
 
           # Window management
-          (bind "SUPER + Q" dsp.close)
-          (bind "SUPER + SHIFT + Q" dsp.exit)
-          (bind "SUPER + V" dsp.float)
-          (bind "SUPER + F" dsp.fullscreen)
+          (bindOpts "SUPER + Q" dsp.close {description = "Close the focused window";})
+          (bindOpts "SUPER + SHIFT + Q" dsp.exit {description = "Exit Hyprland";})
+          (bindOpts "SUPER + V" dsp.float {description = "Toggle floating for the focused window";})
+          (bindOpts "SUPER + F" dsp.fullscreen {description = "Toggle fullscreen for the focused window";})
 
           # Focus
-          (bind "SUPER + down" (dsp.focus "down"))
-          (bind "SUPER + left" (dsp.focus "left"))
-          (bind "SUPER + right" (dsp.focus "right"))
-          (bind "SUPER + up" (dsp.focus "up"))
+          (bindOpts "SUPER + down" (dsp.focus "down") {description = "Focus the window below";})
+          (bindOpts "SUPER + left" (dsp.focus "left") {description = "Focus the window to the left";})
+          (bindOpts "SUPER + right" (dsp.focus "right") {description = "Focus the window to the right";})
+          (bindOpts "SUPER + up" (dsp.focus "up") {description = "Focus the window above";})
 
           # Swap windows
-          (bind "SUPER + CTRL + down" (dsp.swap "down"))
-          (bind "SUPER + CTRL + left" (dsp.swap "left"))
-          (bind "SUPER + CTRL + right" (dsp.swap "right"))
-          (bind "SUPER + CTRL + up" (dsp.swap "up"))
+          (bindOpts "SUPER + CTRL + down" (dsp.swap "down") {description = "Swap the focused window with the one below";})
+          (bindOpts "SUPER + CTRL + left" (dsp.swap "left") {description = "Swap the focused window with the one to the left";})
+          (bindOpts "SUPER + CTRL + right" (dsp.swap "right") {description = "Swap the focused window with the one to the right";})
+          (bindOpts "SUPER + CTRL + up" (dsp.swap "up") {description = "Swap the focused window with the one above";})
 
           # Move active window to another monitor in the given direction.
           # `silent` keeps focus on the source monitor.
-          (bind "SUPER + SHIFT + down" (dsp.moveToDirection "down"))
-          (bind "SUPER + SHIFT + left" (dsp.moveToDirection "left"))
-          (bind "SUPER + SHIFT + right" (dsp.moveToDirection "right"))
-          (bind "SUPER + SHIFT + up" (dsp.moveToDirection "up"))
+          (bindOpts "SUPER + SHIFT + down" (dsp.moveToDirection "down") {description = "Move the focused window to the monitor below";})
+          (bindOpts "SUPER + SHIFT + left" (dsp.moveToDirection "left") {description = "Move the focused window to the monitor on the left";})
+          (bindOpts "SUPER + SHIFT + right" (dsp.moveToDirection "right") {description = "Move the focused window to the monitor on the right";})
+          (bindOpts "SUPER + SHIFT + up" (dsp.moveToDirection "up") {description = "Move the focused window to the monitor above";})
 
           # Screenshots
-          (bind "Print" (dsp.exec "${hyprshot} -m region --clipboard-only"))
-          (bind "SHIFT + Print" (dsp.exec "${hyprshot} -m window --clipboard-only"))
-          (bind "CTRL + Print" (dsp.exec "${hyprshot} -m output --clipboard-only"))
-          (bind "SUPER + SHIFT + Print" (dsp.exec "${hyprshot} -m region"))
+          (bindOpts "Print" (dsp.exec "${hyprshot} -m region --clipboard-only") {description = "Screenshot a region to the clipboard";})
+          (bindOpts "SHIFT + Print" (dsp.exec "${hyprshot} -m window --clipboard-only") {description = "Screenshot the focused window to the clipboard";})
+          (bindOpts "CTRL + Print" (dsp.exec "${hyprshot} -m output --clipboard-only") {description = "Screenshot the focused output to the clipboard";})
+          (bindOpts "SUPER + SHIFT + Print" (dsp.exec "${hyprshot} -m region") {description = "Screenshot a region to a file";})
 
           # Clipboard history / notifications
-          (bind "SUPER + C" (dsp.exec "alacritty --class clipse -e ${pkgs.clipse}/bin/clipse"))
-          (bind "SUPER + N" (dsp.exec "${swaync-client} -t -sw"))
-          (bind "SUPER + SHIFT + N" (dsp.exec "${swaync-client} -d -sw"))
+          (bindOpts "SUPER + C" (dsp.exec "alacritty --class clipse -e ${pkgs.clipse}/bin/clipse") {description = "Open clipboard history";})
+          (bindOpts "SUPER + N" (dsp.exec "${swaync-client} -t -sw") {description = "Toggle the notification center";})
+          (bindOpts "SUPER + SHIFT + N" (dsp.exec "${swaync-client} -d -sw") {description = "Toggle do-not-disturb";})
 
-          (bind "XF86AudioPlay" (dsp.exec "${pkgs.playerctl}/bin/playerctl -a play-pause"))
+          (bindOpts "XF86AudioPlay" (dsp.exec "${pkgs.playerctl}/bin/playerctl -a play-pause") {description = "Play/pause media";})
 
-          (bind "ALT + TAB" (dsp.exec "${snappy-switcher} next"))
+          (bindOpts "ALT + TAB" (dsp.exec "${snappy-switcher} next") {description = "Switch to the next window";})
 
-          (bind "ALT + SHIFT + Tab" (dsp.exec "${snappy-switcher} prev"))
+          (bindOpts "ALT + SHIFT + Tab" (dsp.exec "${snappy-switcher} prev") {description = "Switch to the previous window";})
 
           # Volume keys
           (bindOpts "XF86AudioRaiseVolume" (dsp.exec "wpctl set-volume @ 5%+") {
             locked = true;
             repeating = true;
+            description = "Raise volume by 5%";
           })
           (bindOpts "XF86AudioLowerVolume" (dsp.exec "wpctl set-volume @ 5%-") {
             locked = true;
             repeating = true;
+            description = "Lower volume by 5%";
           })
-          (bindOpts "XF86AudioMute" (dsp.exec "wpctl set-mute @ toggle") {locked = true;})
-          (bindOpts "XF86AudioMicMute" (dsp.exec "wpctl set-mute u/DEFAULT_AUDIO_SOURCE@ toggle") {locked = true;})
+          (bindOpts "XF86AudioMute" (dsp.exec "wpctl set-mute @ toggle") {
+            locked = true;
+            description = "Toggle mute";
+          })
+          (bindOpts "XF86AudioMicMute" (dsp.exec "wpctl set-mute u/DEFAULT_AUDIO_SOURCE@ toggle") {
+            locked = true;
+            description = "Toggle microphone mute";
+          })
 
           # Backlight keys
           (bindOpts "XF86MonBrightnessUp" (dsp.exec "${brightnessctl} -e4 -n2 set 5%+") {
             locked = true;
             repeating = true;
+            description = "Raise screen brightness by 5%";
           })
           (bindOpts "XF86MonBrightnessDown" (dsp.exec "${brightnessctl} -e4 -n2 set 5%-") {
             locked = true;
             repeating = true;
+            description = "Lower screen brightness by 5%";
           })
 
           # Mouse move/resize
-          (bindOpts "SUPER + mouse:272" dsp.drag {mouse = true;})
-          (bindOpts "SUPER + mouse:273" dsp.resize {mouse = true;})
+          (bindOpts "SUPER + mouse:272" dsp.drag {
+            mouse = true;
+            description = "Drag-move the focused window with the mouse";
+          })
+          (bindOpts "SUPER + mouse:273" dsp.resize {
+            mouse = true;
+            description = "Resize the focused window with the mouse";
+          })
 
-          (bindOpts "switch:on:Lid Switch" (lua ''hl.dsp.dpms({ action = "off" })'') {locked = true;})
-          (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {locked = true;})
+          (bindOpts "switch:on:Lid Switch" (lua ''hl.dsp.dpms({ action = "off" })'') {
+            locked = true;
+            description = "Turn the screen off when the laptop lid closes";
+          })
+          (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {
+            locked = true;
+            description = "Turn the screen on when the laptop lid opens";
+          })
         ]
         ++ layoutBinds
         ++ workspaceBinds
