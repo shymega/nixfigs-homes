@@ -1,0 +1,51 @@
+From dd2c75c89128f322e1ab33c6efd6b1a0720cb797 Mon Sep 17 00:00:00 2001
+From: Dom Rodriguez <shymega@shymega.org.uk>
+Date: Sun, 9 Aug 2026 20:14:38 +0100
+Subject: [PATCH 4/4] fix(hyprland): re-order workspaces across monitors on
+ disconnect
+
+split-monitor-workspaces only unmaps a departed monitor's own
+workspace range on `monitor.removed`; it doesn't recompute a
+contiguous mapping across the monitors that remain (that only happens
+on `config.reloaded`, via its internal monitors.remap_all_monitors()).
+Left alone, the surviving monitor(s) kept showing gappy, out-of-order
+workspace numbers instead of a clean 1..N layout.
+
+Hook `monitor.removed` to trigger `hyprctl reload`, so smw's own
+`config.reloaded` handler runs the remap (with keep_focused
+restoration) instead of reaching into its non-public API directly.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Signed-off-by: Dom Rodriguez <shymega@shymega.org.uk>
+---
+ homes/configs/programs/hyprland.nix | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/homes/configs/programs/hyprland.nix b/homes/configs/programs/hyprland.nix
+index 5c04a16..fcbb69a 100644
+--- a/homes/configs/programs/hyprland.nix
++++ b/homes/configs/programs/hyprland.nix
+@@ -205,6 +205,20 @@ in {
+         enable_persistent_workspaces = false,
+         enable_wrapping = true,
+       })
++
++      -- On `monitor.removed`, split-monitor-workspaces only unmaps the
++      -- departed monitor's own workspace range; it doesn't recompute a
++      -- contiguous mapping across the monitors that remain (that only
++      -- happens on `config.reloaded`, via monitors.remap_all_monitors()).
++      -- Left alone, the surviving monitor(s) would keep showing gappy,
++      -- out-of-order workspace numbers instead of a clean 1..N layout.
++      --
++      -- Force a config reload here so smw's own `config.reloaded` handler
++      -- runs and remaps everything, instead of reaching into its internal
++      -- (non-public) API ourselves.
++      hl.on("monitor.removed", function()
++        hl.exec_cmd("hyprctl reload")
++      end)
+     '';
+     settings = {
+       smw = lib.optionalAttrs useSplitMonitorWorkspaces {
+-- 
+2.54.0
+
