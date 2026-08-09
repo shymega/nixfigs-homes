@@ -1,0 +1,69 @@
+From ab36554a9772b5c784f3ed4cb7ab671f12b90645 Mon Sep 17 00:00:00 2001
+From: Dom Rodriguez <shymega@shymega.org.uk>
+Date: Sun, 9 Aug 2026 19:33:46 +0100
+Subject: [PATCH 2/4] feat(hyprland): add native descriptions to hy3 keybinds
+
+Use hl.bind's `description` option on each hy3 bind so they're
+self-documenting and queryable at runtime via `hyprctl binds`, instead
+of only living in a comment block above them.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Signed-off-by: Dom Rodriguez <shymega@shymega.org.uk>
+---
+ homes/configs/programs/hyprland.nix | 35 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 18 deletions(-)
+
+diff --git a/homes/configs/programs/hyprland.nix b/homes/configs/programs/hyprland.nix
+index e83c5a6..69d130c 100644
+--- a/homes/configs/programs/hyprland.nix
++++ b/homes/configs/programs/hyprland.nix
+@@ -131,29 +131,28 @@ in {
+     # only do something meaningful once `general:layout` is switched to hy3
+     # (see `hy3ToggleScript`), and are harmless no-ops under master/dwindle.
+     #
+-    # Keybindings:
+-    #   SUPER + SHIFT + T         Toggle the active layout between hy3 and
+-    #                             `layout` (master) at runtime, via
+-    #                             `hyprctl keyword general:layout`. No
+-    #                             rebuild required.
+-    #   SUPER + T                 Turn the focused node into a tab group, or
+-    #                             dissolve it back out if it already is one
+-    #                             (`hy3:makegroup tab, toggle`).
+-    #   SUPER + SHIFT + G         Toggle tabbed layout on the focused node's
+-    #                             group without changing its membership
+-    #                             (`hy3:changegroup toggletab`).
+-    #   SUPER + bracketleft  ([)  Focus the previous tab in the group.
+-    #   SUPER + bracketright (]) Focus the next tab in the group.
++    # Each bind below carries a native `description`, so the full list with
++    # explanations is queryable at runtime via `hyprctl binds`.
+     #
+     # Arrow-key focus/swap/move binds above are unchanged: Hyprland's core
+     # movefocus/movewindow dispatchers work against any active layout,
+     # including hy3, so they don't need hy3-specific replacements.
+     hy3Binds = [
+-      (bind "SUPER + SHIFT + T" (dsp.exec hy3ToggleScript))
+-      (bind "SUPER + T" hy3.makeTabGroup)
+-      (bind "SUPER + SHIFT + G" hy3.toggleTabbed)
+-      (bind "SUPER + bracketleft" (hy3.focusTab "l"))
+-      (bind "SUPER + bracketright" (hy3.focusTab "r"))
++      (bindOpts "SUPER + SHIFT + T" (dsp.exec hy3ToggleScript) {
++        description = "hy3: toggle the active layout between hy3 and master at runtime (no rebuild)";
++      })
++      (bindOpts "SUPER + T" hy3.makeTabGroup {
++        description = "hy3: turn the focused node into a tab group, or dissolve it back out";
++      })
++      (bindOpts "SUPER + SHIFT + G" hy3.toggleTabbed {
++        description = "hy3: toggle tabbed layout on the focused node's group";
++      })
++      (bindOpts "SUPER + bracketleft" (hy3.focusTab "l") {
++        description = "hy3: focus the previous tab in the group";
++      })
++      (bindOpts "SUPER + bracketright" (hy3.focusTab "r") {
++        description = "hy3: focus the next tab in the group";
++      })
+     ];
+ 
+     toWorkspaceKey = n:
+-- 
+2.54.0
+
