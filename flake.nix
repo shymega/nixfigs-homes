@@ -67,7 +67,6 @@
       url = "github:shymega/nixfigs-helpers";
       inputs.agenix.follows = "agenix";
       inputs.flake-compat.follows = "flake-compat";
-      inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixfigs-secrets = {
@@ -81,7 +80,6 @@
       inputs.agenix.follows = "agenix";
       inputs.flake-compat.follows = "flake-compat";
       inputs.flake-registry.follows = "flake-registry";
-      inputs.flake-utils.follows = "flake-utils";
       inputs.home-manager.follows = "home-manager";
       inputs.hyprland-plugins.follows = "hyprland-plugins";
       inputs.nix-index-database.follows = "nix-index-database";
@@ -156,7 +154,6 @@
       url = "github:1Password/shell-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
     shypkgs-private = {
       url = "github:shymega/shypkgs-private";
       inputs.nixfigs-helpers.follows = "nixfigs-helpers";
@@ -200,8 +197,6 @@
     snappy-switcher = {
       url = "github:OpalAayan/snappy-switcher?rev=0957cd612fadf80fa95034515cb6fa2c163e497e";
       inputs.nixpkgs.follows = "nixpkgs";
-
-      inputs.flake-utils.follows = "flake-utils";
     };
     gitalias = {
       url = "github:GitAlias/gitalias";
@@ -217,7 +212,6 @@
     };
     nix-openclaw = {
       url = "github:openclaw/nix-openclaw";
-      inputs.flake-utils.follows = "flake-utils";
       inputs.home-manager.follows = "home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
