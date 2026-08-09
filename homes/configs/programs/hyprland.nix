@@ -205,6 +205,20 @@ in {
         enable_persistent_workspaces = false,
         enable_wrapping = true,
       })
+
+      -- On `monitor.removed`, split-monitor-workspaces only unmaps the
+      -- departed monitor's own workspace range; it doesn't recompute a
+      -- contiguous mapping across the monitors that remain (that only
+      -- happens on `config.reloaded`, via monitors.remap_all_monitors()).
+      -- Left alone, the surviving monitor(s) would keep showing gappy,
+      -- out-of-order workspace numbers instead of a clean 1..N layout.
+      --
+      -- Force a config reload here so smw's own `config.reloaded` handler
+      -- runs and remaps everything, instead of reaching into its internal
+      -- (non-public) API ourselves.
+      hl.on("monitor.removed", function()
+        hl.exec_cmd("hyprctl reload")
+      end)
     '';
     settings = {
       smw = lib.optionalAttrs useSplitMonitorWorkspaces {
