@@ -134,7 +134,7 @@ in {
 
   services.swayidle = let
     swaylock = lib.getExe pkgs.swaylock;
-  in  {
+  in {
     enable = config.wayland.windowManager.sway.enable;
     systemdTargets = ["sway-session.target"];
     timeouts = [
