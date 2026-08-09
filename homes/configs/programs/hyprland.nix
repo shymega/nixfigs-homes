@@ -6,8 +6,8 @@
   ...
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
-  windowManager = args.osConfig.config.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
-  hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.config.networking.hostName == name;
+  windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
+  hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
   isMorpheus = hostIs "MORPHEUS-LINUX";
