@@ -4,7 +4,7 @@
   lib,
   ...
 } @ args: let
-  windowManager = args.osConfig.config.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
+  windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
   swaylock = lib.getExe pkgs.swaylock;
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
