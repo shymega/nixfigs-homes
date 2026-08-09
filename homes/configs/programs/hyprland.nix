@@ -64,6 +64,32 @@ in {
     splitWorkspace = ws: lua ''smw.workspace("${toString ws}")'';
     splitMoveToWorkspace = ws: lua ''smw.move_to_workspace("${toString ws}")'';
 
+    # hy3 (i3/sway-like tabbed/tiling layout) is always loaded as a Hyprland
+    # plugin so it's available for the whole session; which layout is
+    # *active* (`general:layout`) is then flipped at runtime via `hyprctl`,
+    # so switching to/from hy3 never needs a NixOS/home-manager rebuild.
+    hy3Package = inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
+
+    hy3 = {
+      makeTabGroup = lua ''hl.plugin.hy3.make_group("tab", { toggle = true })'';
+      toggleTabbed = lua ''hl.plugin.hy3.change_group("toggletab")'';
+      focusTab = dir: lua ''hl.plugin.hy3.focus_tab({ direction = "${dir}", wrap = true })'';
+    };
+
+    # Toggles `general:layout` between hy3 and the statically-configured
+    # base `layout` (master/dwindle) via `hyprctl keyword`, so the active
+    # layout can be switched at runtime without touching the Nix config.
+    hy3ToggleScript = lib.getExe (pkgs.writeShellScriptBin "hypr-toggle-hy3" ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      current="$(hyprctl getoption general:layout -j | ${lib.getExe pkgs.jq} -r '.str')"
+      if [ "$current" = "hy3" ]; then
+        hyprctl keyword general:layout "${layout}"
+      else
+        hyprctl keyword general:layout hy3
+      fi
+    '');
+
     bind = keys: dispatcher: {
       _args = [
         keys
@@ -78,8 +104,14 @@ in {
       ];
     };
 
-    # Drives both `general.layout` and the layout-specific binds below.
+    # Drives the non-hy3 layout-specific binds below, and is the layout the
+    # runtime toggle (`hy3ToggleScript`) falls back to when switching away
+    # from hy3.
     layout = "master";
+
+    # The layout Hyprland actually starts in. hy3 is the default for now;
+    # `SUPER + SHIFT + T` toggles back to `layout` above at runtime.
+    defaultLayout = "hy3";
 
     layoutBinds =
       if layout == "master"
@@ -94,6 +126,17 @@ in {
         (bind "SUPER + J" (dsp.layout "togglesplit"))
         (bind "SUPER + SHIFT + P" dsp.pseudo)
       ];
+
+    # hy3-exclusive dispatchers (tab groups). These are always bound: they
+    # only do something meaningful once `general:layout` is switched to hy3
+    # (see `hy3ToggleScript`), and are harmless no-ops under master/dwindle.
+    hy3Binds = [
+      (bind "SUPER + SHIFT + T" (dsp.exec hy3ToggleScript))
+      (bind "SUPER + T" hy3.makeTabGroup)
+      (bind "SUPER + SHIFT + G" hy3.toggleTabbed)
+      (bind "SUPER + bracketleft" (hy3.focusTab "l"))
+      (bind "SUPER + bracketright" (hy3.focusTab "r"))
+    ];
 
     toWorkspaceKey = n:
       if n == 10
@@ -121,7 +164,7 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     configType = "lua";
-    plugins = [];
+    plugins = [hy3Package];
     extraConfig = lib.optionalString useSplitMonitorWorkspaces ''
       smw.setup({
         workspace_count = 10,
@@ -225,7 +268,8 @@ in {
           (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {locked = true;})
         ]
         ++ layoutBinds
-        ++ workspaceBinds;
+        ++ workspaceBinds
+        ++ hy3Binds;
 
       mod = {
         _var = "SUPER";
@@ -248,7 +292,7 @@ in {
           gaps_in = 2;
           gaps_out = 2;
           border_size = 2;
-          inherit layout;
+          layout = defaultLayout;
         };
         decoration = {
           rounding = 7;
