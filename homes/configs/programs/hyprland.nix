@@ -130,6 +130,24 @@ in {
     # hy3-exclusive dispatchers (tab groups). These are always bound: they
     # only do something meaningful once `general:layout` is switched to hy3
     # (see `hy3ToggleScript`), and are harmless no-ops under master/dwindle.
+    #
+    # Keybindings:
+    #   SUPER + SHIFT + T         Toggle the active layout between hy3 and
+    #                             `layout` (master) at runtime, via
+    #                             `hyprctl keyword general:layout`. No
+    #                             rebuild required.
+    #   SUPER + T                 Turn the focused node into a tab group, or
+    #                             dissolve it back out if it already is one
+    #                             (`hy3:makegroup tab, toggle`).
+    #   SUPER + SHIFT + G         Toggle tabbed layout on the focused node's
+    #                             group without changing its membership
+    #                             (`hy3:changegroup toggletab`).
+    #   SUPER + bracketleft  ([)  Focus the previous tab in the group.
+    #   SUPER + bracketright (]) Focus the next tab in the group.
+    #
+    # Arrow-key focus/swap/move binds above are unchanged: Hyprland's core
+    # movefocus/movewindow dispatchers work against any active layout,
+    # including hy3, so they don't need hy3-specific replacements.
     hy3Binds = [
       (bind "SUPER + SHIFT + T" (dsp.exec hy3ToggleScript))
       (bind "SUPER + T" hy3.makeTabGroup)
