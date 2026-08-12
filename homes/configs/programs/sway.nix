@@ -9,6 +9,7 @@
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
+  swaymsg = lib.getExe' pkgs.sway "swaymsg";
 in {
   wayland.windowManager.sway = let
     modifier = "Mod4";
@@ -144,15 +145,15 @@ in {
       }
       {
         timeout = 302;
-        command = "swaymsg \"output * power off\"";
-        resumeCommand = "swaymsg \"output * power on\"";
+        command = "${swaymsg} \"output * power off\"";
+        resumeCommand = "${swaymsg} \"output * power on\"";
       }
     ];
     events = {
-      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
-      lock = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && swaymsg \"output * power off\"";
-      "after-resume" = "${unlockResume} && ${swaync-client} -df && swaymsg \"output * power on\"";
-      unlock = "${unlockResume} && ${swaync-client} -df && swaymsg \"output * power on\"";
+      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && ${swaymsg} \"output * power off\"";
+      lock = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && ${swaymsg} \"output * power off\"";
+      "after-resume" = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
+      unlock = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
     };
   };
 
