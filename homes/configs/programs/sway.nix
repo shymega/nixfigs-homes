@@ -13,7 +13,7 @@ in {
   wayland.windowManager.sway = let
     modifier = "Mod4";
     terminal = "alacritty";
-    menu = "rofi -combi-modi window,drun,ssh,run -show combi -show-icons | xargs -r swaymsg -t command exec";
+    menu = "wm-menu";
 
     toWorkspaceKey = n:
       if n == 10
