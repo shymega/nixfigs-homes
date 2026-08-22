@@ -447,10 +447,15 @@ in {
     mkSessionApp = {
       description,
       command,
+      extraAfter ? [],
     }: {
       Unit = {
         Description = description;
         PartOf = ["graphical-session.target"];
+        # PartOf alone gives no start-ordering guarantee, so without this
+        # these can race Hyprland's env-import/hyprland-session.target
+        # exec-once and fail to launch until the compositor is restarted.
+        After = ["graphical-session.target"] ++ extraAfter;
       };
       Service = {
         ExecStart = ''${lib.getExe pkgs.bash} -lc "${command}"'';
@@ -552,17 +557,22 @@ in {
         };
       };
 
+      # These start iconified into the tray, so they need the tray (waybar)
+      # to already exist or they silently fall back to a normal window.
       discord = mkSessionApp {
         description = "Discord (Flatpak)";
         command = "flatpak run com.discordapp.Discord -- --start-minimized ${noGrab}";
+        extraAfter = ["waybar.service"];
       };
       telegram = mkSessionApp {
         description = "Telegram Desktop (Flatpak)";
         command = "flatpak run org.telegram.desktop -- -startintray";
+        extraAfter = ["waybar.service"];
       };
       element = mkSessionApp {
         description = "Element (Flatpak)";
         command = "flatpak run im.riot.Element -- --hidden ${noGrab}";
+        extraAfter = ["waybar.service"];
       };
       onepassword = mkSessionApp {
         description = "1Password";
@@ -573,6 +583,7 @@ in {
         # No CLI flag to start minimized to tray; enable "Keep Beeper
         # minimized on launch" in its own settings instead.
         command = "beeper ${noGrab}";
+        extraAfter = ["waybar.service"];
       };
     };
   };
