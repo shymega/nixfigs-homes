@@ -438,6 +438,32 @@ in {
       ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
       ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
     };
+
+    # Apps that live outside the Nix store (Flatpaks, plus 1Password/Beeper
+    # as installed on the host): resolved through a login shell so they're
+    # found via the host $PATH rather than a Nix store path. Watched over
+    # by systemd --user and started as a dependency of the graphical
+    # session, so this works the same under Sway, Hyprland and KDE Plasma.
+    mkSessionApp = {
+      description,
+      command,
+    }: {
+      Unit = {
+        Description = description;
+        PartOf = ["graphical-session.target"];
+      };
+      Service = {
+        ExecStart = ''${lib.getExe pkgs.bash} -lc "${command}"'';
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+      Install.WantedBy = ["graphical-session.target"];
+    };
+
+    # Electron apps grab the Wayland GlobalShortcutsPortal for global
+    # keyboard shortcuts by default; disable it so they don't grab the
+    # keyboard.
+    noGrab = "--disable-features=GlobalShortcutsPortal";
   in {
     sockets.atuin-daemon = {
       Unit = {
@@ -524,6 +550,29 @@ in {
           ExecStart = "${getExe' pkgs.taskwarrior2 "task"} sync";
           ExecStartPost = "${getExe' pkgs.taskwarrior2 "task"} sync";
         };
+      };
+
+      discord = mkSessionApp {
+        description = "Discord (Flatpak)";
+        command = "flatpak run com.discordapp.Discord -- --start-minimized ${noGrab}";
+      };
+      telegram = mkSessionApp {
+        description = "Telegram Desktop (Flatpak)";
+        command = "flatpak run org.telegram.desktop -- -startintray";
+      };
+      element = mkSessionApp {
+        description = "Element (Flatpak)";
+        command = "flatpak run im.riot.Element -- --hidden ${noGrab}";
+      };
+      onepassword = mkSessionApp {
+        description = "1Password";
+        command = "1password --silent ${noGrab}";
+      };
+      beeper = mkSessionApp {
+        description = "Beeper Desktop";
+        # No CLI flag to start minimized to tray; enable "Keep Beeper
+        # minimized on launch" in its own settings instead.
+        command = "beeper ${noGrab}";
       };
     };
   };
