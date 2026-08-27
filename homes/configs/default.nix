@@ -334,7 +334,7 @@ in {
     };
     atuin = {
       enable = true;
-      package = pkgs.unstable.atuin;
+      package = pkgs.atuin;
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
