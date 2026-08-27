@@ -75,7 +75,6 @@ in {
         alsa-utils
         android-tools
         asciinema
-        atuin-desktop
         b4
         bat
         bc
