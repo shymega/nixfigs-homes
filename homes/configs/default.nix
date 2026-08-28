@@ -192,7 +192,7 @@ in {
           emacs = pkgs.emacs-pgtk;
           experimentalFetchTree = true;
         })
-        inputs.agenix.packages.${hostPlatform}.default 
+        inputs.agenix.packages.${hostPlatform}.default
         inputs.snappy-switcher.packages.${hostPlatform}.default
       ]
       ++ rustCrates
@@ -209,7 +209,7 @@ in {
           )
       )
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
-      ++ rustCrates
+      ++ rustCrates;
   };
 
   services = {
