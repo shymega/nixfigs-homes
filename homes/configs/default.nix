@@ -79,6 +79,7 @@ in {
         bat
         bc
         brightnessctl
+        claude-code
         cloudflared
         cocogitto
         curl
@@ -129,9 +130,11 @@ in {
         nixpkgs-review
         nodejs
         notmuch
+        opencode
         p7zip
         pass
         pdftk
+        pi-coding-agent
         pizauth
         playerctl
         pre-commit
@@ -157,6 +160,7 @@ in {
         shikane
         speedtest-go
         spring-boot-cli
+        sshfs
         statix
         step-cli
         swaks
@@ -172,9 +176,7 @@ in {
         unrar
         unstable.antigravity-cli
         unstable.beeper
-        unstable.claude-code
         unstable.isync-patched
-        unstable.opencode
         unzip
         uv
         vdirsyncer
