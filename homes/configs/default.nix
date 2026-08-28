@@ -69,12 +69,10 @@ in {
     stateVersion = "26.05";
     packages = with pkgs;
       [
-        aerc
         age
         alejandra
         alsa-utils
         android-tools
-        asciinema
         b4
         bat
         bc
@@ -105,7 +103,6 @@ in {
         gthumb
         halloy
         httpie
-        hub
         hut
         imagemagick
         imapsync
@@ -114,13 +111,12 @@ in {
         jq
         leafnode
         libnotify
-        lynx
-        m4
         mkcert
         mpc
         mprisence
         mpv
         mupdf
+        nb
         ncmpcpp
         neomutt
         networkmanagerapplet
@@ -157,16 +153,12 @@ in {
         sbcl
         scrcpy
         senpai
-        shikane
-        speedtest-go
-        spring-boot-cli
         sshfs
         statix
         step-cli
         swaks
         taskwarrior-tui
         tea
-        tigervnc
         timewarrior
         tmuxp
         toolbox
@@ -200,7 +192,8 @@ in {
           emacs = pkgs.emacs-pgtk;
           experimentalFetchTree = true;
         })
-        inputs.agenix.packages.${hostPlatform}.default
+        inputs.agenix.packages.${hostPlatform}.default 
+        inputs.snappy-switcher.packages.${hostPlatform}.default
       ]
       ++ rustCrates
       ++ (
@@ -217,7 +210,6 @@ in {
       )
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
       ++ rustCrates
-      ++ [inputs.snappy-switcher.packages.${hostPlatform}.default];
   };
 
   services = {
