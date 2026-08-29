@@ -103,6 +103,7 @@ in {
         gthumb
         halloy
         httpie
+        hub
         hut
         imagemagick
         imapsync
