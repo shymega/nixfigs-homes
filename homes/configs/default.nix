@@ -112,6 +112,7 @@ in {
         jq
         leafnode
         libnotify
+        lynx
         mkcert
         mpc
         mprisence
