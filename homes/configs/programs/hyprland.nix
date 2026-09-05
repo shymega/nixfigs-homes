@@ -10,7 +10,7 @@
   hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
-  isMorpheus = hostIs "MORPHEUS-LINUX";
+  isFreyr = hostIs "FREYR-LINUX";
   isHeimdall = hostIs "HEIMDALL-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
 
@@ -439,7 +439,7 @@ in {
         ([
             "GDK_BACKEND,wayland"
             "GDK_SCALE,${
-              if (isMorpheus || isHeimdall || isWork)
+              if (isFreyr || isHeimdall || isWork)
               then "1"
               else "2"
             }"
