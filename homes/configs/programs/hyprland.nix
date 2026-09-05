@@ -11,7 +11,7 @@
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
   isMorpheus = hostIs "MORPHEUS-LINUX";
-  isDeusEx = hostIs "DEUSEX-LINUX";
+  isHeimdall = hostIs "HEIMDALL-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
 
   lockScripts = import ./session-lock.nix {inherit pkgs;};
@@ -439,7 +439,7 @@ in {
         ([
             "GDK_BACKEND,wayland"
             "GDK_SCALE,${
-              if (isMorpheus || isDeusEx || isWork)
+              if (isMorpheus || isHeimdall || isWork)
               then "1"
               else "2"
             }"
