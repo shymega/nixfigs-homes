@@ -197,7 +197,6 @@ in {
         inputs.agenix.packages.${hostPlatform}.default
         inputs.snappy-switcher.packages.${hostPlatform}.default
       ]
-      ++ rustCrates
       ++ (
         with pkgs;
           lib.optionals isPC (
@@ -211,7 +210,24 @@ in {
           )
       )
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
-      ++ rustCrates;
+      ++ rustCrates
+      ++ (with pkgs; [
+        alacritty
+        clipman
+        grim
+        kanshi
+        mako
+        slurp
+        sway-contrib.grimshot
+        swayidle
+        swaylock
+        waybar
+        wdisplays
+        wf-recorder
+        wl-clipboard
+        wofi
+        xdg-utils
+      ]);
   };
 
   services = {
