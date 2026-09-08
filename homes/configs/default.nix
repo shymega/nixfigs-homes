@@ -226,7 +226,6 @@ in {
         wf-recorder
         wl-clipboard
         wofi
-        xdg-utils
       ]);
   };
 
