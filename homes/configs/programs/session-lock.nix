@@ -29,8 +29,6 @@ in {
 
     ${systemctl} --user start wpaperd
 
-    ${playerctl} -a play || true
-
     for id in $(${sinks}); do
       ${wpctl} set-mute "$id" 0
     done
