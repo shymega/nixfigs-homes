@@ -216,7 +216,6 @@ in {
         clipman
         grim
         kanshi
-        mako
         slurp
         sway-contrib.grimshot
         swayidle
