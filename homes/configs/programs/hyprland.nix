@@ -507,7 +507,10 @@ in {
     enable = config.wayland.windowManager.hyprland.enable;
     settings = let
       hyprlandConfigType = config.wayland.windowManager.hyprland.configType;
-      hyprlandVersion = if hasosConfig then args.osConfig.programs.hyprland.package.version or null else null;
+      hyprlandVersion =
+        if hasosConfig
+        then args.osConfig.programs.hyprland.package.version or null
+        else null;
       # `configType` ("hyprlang" vs "lua") is slated for removal in
       # Hyprland v0.57.0, once hyprlang config support is dropped entirely
       # and `hyprctl dispatch` always evaluates its argument as Lua. Until
@@ -520,13 +523,13 @@ in {
       mkDpms = x:
         assert lib.assertMsg (x == "on" || x == "off")
         "mkDpms: `x` must be \"on\" or \"off\", got \"${x}\"";
-        lib.warnIf (hyprlandVersion != null && lib.versionAtLeast hyprlandVersion "0.57.0")
-        "mkDpms: Hyprland ${hyprlandVersion} has removed `configType`; drop the hyprlang branch and the configType/hyprlandVersion plumbing from mkDpms"
-        (
-          if hyprlandConfigType == "hyprlang"
-          then "dpms ${x}"
-          else "hl.dsp.dpms({ action = \"${x}\" })"
-        );
+          lib.warnIf (hyprlandVersion != null && lib.versionAtLeast hyprlandVersion "0.57.0")
+          "mkDpms: Hyprland ${hyprlandVersion} has removed `configType`; drop the hyprlang branch and the configType/hyprlandVersion plumbing from mkDpms"
+          (
+            if hyprlandConfigType == "hyprlang"
+            then "dpms ${x}"
+            else "hl.dsp.dpms({ action = \"${x}\" })"
+          );
     in {
       general = {
         # Let media players (Firefox, mpv, Steam) hold off the idle timers.
