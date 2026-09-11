@@ -506,7 +506,11 @@ in {
   services.hypridle = {
     enable = config.wayland.windowManager.hyprland.enable;
     settings = let
-      mkDpms = x: "hl.dsp.dpms({ action = \"${x}\"})";
+      # `hyprctl dispatch` is invoked here from plain shell (hypridle
+      # callbacks), not from inside Hyprland's own Lua config engine, so it
+      # needs the classic `dpms <on|off>` dispatcher syntax rather than the
+      # `hl.dsp.*` Lua helpers used for in-config keybinds below.
+      mkDpms = x: "dpms ${x}";
     in {
       general = {
         # Let media players (Firefox, mpv, Steam) hold off the idle timers.
