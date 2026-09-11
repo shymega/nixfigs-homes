@@ -135,13 +135,22 @@ in {
 
   services.swayidle = let
     swaylock = lib.getExe pkgs.swaylock;
+    # Guard against stacking a second swaylock on top of an already-locked
+    # session (e.g. $mod+l pressed after the idle timeout already locked it).
+    lockCmd = lib.getExe (pkgs.writeShellScriptBin "swaylock-cmd" ''
+      set -euo pipefail
+      pidof swaylock || exec ${swaylock} -f -c 000000
+    '');
   in {
     enable = config.wayland.windowManager.sway.enable;
     systemdTargets = ["sway-session.target"];
     timeouts = [
       {
+        # Go through logind (like $mod+l) instead of calling swaylock
+        # directly, so the `lock` event below runs consistently for both
+        # manual and idle-triggered locks (session prep, DND, DPMS off).
         timeout = 300;
-        command = "${swaylock} -f -c 000000";
+        command = "loginctl lock-session";
       }
       {
         timeout = 302;
@@ -150,8 +159,8 @@ in {
       }
     ];
     events = {
-      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && ${swaymsg} \"output * power off\"";
-      lock = "${lockPrep} && ${swaync-client} -dn && ${swaylock} -f -c 000000 && sleep 2s && ${swaymsg} \"output * power off\"";
+      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
+      lock = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
       "after-resume" = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
       unlock = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
     };
