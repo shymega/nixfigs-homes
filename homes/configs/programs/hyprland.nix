@@ -556,6 +556,14 @@ in {
           on-timeout = "hyprctl dispatch '${mkDpms "off"}'";
           on-resume = "hyprctl dispatch '${mkDpms "on"}' && brightnessctl -r";
         }
+        {
+          # Hyprland wakes the monitor on any input while hyprlock is up
+          # (e.g. typing a password), even with DPMS off. This re-blanks
+          # the screen after 90s of no further interaction with the lock
+          # screen, independent of the pre-lock idle chain above.
+          timeout = 90;
+          on-timeout = "pidof hyprlock && hyprctl dispatch '${mkDpms "off"}'";
+        }
       ];
     };
   };
