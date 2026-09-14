@@ -539,7 +539,14 @@ in {
         on_lock_cmd = "${lockPrep} && swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
         on_unlock_cmd = "${unlockResume} && swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
         before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch '${mkDpms "on"}'";
+        # hypridle's idle listener timers aren't suspend-aware and don't
+        # reset across a sleep cycle (see hyprwm/hypridle #73, #178), so a
+        # listener that already fired pre-suspend (e.g. the 90s lock-screen
+        # re-blank below) never re-arms after resume. Restarting the
+        # service gives every listener a clean slate; backgrounding it
+        # avoids killing the shell mid-restart since systemctl hands the
+        # request straight to systemd.
+        after_sleep_cmd = "hyprctl dispatch '${mkDpms "on"}' && (systemctl --user restart hypridle.service &disown)";
       };
       listener = [
         {
