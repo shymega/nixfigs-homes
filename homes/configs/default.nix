@@ -76,6 +76,7 @@ in {
         b4
         bat
         bc
+        breezy-desktop
         brightnessctl
         claude-code
         cloudflared
