@@ -537,8 +537,11 @@ in {
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
         lock_cmd = "pidof hyprlock || hyprlock";
-        on_lock_cmd = "${lockPrep} && swaync-client -dn && hyprctl dispatch '${mkDpms "off"}'";
-        on_unlock_cmd = "${unlockResume} && swaync-client -df && hyprctl dispatch '${mkDpms "on"}'";
+        # `|| true` after swaync-client: swaync isn't guaranteed to be up
+        # (or installed) on every session, and a failed DND toggle shouldn't
+        # abort the rest of the lock/unlock chain.
+        on_lock_cmd = "${lockPrep} && (swaync-client -dn || true) && hyprctl dispatch '${mkDpms "off"}'";
+        on_unlock_cmd = "${unlockResume} && (swaync-client -df || true) && hyprctl dispatch '${mkDpms "on"}'";
         before_sleep_cmd = "loginctl lock-session";
         # hypridle's idle listener timers aren't suspend-aware and don't
         # reset across a sleep cycle (see hyprwm/hypridle #73, #178), so a
