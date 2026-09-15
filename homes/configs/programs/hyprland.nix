@@ -17,6 +17,7 @@
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
+  wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
@@ -546,7 +547,11 @@ in {
         # service gives every listener a clean slate; backgrounding it
         # avoids killing the shell mid-restart since systemctl hands the
         # request straight to systemd.
-        after_sleep_cmd = "hyprctl dispatch '${mkDpms "on"}' && (systemctl --user restart hypridle.service &disown)";
+        # Skip forcing the display back on when the machine was woken by an
+        # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
+        # look at it, so turning it on just leaves it lit until the next
+        # idle cycle catches up.
+        after_sleep_cmd = "${wasScheduledWake} || hyprctl dispatch '${mkDpms "on"}'; (systemctl --user restart hypridle.service &disown)";
       };
       listener = [
         {

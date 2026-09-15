@@ -8,6 +8,7 @@
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
+  wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
   swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
   swaymsg = lib.getExe' pkgs.sway "swaymsg";
 in {
@@ -161,7 +162,11 @@ in {
     events = {
       "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
       lock = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
-      "after-resume" = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
+      # Skip powering outputs back on when the machine was woken by an
+      # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
+      # look at them, so turning them on just leaves the display lit until
+      # the next idle cycle catches up.
+      "after-resume" = "${unlockResume} && ${swaync-client} -df && (${wasScheduledWake} || ${swaymsg} \"output * power on\")";
       unlock = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
     };
   };
