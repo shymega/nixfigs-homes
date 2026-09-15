@@ -160,14 +160,17 @@ in {
       }
     ];
     events = {
-      "before-sleep" = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
-      lock = "${lockPrep} && ${swaync-client} -dn && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
+      # `|| true` after swaync-client: swaync isn't guaranteed to be up (or
+      # installed) on every session, and a failed DND toggle shouldn't abort
+      # the rest of the lock/unlock chain.
+      "before-sleep" = "${lockPrep} && (${swaync-client} -dn || true) && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
+      lock = "${lockPrep} && (${swaync-client} -dn || true) && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
       # Skip powering outputs back on when the machine was woken by an
       # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
       # look at them, so turning them on just leaves the display lit until
       # the next idle cycle catches up.
-      "after-resume" = "${unlockResume} && ${swaync-client} -df && (${wasScheduledWake} || ${swaymsg} \"output * power on\")";
-      unlock = "${unlockResume} && ${swaync-client} -df && ${swaymsg} \"output * power on\"";
+      "after-resume" = "${unlockResume} && (${swaync-client} -df || true) && (${wasScheduledWake} || ${swaymsg} \"output * power on\")";
+      unlock = "${unlockResume} && (${swaync-client} -df || true) && ${swaymsg} \"output * power on\"";
     };
   };
 
