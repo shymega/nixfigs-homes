@@ -33,4 +33,35 @@ in {
       ${wpctl} set-mute "$id" 0
     done
   '';
+
+  # Reports (via exit status) whether the most recent resume-from-suspend was
+  # triggered by one of the unattended RTC wake timers -- alarm-clock.timer
+  # on nixfigs-public, scheduled-wake.timer on nixfigs-work -- rather than a
+  # real user interaction (lid open, keypress). The idle daemons' resume
+  # hooks use this to decide whether the display should be turned back on at
+  # all: an unattended wake has nobody there to look at it, so forcing DPMS
+  # on just leaves the screen lit until the next idle cycle catches up.
+  wasScheduledWake = pkgs.writeShellScriptBin "was-scheduled-wake" ''
+    set -euo pipefail
+
+    now=$(date +%s)
+
+    for unit in alarm-clock.timer scheduled-wake.timer; do
+      last=$(${systemctl} show "$unit" -p LastTriggerUSec --value 2>/dev/null) || continue
+      if [ -z "$last" ] || [ "$last" = "n/a" ]; then
+        continue
+      fi
+
+      last_epoch=$(date -d "$last" +%s 2>/dev/null) || continue
+      diff=$(( now - last_epoch ))
+
+      # The resume hook runs within a second or two of wake, so a timer that
+      # last fired in roughly that window is what woke the machine.
+      if [ "$diff" -ge 0 ] && [ "$diff" -le 15 ]; then
+        exit 0
+      fi
+    done
+
+    exit 1
+  '';
 }
