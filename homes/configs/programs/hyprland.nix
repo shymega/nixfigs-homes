@@ -591,6 +591,20 @@ in {
         ignore_empty_input = true;
       };
 
+      # None of these hosts have a fingerprint reader, but hyprlock's
+      # fingerprint auth backend is on by default and, once enabled, opens a
+      # system D-Bus connection whose fd it polls in the main event loop
+      # alongside the Wayland fd. That connection reliably gets a POLLHUP
+      # right as the system actually suspends, and hyprlock treats *any*
+      # POLLHUP on a polled fd as fatal (`RASSERT` at hyprlock.cpp:412),
+      # aborting with SIGABRT instead of reconnecting. That's what was
+      # crashing hyprlock around suspend/resume on HEIMDALL-LINUX
+      # (confirmed via `coredumpctl info` -- abort landed squarely on the
+      # dbus pollfd id right as `PrepareForSleep` fired). Disabling the
+      # unused fingerprint backend keeps that dbus connection from ever
+      # being opened.
+      auth.fingerprint.enabled = false;
+
       animations = {
         enabled = true;
         fade_in = {
