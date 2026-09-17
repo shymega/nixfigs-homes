@@ -53,8 +53,10 @@
 in {
   imports = with inputs; [
     ./network-targets.nix
+    ./programs/alacritty.nix
     ./programs/hyprland.nix
     ./programs/sway.nix
+    ./programs/wezterm.nix
     agenix.homeManagerModules.default
     nix-index-database.homeModules.nix-index
     _1password-shell-plugins.hmModules.default
@@ -625,6 +627,7 @@ in {
       swaylock.enable = true;
       tmux.enable = true;
       waybar.enable = true;
+      wezterm.enable = true;
     };
   };
 }
