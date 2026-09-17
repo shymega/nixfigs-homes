@@ -7,6 +7,10 @@
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
+  # Build-time toggle for the hy3 plugin: set
+  # `nixfigs.graphical.windowManagers.enableHy3 = true;` in the NixOS config
+  # to opt in. Defaults to disabled (no plugin fetch/build, no hy3 binds).
+  enableHy3 = args.osConfig.nixfigs.graphical.windowManagers.enableHy3 or false;
   hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
@@ -65,10 +69,12 @@ in {
     splitWorkspace = ws: lua ''smw.workspace("${toString ws}")'';
     splitMoveToWorkspace = ws: lua ''smw.move_to_workspace("${toString ws}")'';
 
-    # hy3 (i3/sway-like tabbed/tiling layout) is always loaded as a Hyprland
-    # plugin so it's available for the whole session; which layout is
-    # *active* (`general:layout`) is then flipped at runtime via `hyprctl`,
-    # so switching to/from hy3 never needs a NixOS/home-manager rebuild.
+    # hy3 (i3/sway-like tabbed/tiling layout) is loaded as a Hyprland plugin
+    # for the whole session whenever `enableHy3` is true, so which layout is
+    # *active* (`general:layout`) can be flipped at runtime via `hyprctl`
+    # without a NixOS/home-manager rebuild. `enableHy3` itself is a
+    # build-time switch: disabling it drops the plugin (and its binds)
+    # entirely, so it does require a rebuild to take effect.
     hy3Package = inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
 
     # `hl.plugin.hy3` is only populated once the hy3 plugin finishes loading
@@ -129,9 +135,13 @@ in {
     # from hy3.
     layout = "master";
 
-    # The layout Hyprland actually starts in. hy3 is the default for now;
-    # `SUPER + SHIFT + T` toggles back to `layout` above at runtime.
-    defaultLayout = "hy3";
+    # The layout Hyprland actually starts in. When hy3 is enabled,
+    # `SUPER + SHIFT + T` toggles back to `layout` above at runtime; when
+    # disabled at build-time, this falls back to the base `layout` outright.
+    defaultLayout =
+      if enableHy3
+      then "hy3"
+      else layout;
 
     layoutBinds =
       if layout == "master"
@@ -201,7 +211,7 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     configType = "lua";
-    plugins = [hy3Package];
+    plugins = lib.optionals enableHy3 [hy3Package];
     extraConfig = lib.optionalString useSplitMonitorWorkspaces ''
       smw.setup({
         workspace_count = 10,
@@ -343,7 +353,7 @@ in {
         ]
         ++ layoutBinds
         ++ workspaceBinds
-        ++ hy3Binds;
+        ++ lib.optionals enableHy3 hy3Binds;
 
       mod = {
         _var = "SUPER";
