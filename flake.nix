@@ -176,17 +176,19 @@
         home-manager.follows = "home-manager";
       };
     };
-    hyprland.follows = "nixfigs-pkgs/hyprnix/hyprland";
+    hyprland = {
+      url = "github:hyprwm/hyprland?rev=d50ca8950ac8753c54e50b6d44f4461df14bfabb";
+    };
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins?ref=v0.55.0";
+      url = "github:hyprwm/hyprland-plugins?ref=v0.56.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
     };
     split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces?ref=v0.55.4";
+      url = "github:Duckonaut/split-monitor-workspaces?ref=v0.56.2";
       inputs.hyprland.follows = "hyprland";
     };
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.55.0";
+      url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
       # hy3 tracks Hyprland's main branch; follow to keep the plugin build in sync.
       inputs.hyprland.follows = "hyprland";
     };
