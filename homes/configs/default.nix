@@ -606,6 +606,11 @@ in {
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
     image = inputs.wallpaper;
+    fonts.monospace = {
+      package = pkgs.nerd-fonts.blex-mono;
+      name = "IBM Plex Mono Light";
+    };
+    fonts.sizes.terminal = 11.5;
     targets = {
       alacritty.enable = true;
       gnome.enable = true;
