@@ -583,7 +583,7 @@ in {
       };
       element = mkSessionApp {
         description = "Element (Flatpak)";
-        command = "flatpak run im.riot.Element -- --hidden ${noGrab}";
+        command = "flatpak run im.riot.Riot -- --hidden ${noGrab}";
         extraAfter = ["waybar.service"];
       };
       onepassword = mkSessionApp {
