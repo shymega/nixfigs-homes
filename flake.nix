@@ -192,6 +192,22 @@
       # hy3 tracks Hyprland's main branch; follow to keep the plugin build in sync.
       inputs.hyprland.follows = "hyprland";
     };
+    hyprlock = {
+      # Stock hyprlock (any version) aborts with SIGABRT the instant it
+      # loses its Wayland connection to Hyprland for *any* reason --
+      # shutdown, DPMS monitor power-cycling, hotplugging a display --
+      # instead of exiting cleanly (RASSERT at hyprlock.cpp:412, tracked
+      # upstream as hyprwm/hyprlock#991). The fix
+      # (hyprwm/hyprlock#1052, "handle compositor connection loss
+      # gracefully instead of aborting") is unmerged and doesn't apply
+      # cleanly to the stock release as a patch, so this pins straight to
+      # that PR's own commit -- a complete, self-contained buildable tree
+      # with the fix already in it. hyprlock only talks to Hyprland over
+      # stable public Wayland protocols (session-lock, layer-shell,
+      # screencopy), so it doesn't need to track the compositor's own
+      # hyprutils/hyprland version.
+      url = "github:hyprwm/hyprlock/d1ebb16b9a072ca98658cb7938fb9cbfae1bff36";
+    };
     iio-hyprland = {
       url = "github:JeanSchoeller/iio-hyprland";
       inputs.nixpkgs.follows = "nixpkgs";

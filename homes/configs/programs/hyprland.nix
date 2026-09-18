@@ -595,6 +595,16 @@ in {
 
   programs.hyprlock = {
     enable = config.services.hypridle.enable;
+    # See the `hyprlock` flake input: stock hyprlock SIGABRTs the instant it
+    # loses its Wayland connection to Hyprland (shutdown, DPMS power-cycling
+    # a monitor, hotplugging a display -- hyprwm/hyprlock#991), instead of
+    # exiting cleanly. This is built from the unmerged upstream fix
+    # (hyprwm/hyprlock#1052) so it doesn't abort in the first place.
+    # `hyprlock-shutdown-guard` and `hyprlock-watchdog` below are additional
+    # layers on top, not a replacement: even a clean `exit(1)` on connection
+    # loss leaves the session locked with no locker UI ("oopsie daisy") until
+    # something relaunches hyprlock.
+    package = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
     settings = {
       general = {
         hide_cursor = true;
@@ -604,28 +614,18 @@ in {
       # None of these hosts have a fingerprint reader, but hyprlock's
       # fingerprint auth backend is on by default and, once enabled, opens a
       # system D-Bus connection whose fd it polls in the main event loop
-      # alongside the Wayland fd. That connection reliably gets a POLLHUP
-      # right as the system actually suspends, and hyprlock treats *any*
-      # POLLHUP on a polled fd as fatal (`RASSERT` at hyprlock.cpp:412),
-      # aborting with SIGABRT instead of reconnecting. That's what was
-      # crashing hyprlock around suspend/resume on HEIMDALL-LINUX
-      # (confirmed via `coredumpctl info` -- abort landed squarely on the
-      # dbus pollfd id right as `PrepareForSleep` fired). Disabling the
-      # unused fingerprint backend keeps that dbus connection from ever
-      # being opened.
+      # alongside the Wayland fd -- one more fd that can POLLHUP and (on
+      # stock hyprlock) abort it. Not load-bearing now that `package` above
+      # is built from the graceful-disconnect fix, but there's no reason to
+      # keep an unused dbus connection open either.
       auth.fingerprint.enabled = false;
 
-      animations = {
-        enabled = true;
-        fade_in = {
-          duration = 300;
-          bezier = "easeOutQuint";
-        };
-        fade_out = {
-          duration = 300;
-          bezier = "easeOutQuint";
-        };
-      };
+      animations.enabled = true;
+      bezier = ["easeOutQuint, 0.23, 1, 0.32, 1"];
+      animation = [
+        "fadeIn, 1, 3, easeOutQuint"
+        "fadeOut, 1, 3, easeOutQuint"
+      ];
       background = [
         {
           path = "screenshot";
@@ -675,6 +675,72 @@ in {
         }
       ];
     };
+  };
+
+  # Belt-and-suspenders on top of the graceful-disconnect fix baked into
+  # `programs.hyprlock.package` above: proactively SIGUSR1s hyprlock (its
+  # documented graceful-unlock signal) the moment logind announces a
+  # shutdown, so it exits cleanly *before* Hyprland's socket disappears
+  # instead of racing the teardown at all. Holds a `shutdown`
+  # delay-inhibitor so systemd-logind blocks poweroff/reboot just long
+  # enough for this to happen.
+  systemd.user.services.hyprlock-shutdown-guard = lib.mkIf config.programs.hyprlock.enable {
+    Unit = {
+      Description = "SIGUSR1 hyprlock before shutdown so it exits cleanly instead of racing the teardown";
+      PartOf = ["graphical-session.target"];
+      After = ["graphical-session.target"];
+    };
+    Service = {
+      ExecStart = lib.getExe (pkgs.writeShellScriptBin "hyprlock-shutdown-guard" ''
+        set -euo pipefail
+        while true; do
+          ${pkgs.systemd}/bin/systemd-inhibit --what=shutdown --mode=delay \
+            --who="hyprlock-shutdown-guard" \
+            --why="let hyprlock exit cleanly before Hyprland's Wayland socket disappears" \
+            ${lib.getExe pkgs.bash} -c '
+              ${pkgs.glib}/bin/gdbus monitor --system --dest org.freedesktop.login1 \
+                --object-path /org/freedesktop/login1 2>/dev/null |
+                grep -qm1 "PrepareForShutdown"
+              ${pkgs.procps}/bin/pkill -SIGUSR1 -x hyprlock || true
+            '
+        done
+      '');
+      Restart = "always";
+      RestartSec = 1;
+    };
+    Install.WantedBy = ["graphical-session.target"];
+  };
+
+  # Second safety net: even with the graceful-disconnect fix, a hyprlock
+  # that exits (cleanly or otherwise) while the session is still locked
+  # leaves ext-session-lock active with no locker UI to type a password
+  # into -- Hyprland's "oopsie daisy" screen. Poll for that specific state
+  # (locked per logind, but no hyprlock process) and relaunch it, so a
+  # crash anywhere this doesn't otherwise catch (e.g. a future regression,
+  # or a completely different abort) still self-heals instead of requiring
+  # a manual restart.
+  systemd.user.services.hyprlock-watchdog = lib.mkIf config.programs.hyprlock.enable {
+    Unit = {
+      Description = "Relaunch hyprlock if it dies while the session is still locked";
+      PartOf = ["graphical-session.target"];
+      After = ["graphical-session.target"];
+    };
+    Service = {
+      ExecStart = lib.getExe (pkgs.writeShellScriptBin "hyprlock-watchdog" ''
+        set -euo pipefail
+        while true; do
+          sleep 3
+          locked="$(${pkgs.systemd}/bin/loginctl show-session "''${XDG_SESSION_ID:-}" -p LockedHint --value 2>/dev/null || true)"
+          if [ "$locked" = "yes" ] && ! ${pkgs.procps}/bin/pidof hyprlock >/dev/null 2>&1; then
+            ${lib.getExe config.programs.hyprlock.package} &
+            disown
+          fi
+        done
+      '');
+      Restart = "always";
+      RestartSec = 1;
+    };
+    Install.WantedBy = ["graphical-session.target"];
   };
 
   services.swaync.enable = true;
