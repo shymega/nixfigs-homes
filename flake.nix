@@ -176,9 +176,7 @@
         home-manager.follows = "home-manager";
       };
     };
-    hyprland = {
-      url = "github:hyprwm/hyprland?rev=d50ca8950ac8753c54e50b6d44f4461df14bfabb";
-    };
+    hyprland.follows = "nixfigs-pkgs/hyprnix/hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins?ref=v0.56.0";
       inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
