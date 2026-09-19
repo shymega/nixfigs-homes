@@ -54,7 +54,10 @@ in {
   imports = with inputs; [
     ./network-targets.nix
     ./programs/alacritty.nix
+    ./programs/antigravity-cli.nix
+    ./programs/claude-code.nix
     ./programs/hyprland.nix
+    ./programs/opencode.nix
     ./programs/sway.nix
     ./programs/wezterm.nix
     agenix.homeManagerModules.default
@@ -80,7 +83,6 @@ in {
         bc
         breezy-desktop
         brightnessctl
-        claude-code
         cloudflared
         cocogitto
         curl
@@ -131,7 +133,6 @@ in {
         nixpkgs-review
         nodejs
         notmuch
-        opencode
         p7zip
         pass
         pdftk
@@ -171,7 +172,6 @@ in {
         twilight-kde
         units
         unrar
-        unstable.antigravity-cli
         unstable.beeper
         unstable.isync-patched
         unzip
