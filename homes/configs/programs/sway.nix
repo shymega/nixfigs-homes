@@ -2,10 +2,14 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 } @ args: let
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
-  lockScripts = import ./session-lock.nix {inherit pkgs;};
+  lockScripts = import ./session-lock.nix {
+    inherit pkgs;
+    hyprlockPackage = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
+  };
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
