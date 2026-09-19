@@ -18,10 +18,14 @@
   isHeimdall = hostIs "HEIMDALL-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
 
-  lockScripts = import ./session-lock.nix {inherit pkgs;};
+  lockScripts = import ./session-lock.nix {
+    inherit pkgs;
+    hyprlockPackage = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
+  };
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
+  hyprlockLaunch = lib.getExe lockScripts.hyprlockLaunch;
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
@@ -546,7 +550,7 @@ in {
         # Let media players (Firefox, mpv, Steam) hold off the idle timers.
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
-        lock_cmd = "pidof hyprlock || hyprlock";
+        lock_cmd = hyprlockLaunch;
         # `|| true` after swaync-client: swaync isn't guaranteed to be up
         # (or installed) on every session, and a failed DND toggle shouldn't
         # abort the rest of the lock/unlock chain.
@@ -719,6 +723,18 @@ in {
   # crash anywhere this doesn't otherwise catch (e.g. a future regression,
   # or a completely different abort) still self-heals instead of requiring
   # a manual restart.
+  #
+  # Relaunches go through `hyprlockLaunch` (session-lock.nix), which
+  # serializes against hypridle's own `lock_cmd` so this poll can never
+  # spawn a duplicate hyprlock racing another for the ext-session-lock-v1
+  # grab. That race used to hot-loop this watchdog every 3s indefinitely
+  # once ext-session-lock-v1 got stuck refusing new clients (146 failed
+  # "Couldn't bind" attempts in 8 minutes, observed 2026-09-18 -- the
+  # SIGABRT itself was already fixed by 969a231, this was a second bug in
+  # the recovery path). The backoff below is a second layer on top: if a
+  # relaunch attempt doesn't leave hyprlock running a second later (e.g.
+  # ext-session-lock-v1 itself is refusing binds, which flock can't fix),
+  # back off up to 30s between attempts instead of hammering it.
   systemd.user.services.hyprlock-watchdog = lib.mkIf config.programs.hyprlock.enable {
     Unit = {
       Description = "Relaunch hyprlock if it dies while the session is still locked";
@@ -728,12 +744,21 @@ in {
     Service = {
       ExecStart = lib.getExe (pkgs.writeShellScriptBin "hyprlock-watchdog" ''
         set -euo pipefail
+        backoff=3
         while true; do
-          sleep 3
+          sleep "$backoff"
           locked="$(${pkgs.systemd}/bin/loginctl show-session "''${XDG_SESSION_ID:-}" -p LockedHint --value 2>/dev/null || true)"
           if [ "$locked" = "yes" ] && ! ${pkgs.procps}/bin/pidof hyprlock >/dev/null 2>&1; then
-            ${lib.getExe config.programs.hyprlock.package} &
+            ${hyprlockLaunch} &
             disown
+            sleep 1
+            if ${pkgs.procps}/bin/pidof hyprlock >/dev/null 2>&1; then
+              backoff=3
+            else
+              backoff=$(( backoff < 30 ? backoff * 2 : 30 ))
+            fi
+          else
+            backoff=3
           fi
         done
       '');

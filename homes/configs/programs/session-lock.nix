@@ -1,4 +1,7 @@
-{pkgs}: let
+{
+  pkgs,
+  hyprlockPackage,
+}: let
   systemctl = "${pkgs.systemd}/bin/systemctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
@@ -63,5 +66,27 @@ in {
     done
 
     exit 1
+  '';
+
+  # Single choke point for starting hyprlock. hypridle's `lock_cmd`, the
+  # shutdown guard's relaunch, and the watchdog's relaunch were all
+  # independently doing `pidof hyprlock || hyprlock`, which races: two
+  # triggers firing close together (e.g. a lock timeout landing right as
+  # the watchdog polls) each see no hyprlock yet and launch their own,
+  # and the two processes fight over the single-client ext-session-lock-v1
+  # grab -- the loser logs "Couldn't bind to ext-session-lock-v1" and exits
+  # immediately, and whatever triggers next just launches another loser
+  # (observed hot-looping every ~3s, 146 failed binds in 8 minutes, after
+  # 969a231 fixed the SIGABRT itself but not this race). Routing every
+  # launch through one flock -- held for the launched hyprlock's entire
+  # lifetime, since it's the last thing this script execs -- makes
+  # concurrent triggers a no-op instead of a race.
+  hyprlockLaunch = pkgs.writeShellScriptBin "hyprlock-launch" ''
+    set -euo pipefail
+
+    ${pkgs.procps}/bin/pidof hyprlock >/dev/null 2>&1 && exit 0
+
+    exec ${pkgs.util-linux}/bin/flock -n "''${XDG_RUNTIME_DIR}/hyprlock-launch.lock" \
+      ${pkgs.bash}/bin/bash -c '${pkgs.procps}/bin/pidof hyprlock >/dev/null 2>&1 || exec ${hyprlockPackage}/bin/hyprlock'
   '';
 }
