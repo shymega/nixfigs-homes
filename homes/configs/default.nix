@@ -355,7 +355,7 @@ in {
         inline_height = 0;
         key_path = config.age.secrets.atuin_key.path;
         sync_address = "https://api.atuin.sh";
-        auto_sync = false;
+        auto_sync = true;
         dialect = "uk";
         secrets_filter = true;
         enter_accept = false;
@@ -365,8 +365,8 @@ in {
           records = true;
         };
         daemon = {
-          enabled = false;
-          systemd_socket = false;
+          enabled = true;
+          systemd_socket = true;
           sync_frequency = 900;
         };
       };
