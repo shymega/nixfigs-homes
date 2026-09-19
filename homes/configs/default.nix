@@ -53,6 +53,7 @@
 in {
   imports = with inputs; [
     ./network-targets.nix
+    ./programs/agent-sandbox.nix
     ./programs/alacritty.nix
     ./programs/antigravity-cli.nix
     ./programs/claude-code.nix
