@@ -606,6 +606,7 @@ in {
   stylix = {
     enable = true;
     autoEnable = false;
+    enableReleaseChecks = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
     image = inputs.wallpaper;
     fonts.monospace = {
