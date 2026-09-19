@@ -46,6 +46,26 @@
         "type": "github"
       }
     },
+    "agent-sandbox": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789751676,
+        "narHash": "sha256-nqRDd+/H+w8ICwomc7RM1GTe6bD8vqXSbPYYB34wzrs=",
+        "owner": "archie-judd",
+        "repo": "agent-sandbox.nix",
+        "rev": "f2dc379b049e71d0d121c2c15832577f85b5be86",
+        "type": "github"
+      },
+      "original": {
+        "owner": "archie-judd",
+        "repo": "agent-sandbox.nix",
+        "type": "github"
+      }
+    },
     "aquamarine": {
       "inputs": {
         "hyprutils": [
@@ -3387,6 +3407,7 @@
       "inputs": {
         "_1password-shell-plugins": "_1password-shell-plugins",
         "agenix": "agenix",
+        "agent-sandbox": "agent-sandbox",
         "base16-schemes": "base16-schemes",
         "doom-emacs": "doom-emacs",
         "flake-compat": "flake-compat",
