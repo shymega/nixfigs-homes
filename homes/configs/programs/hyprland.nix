@@ -776,7 +776,7 @@ in {
   services.hyprpolkitagent.enable = config.wayland.windowManager.hyprland.enable;
 
   programs.waybar = {
-    enable = true;
+    enable = windowManager == "hyprland" || windowManager == "sway";
     systemd.enable = config.programs.waybar.enable;
     style = import ./waybar-style.nix;
     settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
