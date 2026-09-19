@@ -121,6 +121,10 @@
 
       inputs.home-manager.follows = "home-manager";
     };
+    agent-sandbox = {
+      url = "github:archie-judd/agent-sandbox.nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
