@@ -526,6 +526,7 @@ in {
       QT_QPA_PLATFORM = "wayland;xcb";
       MOZ_ENABLE_WAYLAND = "1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
+      OLLAMA_HOST = "mjolnir-linux.laperm-anoles.ts.net:11434";
     };
     tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
     services = {
