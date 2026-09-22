@@ -3,7 +3,7 @@
   inputs,
   ...
 }: let
-  sbx = inputs.agent-sandbox.lib.${pkgs.system};
+  sbx = inputs.agent-sandbox.lib.${pkgs.stdenv.hostPlatform.system};
 
   # Identity ([user] name/email/signingkey) lives in ~/.gitconfig, not the
   # XDG ~/.config/git/config that home-manager otherwise manages.
