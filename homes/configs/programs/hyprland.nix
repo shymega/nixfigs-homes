@@ -798,7 +798,7 @@ in {
   };
 
   programs.hyprshot.enable = config.wayland.windowManager.hyprland.enable;
-  services.hyprpolkitagent.enable = config.wayland.windowManager.hyprland.enable;
+  services.hyprpolkitagent.enable = windowManager == "hyprland" || windowManager == "sway";
 
   programs.waybar = {
     enable = windowManager == "hyprland" || windowManager == "sway";
