@@ -13,6 +13,7 @@
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
+  hyprlockLaunch = lib.getExe lockScripts.hyprlockLaunch;
   swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
   swaymsg = lib.getExe' pkgs.sway "swaymsg";
 in {
@@ -139,13 +140,12 @@ in {
   };
 
   services.swayidle = let
-    swaylock = lib.getExe pkgs.swaylock;
-    # Guard against stacking a second swaylock on top of an already-locked
-    # session (e.g. $mod+l pressed after the idle timeout already locked it).
-    lockCmd = lib.getExe (pkgs.writeShellScriptBin "swaylock-cmd" ''
-      set -euo pipefail
-      pidof swaylock || exec ${swaylock} -f -c 000000
-    '');
+    # hyprlockLaunch (session-lock.nix) already guards against stacking a
+    # second hyprlock on top of an already-locked session (e.g. $mod+l
+    # pressed after the idle timeout already locked it), and execs hyprlock
+    # in the foreground, so it's backgrounded below to keep this chain's
+    # post-lock power-off from blocking on unlock.
+    lockCmd = hyprlockLaunch;
   in {
     enable = config.wayland.windowManager.sway.enable;
     systemdTargets = ["sway-session.target"];
@@ -167,8 +167,8 @@ in {
       # `|| true` after swaync-client: swaync isn't guaranteed to be up (or
       # installed) on every session, and a failed DND toggle shouldn't abort
       # the rest of the lock/unlock chain.
-      "before-sleep" = "${lockPrep} && (${swaync-client} -dn || true) && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
-      lock = "${lockPrep} && (${swaync-client} -dn || true) && ${lockCmd} && sleep 2s && ${swaymsg} \"output * power off\"";
+      "before-sleep" = "${lockPrep} && (${swaync-client} -dn || true) && (${lockCmd} & disown) && sleep 2s && ${swaymsg} \"output * power off\"";
+      lock = "${lockPrep} && (${swaync-client} -dn || true) && (${lockCmd} & disown) && sleep 2s && ${swaymsg} \"output * power off\"";
       # Skip powering outputs back on when the machine was woken by an
       # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
       # look at them, so turning them on just leaves the display lit until
@@ -179,7 +179,6 @@ in {
   };
 
   home.packages = lib.mkIf config.wayland.windowManager.sway.enable (with pkgs; [
-    swaylock
     wl-clipboard
     clipman
     wl-mirror

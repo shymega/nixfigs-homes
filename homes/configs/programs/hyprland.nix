@@ -598,7 +598,10 @@ in {
   };
 
   programs.hyprlock = {
-    enable = config.services.hypridle.enable;
+    # hyprlock is also used as Sway's session locker (sway.nix), via the
+    # same hyprlockLaunch script, so it's shared here rather than
+    # duplicating this settings block per-compositor.
+    enable = config.services.hypridle.enable || config.wayland.windowManager.sway.enable;
     # See the `hyprlock` flake input: stock hyprlock SIGABRTs the instant it
     # loses its Wayland connection to Hyprland (shutdown, DPMS power-cycling
     # a monitor, hotplugging a display -- hyprwm/hyprlock #991), instead of
