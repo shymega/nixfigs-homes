@@ -223,7 +223,6 @@ in {
         slurp
         sway-contrib.grimshot
         swayidle
-        swaylock
         waybar
         wdisplays
         wf-recorder
@@ -627,7 +626,6 @@ in {
       hyprlock.enable = false;
       rofi.enable = true;
       sway.enable = true;
-      swaylock.enable = true;
       tmux.enable = true;
       waybar.enable = true;
       wezterm.enable = true;
