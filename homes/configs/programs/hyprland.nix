@@ -37,7 +37,7 @@ in {
     in
       lib.getExe default;
 
-    hyprshot = lib.getExe pkgs.hyprshot;
+    hyprshot = lib.getExe pkgs.unstable.hyprshot;
     brightnessctl = lib.getExe pkgs.brightnessctl;
     swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
 
