@@ -89,7 +89,6 @@ in {
         cocogitto
         curl
         dateutils
-        devenv
         dex
         difftastic
         distrobox
