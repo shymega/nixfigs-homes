@@ -216,7 +216,6 @@ in {
       ++ (with pkgs; [(git-wip.override {wipPrefix = "shymega";})])
       ++ rustCrates
       ++ (with pkgs; [
-        alacritty
         clipman
         grim
         kanshi
@@ -227,7 +226,6 @@ in {
         wdisplays
         wf-recorder
         wl-clipboard
-        wofi
       ]);
   };
 
