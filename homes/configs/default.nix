@@ -439,6 +439,11 @@ in {
   news.display = "silent";
 
   systemd.user = let
+    atuinDataDir = "${config.xdg.dataHome}/atuin";
+    atuinCommonConfig = {
+      ConditionPathIsDirectory = atuinDataDir;
+      ConditionPathExists = "${config.xdg.configHome}/atuin/config.toml";
+    };
     taskwCommonConfig = {
       ConditionPathExists = "${config.xdg.configHome}/task/taskrc";
       ConditionPathIsDirectory = "${config.xdg.dataHome}/task";
@@ -475,7 +480,32 @@ in {
     # keyboard.
     noGrab = "--disable-features=GlobalShortcutsPortal";
   in {
+    sockets.atuin-daemon = {
+      Unit = {
+        Description = "Unix socket activation for atuin shell history daemon";
+      };
+
+      Socket = {
+        ListenStream = "%t/atuin.sock";
+        SocketMode = "0600";
+        RemoveOnStop = true;
+      };
+
+      Install = {
+        WantedBy = ["sockets.target"];
+      };
+    };
+
     timers = {
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
+            Description = "Atuin - Sync Service Timer";
+          };
+        Timer.OnCalendar = "*:0/30";
+        Install.WantedBy = ["timers.target"];
+      };
       task-sync = {
         Unit =
           taskwCommonConfig
@@ -496,6 +526,34 @@ in {
     };
     tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
     services = {
+      atuin-daemon = {
+        Unit = {
+          Description = "atuin shell history daemon";
+          Requires = ["atuin-daemon.socket"];
+        };
+        Service = {
+          ExecStart = "${getExe' pkgs.atuin "atuin"} daemon";
+          Environment = ["ATUIN_LOG=info"];
+          Restart = "on-failure";
+          RestartSteps = 5;
+          RestartMaxDelaySec = 10;
+        };
+        Install = {
+          Also = ["atuin-daemon.socket"];
+          WantedBy = ["default.target"];
+        };
+      };
+      atuin-sync = {
+        Unit =
+          atuinCommonConfig
+          // {
+            Description = "Atuin - Sync Service";
+          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${getExe' pkgs.atuin "atuin"} sync";
+        };
+      };
       task-sync = {
         Unit =
           taskwCommonConfig
