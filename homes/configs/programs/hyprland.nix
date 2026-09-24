@@ -420,7 +420,9 @@ in {
           key_press_enables_dpms = true;
           lockdead_screen_delay = 5000;
           mouse_move_enables_dpms = false;
+          vrr = 0;
         };
+        render.direct_scanout = false;
         cursor = {
           no_hardware_cursors = true;
         };
