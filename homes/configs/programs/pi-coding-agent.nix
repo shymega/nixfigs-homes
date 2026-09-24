@@ -10,6 +10,20 @@ in {
       };
     };
 
+    ".pi/agent/AGENTS.md".text = ''
+      Keep changes minimal and scoped; don't add abstractions or config beyond
+      what's asked. Match the existing style of the surrounding code. Load
+      skills as needed rather than restating their content here.
+
+      Prefer simple, effective solutions over clever or general ones. Avoid
+      network access unless the task requires it; don't add dependencies,
+      fetches, or calls to external services as a side effect of other work.
+
+      Commit as you go: make small, incremental commits for each logical step
+      of a task rather than one large commit at the end. Once the task is
+      done, rebase and squash the history into logical, composable commits.
+    '';
+
     ".pi/agent/extensions/check-ai-policy.ts".text = ''
       import type {ExtensionAPI} from "@earendil-works/pi-coding-agent";
       import {execSync} from "node:child_process";

@@ -4,10 +4,17 @@
     package = pkgs.opencode;
     skills = ./ai-skills;
     context = ''
-      This is a personal NixOS/home-manager dotfiles repo (nixfigs-homes). Keep
-      changes minimal and scoped; don't add abstractions or config beyond what's
-      asked. Match the terse style of existing `homes/configs/programs/*.nix`
-      files. Load skills as needed rather than restating their content here.
+      Keep changes minimal and scoped; don't add abstractions or config beyond
+      what's asked. Match the existing style of the surrounding code. Load
+      skills as needed rather than restating their content here.
+
+      Prefer simple, effective solutions over clever or general ones. Avoid
+      network access unless the task requires it; don't add dependencies,
+      fetches, or calls to external services as a side effect of other work.
+
+      Commit as you go: make small, incremental commits for each logical step
+      of a task rather than one large commit at the end. Once the task is
+      done, rebase and squash the history into logical, composable commits.
 
       When committing, add a trailer `Assisted-by: OpenCode <noreply@opencode.ai>`
       (OpenCode has no built-in commit attribution setting, so this is the only
