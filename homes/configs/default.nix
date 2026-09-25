@@ -83,7 +83,6 @@ in {
         b4
         bat
         bc
-        breezy-desktop
         brightnessctl
         cloudflared
         cocogitto
