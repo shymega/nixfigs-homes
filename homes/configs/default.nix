@@ -217,7 +217,6 @@ in {
       ++ (with pkgs; [
         clipman
         grim
-        kanshi
         slurp
         sway-contrib.grimshot
         swayidle
@@ -263,6 +262,7 @@ in {
     };
     kanshi = {
       enable = true;
+      settings = import ./aux/kanshi-config.nix;
       systemdTarget = "graphical-session.target";
     };
     gnome-keyring = {
