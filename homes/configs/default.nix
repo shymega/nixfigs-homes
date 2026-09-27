@@ -347,23 +347,24 @@ in {
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
-        style = "auto";
-        inline_height = 0;
-        key_path = config.age.secrets.atuin_key.path;
-        sync_address = "https://api.atuin.sh";
+        ai.enabled = true;
         auto_sync = true;
         dialect = "uk";
-        secrets_filter = true;
         enter_accept = false;
+        inline_height = 0;
+        key_path = config.age.secrets.atuin_key.path;
+        secrets_filter = true;
+        style = "auto";
+        sync_address = "https://api.atuin.sh";
+        sync_frequency = 0;
         workspaces = true;
-        sync_frequency = 900;
         sync = {
           records = true;
         };
         daemon = {
           enabled = true;
-          systemd_socket = true;
-          sync_frequency = 900;
+          systemd_socket = config.programs.atuin.settings.daemon.enabled;
+          sync_frequency = config.programs.atuin.settings.sync_frequency;
         };
       };
     };
