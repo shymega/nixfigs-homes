@@ -118,8 +118,6 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
-
-      inputs.home-manager.follows = "home-manager";
     };
     agent-sandbox = {
       url = "github:archie-judd/agent-sandbox.nix";
