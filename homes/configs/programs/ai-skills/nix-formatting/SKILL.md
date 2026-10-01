@@ -10,9 +10,9 @@ description: Format, lint, and add license headers to Nix files in this repo. Us
 - Every `.nix` file starts with an SPDX header, matching the existing files:
 
   ```nix
-  # SPDX-FileCopyrightText: 2024 Dom Rodriguez <shymega@shymega.org.uk
+  # SPDX-FileCopyrightText: 2023-2026 Dom 'shymega' Rodriguez <shymega@shymega.org.uk>
   #
-  # SPDX-License-Identifier: GPL-3.0-only
+  # SPDX-License-Identifier: Apache-2.0
   ```
 
   Check a neighboring file in the same directory for the exact header already in use (some files use only the copyright line, others add the license line) and match it rather than guessing.
