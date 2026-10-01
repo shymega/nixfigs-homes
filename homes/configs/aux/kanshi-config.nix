@@ -282,7 +282,7 @@
           position = "0,1200";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
       ];
     };
@@ -298,7 +298,7 @@
           position = "0,1200";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "Stargate Technology DP 0x01010101";
@@ -330,7 +330,7 @@
           position = "0,0";
           scale = 1.5;
           status = "disable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "LG Electronics LG Ultra HD 0x0009B7B4";
@@ -362,7 +362,7 @@
           position = "0,0";
           scale = 1.5;
           status = "disable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "Stargate Technology DP 0x01010101";
@@ -394,7 +394,7 @@
           position = "0,1200";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "Stargate Technology DP 0x01010101";
@@ -442,7 +442,7 @@
           position = "1504,1200";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
       ];
     };
@@ -482,7 +482,7 @@
           position = "1504,1200";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
       ];
     };
@@ -498,7 +498,7 @@
           position = "0,0";
           scale = 1.5;
           status = "disable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "CVT VITURE 0x88888800";
@@ -522,7 +522,7 @@
           position = "0,0";
           scale = 1.5;
           status = "disable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "Stargate Technology DP 0x01010101";
@@ -562,7 +562,7 @@
           position = "0,0";
           scale = 1.5;
           status = "disable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "CVT VITURE 0x88888800";
@@ -594,7 +594,7 @@
           position = "462,1920";
           scale = 1.5;
           status = "enable";
-          transform = "180";
+          transform = "normal";
         }
         {
           criteria = "Synaptics Inc Non-PnP 0x00BC614E";
