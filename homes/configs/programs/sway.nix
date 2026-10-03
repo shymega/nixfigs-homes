@@ -16,6 +16,7 @@
   hyprlockLaunch = lib.getExe lockScripts.hyprlockLaunch;
   swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
   swaymsg = lib.getExe' pkgs.sway "swaymsg";
+  kanshictl = lib.getExe' pkgs.kanshi "kanshictl";
 in {
   wayland.windowManager.sway = let
     modifier = "Mod4";
@@ -160,7 +161,7 @@ in {
       {
         timeout = 302;
         command = "${swaymsg} \"output * power off\"";
-        resumeCommand = "${swaymsg} \"output * power on\"";
+        resumeCommand = "${swaymsg} \"output * power on\" && ${kanshictl} reload";
       }
     ];
     events = {
@@ -173,8 +174,8 @@ in {
       # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
       # look at them, so turning them on just leaves the display lit until
       # the next idle cycle catches up.
-      "after-resume" = "${unlockResume} && (${swaync-client} -df || true) && (${wasScheduledWake} || ${swaymsg} \"output * power on\")";
-      unlock = "${unlockResume} && (${swaync-client} -df || true) && ${swaymsg} \"output * power on\"";
+      "after-resume" = "${unlockResume} && (${swaync-client} -df || true) && (${wasScheduledWake} || (${swaymsg} \"output * power on\" && ${kanshictl} reload))";
+      unlock = "${unlockResume} && (${swaync-client} -df || true) && ${swaymsg} \"output * power on\" && ${kanshictl} reload";
     };
   };
 
