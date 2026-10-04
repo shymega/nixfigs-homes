@@ -773,6 +773,13 @@ in {
     Install.WantedBy = ["graphical-session.target"];
   };
 
+  home.packages = lib.optionals config.wayland.windowManager.hyprland.enable [
+    (pkgs.writeShellScriptBin "recover-hyprland" ''
+      set -euo pipefail
+      exec ${hyprlockLaunch}
+    '')
+  ];
+
   services.swaync.enable = true;
 
   services.wpaperd = {
