@@ -183,5 +183,9 @@ in {
     wl-clipboard
     clipman
     wl-mirror
+    (writeShellScriptBin "recover-sway" ''
+      set -euo pipefail
+      exec ${hyprlockLaunch}
+    '')
   ]);
 }
