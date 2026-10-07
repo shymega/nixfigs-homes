@@ -215,7 +215,7 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     configType = "lua";
-    plugins = lib.optionals enableHy3 [hy3Package];
+    plugins = lib.optional enableHy3 hy3Package;
     extraConfig = lib.optionalString useSplitMonitorWorkspaces ''
       smw.setup({
         workspace_count = 10,
