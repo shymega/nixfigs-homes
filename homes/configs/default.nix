@@ -181,6 +181,7 @@ in {
         wayfarer
         waypipe
         wayvnc
+        weechat
         wezterm
         wf-recorder
         wget
