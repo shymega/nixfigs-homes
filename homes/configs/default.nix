@@ -181,7 +181,7 @@ in {
         wayfarer
         waypipe
         wayvnc
-        weechat
+        weechatWithChathistory
         wezterm
         wf-recorder
         wget
