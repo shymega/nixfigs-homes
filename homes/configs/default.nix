@@ -312,7 +312,7 @@ in {
     zsh.enable = false;
     bash.enable = true;
     obs-studio = {
-      enable = false;
+      enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
         obs-backgroundremoval
@@ -559,7 +559,7 @@ in {
     targets = {
       alacritty.enable = true;
       gnome.enable = true;
-      kde.enable = true;
+      kde.enable = false;
       hyprland = {
         enable = true;
         hyprpaper.enable = false;
