@@ -77,24 +77,6 @@ in {
       ];
     };
 
-    # Renders every registered bind's `description` (see `bindOpts` calls
-    # below) as a searchable rofi cheatsheet, sourced live from
-    # `hyprctl binds -j` so it never drifts from what's actually bound.
-    hyprBindsHelpScript = lib.getExe (pkgs.writeShellScriptBin "hypr-binds-help" ''
-      #!/usr/bin/env bash
-      set -euo pipefail
-      hyprctl binds -j |
-        ${lib.getExe pkgs.jq} -r 'def getbit($position; $n):
-          fmod($n/($position|exp2)|floor;2) | fabs;
-
-        def mod($position; $name):
-            if getbit($position; .modmask) == 1 then $name + " + " else "" end;
-
-        .[] | .description + "|" + mod(6; "SUPER") + mod(2; "Ctrl") + mod(3; "Alt") + mod(0; "Shift") + .key
-        ' | ${lib.getExe' pkgs.util-linux "column"} -t -s "|" |
-        rofi -dmenu -i -sync -p "Bind" -format e -case-smart -l 40 -theme-str "listview {columns: 4;}"
-    '');
-
     layout = "master";
 
     layoutBinds = [
@@ -175,7 +157,6 @@ in {
           (bindOpts "SUPER + RETURN" (dsp.exec "${lib.getExe pkgs.alacritty}") {description = "Open a terminal (Alacritty)";})
           (bindOpts "SUPER + P" (dsp.exec "${lib.getExe pkgs.wm-menu}") {description = "Open the application launcher";})
           (bindOpts "SUPER + L" (dsp.exec "${lock_cmd}") {description = "Lock the session";})
-          (bindOpts "SUPER + H" (dsp.exec hyprBindsHelpScript) {description = "Show all keybindings (rofi cheatsheet)";})
 
           # Window management
           (bindOpts "SUPER + Q" dsp.close {description = "Close the focused window";})
