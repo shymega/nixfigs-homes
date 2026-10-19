@@ -22,6 +22,10 @@
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
   hyprlockLaunch = lib.getExe lockScripts.hyprlockLaunch;
+
+  mkDpms = x:
+    assert lib.assertMsg (x == "on" || x == "off")
+    "mkDpms: `x` must be \"on\" or \"off\", got \"${x}\""; "hl.dsp.dpms({ action = \"${x}\" })";
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
@@ -242,11 +246,11 @@ in {
             description = "Resize the focused window with the mouse";
           })
 
-          (bindOpts "switch:on:Lid Switch" (lua ''hl.dsp.dpms({ action = "off" })'') {
+          (bindOpts "switch:on:Lid Switch" (lua (mkDpms "off")) {
             locked = true;
             description = "Turn the screen off when the laptop lid closes";
           })
-          (bindOpts "switch:off:Lid Switch" (lua ''hl.dsp.dpms({ action = "on" })'') {
+          (bindOpts "switch:off:Lid Switch" (lua (mkDpms "on")) {
             locked = true;
             description = "Turn the screen on when the laptop lid opens";
           })
@@ -417,32 +421,7 @@ in {
 
   services.hypridle = {
     enable = config.wayland.windowManager.hyprland.enable;
-    settings = let
-      hyprlandConfigType = config.wayland.windowManager.hyprland.configType;
-      hyprlandVersion =
-        if hasosConfig
-        then args.osConfig.programs.hyprland.package.version or null
-        else null;
-      # `configType` ("hyprlang" vs "lua") is slated for removal in
-      # Hyprland v0.57.0, once hyprlang config support is dropped entirely
-      # and `hyprctl dispatch` always evaluates its argument as Lua. Until
-      # then, the two config engines need different DPMS dispatch syntax:
-      # the classic `dpms <on|off>` string for hyprlang, or the
-      # `hl.dsp.dpms({ action = ... })` helper for Lua — even when invoked
-      # from a plain shell (e.g. these hypridle callbacks) rather than from
-      # inside Hyprland's own config. See
-      # https://github.com/hyprwm/Hyprland/discussions/14255.
-      mkDpms = x:
-        assert lib.assertMsg (x == "on" || x == "off")
-        "mkDpms: `x` must be \"on\" or \"off\", got \"${x}\"";
-          lib.warnIf (hyprlandVersion != null && lib.versionAtLeast hyprlandVersion "0.57.0")
-          "mkDpms: Hyprland ${hyprlandVersion} has removed `configType`; drop the hyprlang branch and the configType/hyprlandVersion plumbing from mkDpms"
-          (
-            if hyprlandConfigType == "hyprlang"
-            then "dpms ${x}"
-            else "hl.dsp.dpms({ action = \"${x}\" })"
-          );
-    in {
+    settings = {
       general = {
         # Let media players (Firefox, mpv, Steam) hold off the idle timers.
         ignore_dbus_inhibit = false;
