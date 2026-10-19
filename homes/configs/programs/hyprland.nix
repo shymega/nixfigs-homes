@@ -7,10 +7,6 @@
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
-  # Build-time toggle for the hy3 plugin: set
-  # `nixfigs.graphical.windowManagers.enableHy3 = true;` in the NixOS config
-  # to opt in. Defaults to disabled (no plugin fetch/build, no hy3 binds).
-  enableHy3 = args.osConfig.nixfigs.graphical.windowManagers.enableHy3 or false;
   hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
@@ -73,41 +69,6 @@ in {
     splitWorkspace = ws: lua ''smw.workspace("${toString ws}")'';
     splitMoveToWorkspace = ws: lua ''smw.move_to_workspace("${toString ws}")'';
 
-    # hy3 (i3/sway-like tabbed/tiling layout) is loaded as a Hyprland plugin
-    # for the whole session whenever `enableHy3` is true, so which layout is
-    # *active* (`general:layout`) can be flipped at runtime via `hyprctl`
-    # without a NixOS/home-manager rebuild. `enableHy3` itself is a
-    # build-time switch: disabling it drops the plugin (and its binds)
-    # entirely, so it does require a rebuild to take effect.
-    hy3Package = inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
-
-    # `hl.plugin.hy3` is only populated once the hy3 plugin finishes loading
-    # (asynchronously, after the config script's first pass), so these must
-    # be deferred closures rather than plain expressions: `hl.bind` evaluates
-    # its dispatcher argument eagerly while building the bind table, and
-    # indexing `hl.plugin.hy3` at that point (before the plugin has
-    # registered) is what throws "attempting to index a nil value (field
-    # 'hy3')".
-    hy3 = {
-      makeTabGroup = lua ''function() hl.plugin.hy3.make_group("tab", { toggle = true }) end'';
-      toggleTabbed = lua ''function() hl.plugin.hy3.change_group("toggletab") end'';
-      focusTab = dir: lua ''function() hl.plugin.hy3.focus_tab({ direction = "${dir}", wrap = true }) end'';
-    };
-
-    # Toggles `general:layout` between hy3 and the statically-configured
-    # base `layout` (master/dwindle) via `hyprctl keyword`, so the active
-    # layout can be switched at runtime without touching the Nix config.
-    hy3ToggleScript = lib.getExe (pkgs.writeShellScriptBin "hypr-toggle-hy3" ''
-      #!/usr/bin/env bash
-      set -euo pipefail
-      current="$(hyprctl getoption general:layout -j | ${lib.getExe pkgs.jq} -r '.str')"
-      if [ "$current" = "hy3" ]; then
-        hyprctl keyword general:layout "${layout}"
-      else
-        hyprctl keyword general:layout hy3
-      fi
-    '');
-
     bindOpts = keys: dispatcher: opts: {
       _args = [
         keys
@@ -134,59 +95,14 @@ in {
         rofi -dmenu -i -sync -p "Bind" -format e -case-smart -l 40 -theme-str "listview {columns: 4;}"
     '');
 
-    # Drives the non-hy3 layout-specific binds below, and is the layout the
-    # runtime toggle (`hy3ToggleScript`) falls back to when switching away
-    # from hy3.
     layout = "master";
 
-    # The layout Hyprland actually starts in. When hy3 is enabled,
-    # `SUPER + SHIFT + T` toggles back to `layout` above at runtime; when
-    # disabled at build-time, this falls back to the base `layout` outright.
-    defaultLayout =
-      if enableHy3
-      then "hy3"
-      else layout;
-
-    layoutBinds =
-      if layout == "master"
-      then [
-        (bindOpts "SUPER + J" (dsp.layout "swapwithmaster") {description = "master: swap the focused window with the master";})
-        (bindOpts "SUPER + M" (dsp.layout "focusmaster") {description = "master: focus the master window";})
-        (bindOpts "SUPER + I" (dsp.layout "addmaster") {description = "master: add the focused window to the master area";})
-        (bindOpts "SUPER + D" (dsp.layout "removemaster") {description = "master: remove the focused window from the master area";})
-        (bindOpts "SUPER + O" (dsp.layout "orientationnext") {description = "master: cycle the master area orientation";})
-      ]
-      else [
-        (bindOpts "SUPER + J" (dsp.layout "togglesplit") {description = "dwindle: toggle the split orientation";})
-        (bindOpts "SUPER + SHIFT + P" dsp.pseudo {description = "dwindle: toggle pseudotiling for the focused window";})
-      ];
-
-    # hy3-exclusive dispatchers (tab groups). These are always bound: they
-    # only do something meaningful once `general:layout` is switched to hy3
-    # (see `hy3ToggleScript`), and are harmless no-ops under master/dwindle.
-    #
-    # Each bind below carries a native `description`, so the full list with
-    # explanations is queryable at runtime via `hyprctl binds`.
-    #
-    # Arrow-key focus/swap/move binds above are unchanged: Hyprland's core
-    # movefocus/movewindow dispatchers work against any active layout,
-    # including hy3, so they don't need hy3-specific replacements.
-    hy3Binds = [
-      (bindOpts "SUPER + SHIFT + T" (dsp.exec hy3ToggleScript) {
-        description = "hy3: toggle the active layout between hy3 and master at runtime (no rebuild)";
-      })
-      (bindOpts "SUPER + T" hy3.makeTabGroup {
-        description = "hy3: turn the focused node into a tab group, or dissolve it back out";
-      })
-      (bindOpts "SUPER + SHIFT + G" hy3.toggleTabbed {
-        description = "hy3: toggle tabbed layout on the focused node's group";
-      })
-      (bindOpts "SUPER + bracketleft" (hy3.focusTab "l") {
-        description = "hy3: focus the previous tab in the group";
-      })
-      (bindOpts "SUPER + bracketright" (hy3.focusTab "r") {
-        description = "hy3: focus the next tab in the group";
-      })
+    layoutBinds = [
+      (bindOpts "SUPER + J" (dsp.layout "swapwithmaster") {description = "master: swap the focused window with the master";})
+      (bindOpts "SUPER + M" (dsp.layout "focusmaster") {description = "master: focus the master window";})
+      (bindOpts "SUPER + I" (dsp.layout "addmaster") {description = "master: add the focused window to the master area";})
+      (bindOpts "SUPER + D" (dsp.layout "removemaster") {description = "master: remove the focused window from the master area";})
+      (bindOpts "SUPER + O" (dsp.layout "orientationnext") {description = "master: cycle the master area orientation";})
     ];
 
     toWorkspaceKey = n:
@@ -215,7 +131,6 @@ in {
     systemd.enable = true;
     xwayland.enable = true;
     configType = "lua";
-    plugins = lib.optional enableHy3 hy3Package;
     extraConfig = lib.optionalString useSplitMonitorWorkspaces ''
       smw.setup({
         workspace_count = 10,
@@ -356,8 +271,7 @@ in {
           })
         ]
         ++ layoutBinds
-        ++ workspaceBinds
-        ++ lib.optionals enableHy3 hy3Binds;
+        ++ workspaceBinds;
 
       mod = {
         _var = "SUPER";
@@ -380,7 +294,7 @@ in {
           gaps_in = 2;
           gaps_out = 2;
           border_size = 2;
-          layout = defaultLayout;
+          layout = "master";
         };
         decoration = {
           rounding = 7;
