@@ -81,8 +81,6 @@ in {
       ];
     };
 
-    layout = "master";
-
     layoutBinds = [
       (bindOpts "SUPER + J" (dsp.layout "swapwithmaster") {description = "master: swap the focused window with the master";})
       (bindOpts "SUPER + M" (dsp.layout "focusmaster") {description = "master: focus the master window";})
