@@ -181,7 +181,7 @@ in {
     wl-mirror
     (writeShellScriptBin "recover-sway" ''
       set -euo pipefail
-      exec ${hyprlockLaunch}
+      exec ${lib.getExe swaylock}
     '')
   ]);
 }
