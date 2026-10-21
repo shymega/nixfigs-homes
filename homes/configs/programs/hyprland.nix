@@ -22,6 +22,10 @@
   mkDpms = x:
     assert lib.assertMsg (x == "on" || x == "off")
     "mkDpms: `x` must be \"on\" or \"off\", got \"${x}\""; "hl.dsp.dpms({ action = \"${x}\" })";
+
+  # Shared by `lock_cmd` and `after_sleep_cmd` below: both just need "make
+  # sure hyprlock is running, launch it if not".
+  lockCmd = "pidof hyprlock || hyprlock";
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default
@@ -420,7 +424,7 @@ in {
         # Let media players (Firefox, mpv, Steam) hold off the idle timers.
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
-        lock_cmd = "pidof hyprlock || hyprlock";
+        lock_cmd = lockCmd;
         # `|| true` after swaync-client: swaync isn't guaranteed to be up
         # (or installed) on every session, and a failed DND toggle shouldn't
         # abort the rest of the lock/unlock chain.
@@ -438,7 +442,17 @@ in {
         # unattended RTC timer (see `wasScheduledWake`) -- nobody is there to
         # look at it, so turning it on just leaves it lit until the next
         # idle cycle catches up.
-        after_sleep_cmd = "${wasScheduledWake} || hyprctl dispatch '${mkDpms "on"}'; (systemctl --user restart hypridle.service &disown)";
+        # `lockCmd` here is a self-heal, not a duplicate of `before_sleep_cmd`:
+        # hyprlock aborts outright if a monitor gets torn down and recreated
+        # while it's live-polling it (upstream hyprwm/hyprlock #991), which
+        # outputs reliably do across a suspend/resume cycle (see "removed
+        # iface" in hypridle's wayland log right at resume). Since
+        # `before_sleep_cmd` always locks before every suspend, the session
+        # is guaranteed locked by the time this runs, so a no-op `pidof`
+        # check is enough to tell "hyprlock survived" from "it died
+        # mid-suspend and needs relaunching" without leaving the bare
+        # "oopsie daisy" lock screen up until the next idle cycle relocks.
+        after_sleep_cmd = "${wasScheduledWake} || hyprctl dispatch '${mkDpms "on"}'; ${lockCmd}; (systemctl --user restart hypridle.service &disown)";
       };
       listener = [
         {
