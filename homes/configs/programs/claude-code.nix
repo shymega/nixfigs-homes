@@ -67,6 +67,10 @@
       attribution.commit = "Assisted-by: Claude <noreply@anthropic.com>";
       cleanupPeriodDays = 30;
       autoCompactEnabled = true;
+      fileCheckpointingEnabled = true;
+      todoFeatureEnabled = true;
+      showTurnDuration = true;
+      terminalProgressBarEnabled = true;
       hooks.SessionStart = [
         {
           hooks = [
