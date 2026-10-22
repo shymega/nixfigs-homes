@@ -1,6 +1,6 @@
 {
   pkgs,
-  lib,
+  lib ? pkgs.lib,
 }: let
   systemctl = "${pkgs.systemd}/bin/systemctl";
   systemdRun = "${pkgs.systemd}/bin/systemd-run";
