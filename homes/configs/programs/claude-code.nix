@@ -71,6 +71,8 @@
       todoFeatureEnabled = true;
       showTurnDuration = true;
       terminalProgressBarEnabled = true;
+      terminalTitleFromRename = true;
+      tui = "fullscreen";
       hooks.SessionStart = [
         {
           hooks = [
