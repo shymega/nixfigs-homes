@@ -14,7 +14,7 @@
   isHeimdall = hostIs "HEIMDALL-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
 
-  lockScripts = import ./session-lock.nix {inherit pkgs;};
+  lockScripts = import ./session-lock.nix {inherit pkgs lib;};
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
@@ -25,8 +25,9 @@
     "mkDpms: `x` must be \"on\" or \"off\", got \"${x}\""; "hl.dsp.dpms({ action = \"${x}\" })";
 
   # Shared by `lock_cmd` and `after_sleep_cmd` below: both just need "make
-  # sure hyprlock is running, launch it if not".
-  lockCmd = "pidof hyprlock || hyprlock";
+  # sure hyprlock is running, launch it in its own scope if not" (see
+  # `hyprlockLaunch` in session-lock.nix for why "its own scope" matters).
+  lockCmd = lib.getExe lockScripts.hyprlockLaunch;
 in {
   imports = with inputs; [
     hyprland.homeManagerModules.default

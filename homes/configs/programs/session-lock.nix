@@ -1,5 +1,9 @@
-{pkgs}: let
+{
+  pkgs,
+  lib,
+}: let
   systemctl = "${pkgs.systemd}/bin/systemctl";
+  systemdRun = "${pkgs.systemd}/bin/systemd-run";
   loginctl = "${pkgs.systemd}/bin/loginctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
   pidof = "${pkgs.procps}/bin/pidof";
@@ -87,5 +91,30 @@ in {
       ${pidof} hyprlock >/dev/null 2>&1 && exit 0
       sleep 0.1
     done
+  '';
+
+  # hyprlock is launched as a plain child, so without this it inherits
+  # whatever cgroup its launcher is running in -- hypridle.service, for
+  # both `lock_cmd` (the dbus Lock listener) and the `after_sleep_cmd`
+  # self-heal below. `after_sleep_cmd` also runs `systemctl --user restart
+  # hypridle.service` on every resume (to give hypridle's own idle timers a
+  # clean slate, hyprwm/hypridle#73/#178), and that service's default
+  # KillMode=control-group sends its stop signal to every process sharing
+  # its cgroup, not just its own main PID. A hyprlock that's still a child
+  # of that cgroup is collateral damage on some fraction of those restarts
+  # -- observed on FREYR-LINUX 2026-10-22: a live, already-locked hyprlock
+  # vanished with no coredump and no crash log (SIGTERM, like SIGKILL,
+  # produces neither), leaving the session ext-session-lock-v1 locked with
+  # no client -- Hyprland's "lockscreen app died" screen -- until an
+  # unrelated lock event happened to fire and relaunch it via
+  # misc:allow_session_lock_restore. Running it in its own transient scope
+  # takes it out of hypridle.service's cgroup entirely, so hypridle's own
+  # restarts can never touch it.
+  hyprlockLaunch = pkgs.writeShellScriptBin "hyprlock-launch" ''
+    set -euo pipefail
+
+    ${pidof} hyprlock >/dev/null 2>&1 && exit 0
+
+    exec ${systemdRun} --user --scope --collect -- ${lib.getExe pkgs.hyprlock}
   '';
 }
