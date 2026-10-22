@@ -2,7 +2,6 @@
   programs.claude-code = {
     enable = true;
     package = pkgs.claude-code;
-    skills = ./ai-skills;
     context = ''
       Keep changes minimal and scoped; don't add abstractions or config beyond
       what's asked. Match the existing style of the surrounding code. Load
