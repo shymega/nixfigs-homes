@@ -1,6 +1,8 @@
 {pkgs}: let
   systemctl = "${pkgs.systemd}/bin/systemctl";
+  loginctl = "${pkgs.systemd}/bin/loginctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
+  pidof = "${pkgs.procps}/bin/pidof";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
 
   # Enumerate every output (sink) node at runtime: device topology varies
@@ -63,5 +65,27 @@ in {
     done
 
     exit 1
+  '';
+
+  # `before_sleep_cmd` runs synchronously while hypridle holds the sleep
+  # delay-inhibitor, so actual suspend can't proceed until this returns --
+  # but it previously just fired `loginctl lock-session` and returned
+  # immediately, with both the lock request and hyprlock's own startup
+  # happening asynchronously after that. That let suspend proceed before
+  # hyprlock had even started, so on resume it raced ext-session-lock-v1's
+  # own lock-frame timeout (misc:lockdead_screen_delay) instead of having a
+  # lock surface ready, flashing Hyprland's "lockdead" screen
+  # (hyprwm/hyprlock#991). Waiting here (bounded, so a hyprlock that never
+  # starts can't block suspend forever) keeps the inhibitor held long enough
+  # for it to actually be running first.
+  lockAndWait = pkgs.writeShellScriptBin "session-lock-and-wait" ''
+    set -euo pipefail
+
+    ${loginctl} lock-session
+
+    for _ in $(seq 1 30); do
+      ${pidof} hyprlock >/dev/null 2>&1 && exit 0
+      sleep 0.1
+    done
   '';
 }

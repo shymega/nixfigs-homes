@@ -18,6 +18,7 @@
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
   wasScheduledWake = lib.getExe lockScripts.wasScheduledWake;
+  lockAndWait = lib.getExe lockScripts.lockAndWait;
 
   mkDpms = x:
     assert lib.assertMsg (x == "on" || x == "off")
@@ -430,7 +431,7 @@ in {
         # abort the rest of the lock/unlock chain.
         on_lock_cmd = "${lockPrep} && (swaync-client -dn || true) && hyprctl dispatch '${mkDpms "off"}'";
         on_unlock_cmd = "${unlockResume} && (swaync-client -df || true) && hyprctl dispatch '${mkDpms "on"}'";
-        before_sleep_cmd = "loginctl lock-session";
+        before_sleep_cmd = lockAndWait;
         # hypridle's idle listener timers aren't suspend-aware and don't
         # reset across a sleep cycle (see hyprwm/hypridle #73, #178), so a
         # listener that already fired pre-suspend (e.g. the 90s lock-screen
