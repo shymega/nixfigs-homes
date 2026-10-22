@@ -86,7 +86,7 @@
         }
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@30Hz";
+          mode = "1920x1080@60Hz";
           position = "0,0";
           scale = 1.0;
           status = "enable";
@@ -118,7 +118,7 @@
         }
         {
           criteria = "CVT VITURE 0x88888800";
-          mode = "1920x1080@30Hz";
+          mode = "1920x1080@60Hz";
           position = "0,0";
           scale = 1.0;
           status = "enable";
