@@ -74,9 +74,11 @@ in {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
     stateVersion = "26.05";
-    sessionVariables = {
-      OLLAMA_HOST = "mjolnir-linux.laperm-anoles.ts.net:11434";
-    } // config.systemd.user.sessionVariables;
+    sessionVariables =
+      {
+        OLLAMA_HOST = "mjolnir-linux.laperm-anoles.ts.net:11434";
+      }
+      // config.systemd.user.sessionVariables;
     packages = with pkgs;
       [
         age
