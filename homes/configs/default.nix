@@ -74,6 +74,9 @@ in {
     inherit username homeDirectory;
     enableNixpkgsReleaseCheck = true;
     stateVersion = "26.05";
+    sessionVariables = {
+      OLLAMA_HOST = "mjolnir-linux.laperm-anoles.ts.net:11434";
+    } // config.systemd.user.sessionVariables;
     packages = with pkgs;
       [
         age
@@ -218,6 +221,7 @@ in {
       ++ (with pkgs; [
         clipman
         grim
+        ollama
         slurp
         sway-contrib.grimshot
         swayidle
@@ -528,7 +532,6 @@ in {
       QT_QPA_PLATFORM = "wayland;xcb";
       MOZ_ENABLE_WAYLAND = "1";
       _JAVA_AWT_WM_NONREPARENTING = "1";
-      OLLAMA_HOST = "mjolnir-linux.laperm-anoles.ts.net:11434";
     };
     tmpfiles.rules = ["L %t/discord-ipc-0 - - - - app/com.discordapp.Discord/discord-ipc-0"];
     services = {
