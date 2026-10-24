@@ -187,17 +187,8 @@
       url = "github:Duckonaut/split-monitor-workspaces?ref=v0.56.2";
       inputs.hyprland.follows = "hyprland";
     };
-    hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
-      # hy3 tracks Hyprland's main branch; follow to keep the plugin build in sync.
-      inputs.hyprland.follows = "hyprland";
-    };
-    iio-hyprland = {
-      url = "github:JeanSchoeller/iio-hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     snappy-switcher = {
-      url = "github:OpalAayan/snappy-switcher?rev=0957cd612fadf80fa95034515cb6fa2c163e497e";
+      url = "github:OpalAayan/snappy-switcher?ref=v4.5.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     gitalias = {
