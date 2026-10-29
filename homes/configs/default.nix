@@ -405,7 +405,6 @@ in {
         };
         daemon = {
           enabled = true;
-          systemd_socket = true;
           sync_frequency = config.programs.atuin.settings.sync_frequency;
         };
       };
