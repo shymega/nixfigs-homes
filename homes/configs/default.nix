@@ -386,6 +386,7 @@ in {
     atuin = {
       enable = true;
       package = pkgs.atuin;
+      daemon.enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
       settings = {
