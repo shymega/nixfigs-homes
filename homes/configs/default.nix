@@ -400,6 +400,7 @@ in {
         sync_address = "https://api.atuin.sh";
         sync_frequency = 0;
         workspaces = true;
+        threads.capture = true;
         sync = {
           records = true;
         };
