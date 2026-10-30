@@ -396,6 +396,7 @@ in {
         enter_accept = false;
         inline_height = 0;
         key_path = config.age.secrets.atuin_key.path;
+        session_path = config.age.secrets.atuin_session.path;
         secrets_filter = true;
         style = "auto";
         sync_address = "https://api.atuin.sh";
@@ -407,7 +408,7 @@ in {
         };
         daemon = {
           enabled = true;
-          sync_frequency = config.programs.atuin.settings.sync_frequency;
+          inherit (config.programs.atuin.settings) sync_frequency;
         };
       };
     };
