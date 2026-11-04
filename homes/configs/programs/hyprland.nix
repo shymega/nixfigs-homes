@@ -7,7 +7,7 @@
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
-  hostIs = name: hasosConfig && args.osConfig ? config && args.osConfig.networking.hostName == name;
+  hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
   isFreyr = hostIs "FREYR-LINUX";

@@ -5,6 +5,9 @@
   ...
 } @ args: let
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
+  hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
+  isMjolnir = hostIs "MJOLNIR-LINUX";
+  isWork = hostIs "ct-lt-2506-nixos";
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
   unlockResume = lib.getExe lockScripts.unlockResume;
