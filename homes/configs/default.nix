@@ -277,7 +277,7 @@ in {
       enable = true;
       components = ["secrets"];
     };
-    mpd-discord-rpc.enable = true;
+    mpd-discord-rpc.enable = false;
     mpris-proxy.enable = true;
     mpdris2.enable = true;
     emacs = {
