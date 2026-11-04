@@ -379,6 +379,13 @@ in {
             "__GL_MaxFramesAllowed,1"
             "__GL_VRR_ALLOWED,0"
             "__VK_LAYER_NV_optimus,NVIDIA_only"
+          ]
+          ++ lib.optionals (isMjolnir || isWork) [
+            # evdi (DisplayLink) doesn't reliably signal atomic commit
+            # completion behind the PRIME-sync nvidia/intel hybrid pipeline,
+            # which times out the flip ("flip_done timed out") and leaves
+            # the panel on "No Signal" even though Hyprland sees it as active.
+            "AQ_NO_ATOMIC,1"
           ]);
 
       window_rule = [

@@ -6,6 +6,7 @@
 } @ args: let
   windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
   hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
+  hasosConfig = builtins.hasAttr "osConfig" args;
   isMjolnir = hostIs "MJOLNIR-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
   lockScripts = import ./session-lock.nix {inherit pkgs;};
@@ -134,6 +135,12 @@ in {
     extraConfig = ''
       bindsym --locked XF86AudioPlay exec playerctl play-pause
       bindsym --release Mod4+Escape exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1
+    '';
+    # evdi (DisplayLink) doesn't reliably signal atomic commit completion
+    # behind the PRIME-sync nvidia/intel hybrid pipeline on these hosts,
+    # which times out the flip and leaves the panel on "No Signal".
+    extraSessionCommands = lib.optionalString (isMjolnir || isWork) ''
+      export WLR_DRM_NO_ATOMIC=1
     '';
   };
 
