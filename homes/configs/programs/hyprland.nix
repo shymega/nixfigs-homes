@@ -13,6 +13,7 @@
   isFreyr = hostIs "FREYR-LINUX";
   isHeimdall = hostIs "HEIMDALL-LINUX";
   isWork = hostIs "ct-lt-2506-nixos";
+  needsNoAtomicDrm = args.osConfig.nixfigs.graphical.needsNoAtomicDrm or false;
 
   lockScripts = import ./session-lock.nix {inherit pkgs lib;};
   lockPrep = lib.getExe lockScripts.lockPrep;
@@ -380,11 +381,7 @@ in {
             "__GL_VRR_ALLOWED,0"
             "__VK_LAYER_NV_optimus,NVIDIA_only"
           ]
-          ++ lib.optionals (isMjolnir || isWork) [
-            # evdi (DisplayLink) doesn't reliably signal atomic commit
-            # completion behind the PRIME-sync nvidia/intel hybrid pipeline,
-            # which times out the flip ("flip_done timed out") and leaves
-            # the panel on "No Signal" even though Hyprland sees it as active.
+          ++ lib.optionals needsNoAtomicDrm [
             "AQ_NO_ATOMIC,1"
           ]);
 
