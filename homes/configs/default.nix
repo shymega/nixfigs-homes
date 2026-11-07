@@ -402,9 +402,12 @@ in {
         key_path = config.age.secrets.atuin_key.path;
         session_path = config.age.secrets.atuin_session.path;
         secrets_filter = true;
+        search_mode = "fuzzy";
+        show_preview = true;
         style = "auto";
         sync_address = "https://api.atuin.sh";
         sync_frequency = 0;
+        update_check = false;
         workspaces = true;
         threads.capture = true;
         sync = {
@@ -412,8 +415,10 @@ in {
         };
         daemon = {
           enabled = true;
+          autostart = true;
           inherit (config.programs.atuin.settings) sync_frequency;
         };
+        pty_proxy.enabled = true;
       };
     };
     nix-index-database.comma.enable = true;
