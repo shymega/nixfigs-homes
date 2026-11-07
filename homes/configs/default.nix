@@ -334,6 +334,10 @@ in {
         bind-key -n End send Escape "OF"
         set -g window-status-format "[#I:#W(#(ps -o tpgid:1= -p #{pane_pid}),#{pane_current_path})#F]"
         set -g window-status-current-format "[#I:#W(#(ps -o tpgid:1= -p #{pane_pid}),#{pane_current_path})#F]"
+
+        # Pass OSC 8 hyperlinks through to the outer terminal so URLs stay
+        # clickable (hold Shift in Alacritty to bypass tmux's mouse grab).
+        set -as terminal-features ",*:hyperlinks"
       '';
 
       clock24 = true;
