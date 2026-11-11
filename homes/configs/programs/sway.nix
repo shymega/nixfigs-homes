@@ -4,7 +4,6 @@
   lib,
   ...
 } @ args: let
-  windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
   needsNoAtomicDrm = args.osConfig.nixfigs.graphical.needsNoAtomicDrm or false;
   lockScripts = import ./session-lock.nix {inherit pkgs;};
   lockPrep = lib.getExe lockScripts.lockPrep;
@@ -38,7 +37,7 @@ in {
       ]) (lib.range 1 10)
     );
   in {
-    enable = windowManager == "sway";
+    enable = true;
     config = {
       inherit modifier terminal menu;
       bars = [];

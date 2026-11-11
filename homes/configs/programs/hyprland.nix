@@ -6,7 +6,6 @@
   ...
 } @ args: let
   hasosConfig = builtins.hasAttr "osConfig" args;
-  windowManager = args.osConfig.nixfigs.graphical.windowManagers.selectedWindowManager or "hyprland";
   hostIs = name: hasosConfig && args.osConfig.networking.hostName == name;
 
   isMjolnir = hostIs "MJOLNIR-LINUX";
@@ -112,7 +111,7 @@ in {
         ]
     ) (lib.range 1 10);
   in {
-    enable = windowManager == "hyprland";
+    enable = true;
     package = null;
     portalPackage = null;
     systemd.enable = true;
@@ -607,10 +606,10 @@ in {
   };
 
   programs.hyprshot.enable = config.wayland.windowManager.hyprland.enable;
-  services.hyprpolkitagent.enable = windowManager == "hyprland" || windowManager == "sway";
+  services.hyprpolkitagent.enable = true;
 
   programs.waybar = {
-    enable = windowManager == "hyprland" || windowManager == "sway";
+    enable = true;
     systemd.enable = config.programs.waybar.enable;
     style = import ./waybar-style.nix;
     settings.main = builtins.fromJSON (builtins.readFile ./waybar-config.json);
