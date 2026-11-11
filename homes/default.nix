@@ -17,13 +17,14 @@
     ...
   }: let
     libx = inputs.nixfigs-helpers.libx.${hostPlatform};
+    pkgs = genPkgs hostPlatform;
   in
     homeManagerConfiguration {
-      pkgs = genPkgs hostPlatform;
+      inherit pkgs;
       modules = [./configs];
       extraSpecialArgs = {
         hostType = type;
-        pkgs = genPkgs hostPlatform;
+        inherit pkgs;
         inherit
           inputs
           username
