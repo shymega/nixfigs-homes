@@ -29,7 +29,7 @@
   # `hyprlockLaunch` in session-lock.nix for why "its own scope" matters).
   lockCmd = lib.getExe lockScripts.hyprlockLaunch;
 in
-  lib.optionalAttrs (hasosConfig && args.osConfig.my.specialisation == "default") {
+  lib.optionalAttrs (hasosConfig && args.osConfig.nixfigs.meta.specialisation == "default") {
     imports = with inputs; [
       hyprland.homeManagerModules.default
     ];
