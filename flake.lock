@@ -3893,16 +3893,16 @@
         "nix-filter": "nix-filter"
       },
       "locked": {
-        "lastModified": 1786046529,
-        "narHash": "sha256-NEL7gkeIIUY+DkGLEa7lhSZ9PlqWeqddNmNqakxz3KI=",
+        "lastModified": 1794256210,
+        "narHash": "sha256-fy4pK/cuzazLOGdHR/597Yvik+2xbO/O6hehWtbd65k=",
         "owner": "Duckonaut",
         "repo": "split-monitor-workspaces",
-        "rev": "656ac1f024f0c1d6ec007f4c25cbc02951d51c9c",
+        "rev": "5fd2f066d12e727365535bb13beec78f8dbe4157",
         "type": "github"
       },
       "original": {
         "owner": "Duckonaut",
-        "ref": "v0.56.2",
+        "ref": "v0.57.2",
         "repo": "split-monitor-workspaces",
         "type": "github"
       }
