@@ -349,7 +349,6 @@ in {
         awscli2
         cachix
         flyctl
-        gh
         hcloud
         wrangler
       ];
