@@ -55,11 +55,7 @@ in {
     ./network-targets.nix
     ./programs/agent-sandbox.nix
     ./programs/alacritty.nix
-    ./programs/antigravity-cli.nix
-    ./programs/claude-code.nix
     ./programs/hyprland.nix
-    ./programs/opencode.nix
-    ./programs/pi-coding-agent.nix
     ./programs/sway.nix
     ./programs/wezterm.nix
     agenix.homeManagerModules.default
